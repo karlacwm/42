@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:28:31 by wcheung           #+#    #+#             */
-/*   Updated: 2025/10/24 15:58:01 by wcheung          ###   ########.fr       */
+/*   Updated: 2025/10/24 16:01:26 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,5 @@ void    ft_putstr_fd(char *str, int fd)
 // {
 //     char a[] = "hihihihi";
 //     ft_putstr_fd(a, 1);
+//     return (0);
 // }
