@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/18 23:48:16 by wcheung           #+#    #+#             */
-/*   Updated: 2025/10/24 14:35:56 by wcheung          ###   ########.fr       */
+/*   Updated: 2025/10/24 14:59:11 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,5 +22,3 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	ft_memset(ptr, 0, nmemb * size);
 	return (ptr);
 }
-
-
