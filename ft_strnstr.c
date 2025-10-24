@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 14:24:20 by wcheung           #+#    #+#             */
-/*   Updated: 2025/10/22 22:16:22 by wcheung          ###   ########.fr       */
+/*   Updated: 2025/10/24 14:36:48 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ char	*ft_strnstr(const char *bigstr, const char *substr, size_t len)
 	}
 	return (NULL);
 }
+// #include <stdio.h>
+
 // int main(void)
 // {
 // 	const char *big = "Hello world!";

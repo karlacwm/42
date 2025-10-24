@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 15:48:32 by wcheung           #+#    #+#             */
-/*   Updated: 2025/10/23 11:52:24 by wcheung          ###   ########.fr       */
+/*   Updated: 2025/10/23 18:17:59 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,13 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 }
 // size refers to the total size of the dst buffer
 // check if size == 0 before running ft_strlen on dest
+// #include <stdio.h>
 
 // int	main(void)
 // {
-// 	char	a[100] = "banana banana";
+// 	char	a[13] = "banana banana";
 // 	char	b[] = "nanana";
-// 	unsigned int	x = 20;
+// 	unsigned int	x = 13;
 // 	printf("ft_strlcat = %zu\n", ft_strlcat(a, b, x));
 // 	printf("result = %s", a);
 // 	return (0);
