@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 12:55:51 by wcheung           #+#    #+#             */
-/*   Updated: 2025/10/19 18:45:21 by wcheung          ###   ########.fr       */
+/*   Updated: 2025/10/25 16:17:13 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,10 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 	}
 	return (src_len);
 }
+
+	// check?
+	// if (!dst || !src)
+	// 	return (0);
 
 // #include <stdio.h>
 // size_t	ft_strlen(const char *s)
