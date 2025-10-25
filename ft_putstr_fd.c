@@ -6,21 +6,21 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:28:31 by wcheung           #+#    #+#             */
-/*   Updated: 2025/10/24 16:01:26 by wcheung          ###   ########.fr       */
+/*   Updated: 2025/10/25 13:02:03 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void    ft_putstr_fd(char *str, int fd)
+void	ft_putstr_fd(char *str, int fd)
 {
-    if (!str)
-        return ;
-    while (*str)
-    {
-        write(fd, str, 1);
-        str++;
-    }
+	if (!str)
+		return ;
+	while (*str)
+	{
+		write(fd, str, 1);
+		str++;
+	}
 }
 
 // #include <stdio.h>
