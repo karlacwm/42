@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:28:20 by wcheung           #+#    #+#             */
-/*   Updated: 2025/10/24 22:33:26 by wcheung          ###   ########.fr       */
+/*   Updated: 2025/10/24 23:15:48 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void    ft_putendl_fd(char *str, int fd)
 {
+    if (!str)
+        return ;
     ft_putstr_fd(str, fd);
     ft_putchar_fd('\n', fd);
 }
