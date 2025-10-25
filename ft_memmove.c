@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 11:44:54 by wcheung           #+#    #+#             */
-/*   Updated: 2025/10/23 12:11:29 by wcheung          ###   ########.fr       */
+/*   Updated: 2025/10/25 12:29:34 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ void	*ft_memmove(void *dst, const void *src, size_t n)
 	}
 	else
 	{
-		temp_dst += n;
-		temp_src += n;
+		temp_dst = temp_dst + n;
+		temp_src = temp_src + n;
 		while (n--)
 			*(--temp_dst) = *(--temp_src);
 	}
