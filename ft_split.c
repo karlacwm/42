@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-int	ft_word_count(char const *str, char c)
+static int	ft_word_count(char const *str, char c)
 {
 	int	word_count;
 
@@ -31,7 +31,7 @@ int	ft_word_count(char const *str, char c)
 	return (word_count);
 }
 
-int	ft_locate_word(char const *str, char c, int *word_start, int *word_end)
+static int	ft_locate_word(char const *str, char c, size_t *word_start, size_t *word_end)
 {
 	while (str[*word_end] && str[*word_end] == c)
 		(*word_end)++;
@@ -41,7 +41,7 @@ int	ft_locate_word(char const *str, char c, int *word_start, int *word_end)
 	return (*word_end > *word_start);
 }
 
-char	*ft_copy_word(char const *str, size_t word_start, size_t word_end)
+static char	*ft_copy_word(char const *str, size_t word_start, size_t word_end)
 {
 	char	*word;
 	size_t	letter;
@@ -59,7 +59,7 @@ char	*ft_copy_word(char const *str, size_t word_start, size_t word_end)
 	return (word);	
 }
 
-void	ft_free_all(char **split_str, size_t i)
+static void	ft_free_all(char **split_str, size_t i)
 {
 	while (i > 0)
 		free(split_str[--i]);
@@ -69,16 +69,15 @@ void	ft_free_all(char **split_str, size_t i)
 char	**ft_split(char const *str, char c)
 {
 	char	**split_str;
-	int		word_start;
-	int		word_end;
-	int		i;
+	size_t		word_start;
+	size_t	word_end;
+	size_t		i;
 
 	if (!str)
 		return (NULL);
 	split_str = (char **)malloc(sizeof(char *) * (ft_word_count(str, c) + 1));
 	if (!split_str)
 		return (NULL);
-	split_str[ft_word_count(str, c)] = (void *)'\0';
 	word_start = 0;
 	word_end = 0;
 	i = 0;

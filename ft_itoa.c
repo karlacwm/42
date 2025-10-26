@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-size_t	ft_len_count(long n)
+static size_t	ft_digit_count(long n)
 {
 	size_t	n_len;
 
@@ -39,7 +39,7 @@ char	*ft_itoa(int n)
 	char	*str;
 
 	num = n;
-	n_len = ft_len_count(num);
+	n_len = ft_digit_count(num);
 	str = (char *)malloc(sizeof(char) * (n_len + 1));
 	if (!str)
 		return (NULL);

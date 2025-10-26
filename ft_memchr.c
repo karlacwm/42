@@ -18,7 +18,7 @@ void	*ft_memchr(const void *str, int c, size_t n)
 	unsigned char		a;
 
 	ptr = str;
-	a = c;
+	a = (unsigned char) c;
 	while (n > 0)
 	{
 		if (*ptr == a)
@@ -28,7 +28,7 @@ void	*ft_memchr(const void *str, int c, size_t n)
 	}
 	return (NULL);
 }
-
+// // man: c is passed as int but searched for as unsigned char
 // int	main(void)
 // {
 // 	char	s[] = "monday";
