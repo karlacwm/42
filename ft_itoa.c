@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:10:33 by wcheung           #+#    #+#             */
-/*   Updated: 2025/10/25 14:39:28 by wcheung          ###   ########.fr       */
+/*   Updated: 2025/10/26 13:12:41 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ char	*ft_itoa(int n)
 		str[0] = '-';
 		num = -num;
 	}
-	while (num > 0 && n_len > 0)
+	while (num > 0)
 	{
 		str[n_len] = (num % 10) + '0';
 		num = num / 10;

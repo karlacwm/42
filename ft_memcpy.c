@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 17:04:47 by wcheung           #+#    #+#             */
-/*   Updated: 2025/10/22 14:15:52 by wcheung          ###   ########.fr       */
+/*   Updated: 2025/10/26 13:16:28 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ void	*ft_memcpy(void *dst, const void *src, size_t n)
 	unsigned char		*temp_dst;
 	unsigned const char	*temp_src;
 
+	if (!dst && !src)
+		return (NULL);
 	temp_dst = (unsigned char *)dst;
 	temp_src = (unsigned const char *)src;
 	while (n > 0)
