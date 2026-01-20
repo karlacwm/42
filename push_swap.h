@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 19:47:58 by wcheung           #+#    #+#             */
-/*   Updated: 2026/01/20 17:44:36 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/01/20 18:22:38 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <stdlib.h>
 # include <unistd.h>
+# include <stdio.h>
 # include "libft/libft.h"
 
 typedef struct s_node

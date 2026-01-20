@@ -1,4 +1,4 @@
-NAME = push_swap.a
+NAME = push_swap
 
 LIBFT_DIR = ./libft
 LIBFT = $(LIBFT_DIR)/libft.a
@@ -24,7 +24,7 @@ $(LIBFT):
 
 $(NAME): $(LIBFT) $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME)
-	
+
 clean:
 	make -C $(LIBFT_DIR) clean
 	$(RM) $(OBJ)
