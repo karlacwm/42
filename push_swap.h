@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 19:47:58 by wcheung           #+#    #+#             */
-/*   Updated: 2026/01/19 18:46:23 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/01/20 17:44:36 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,9 @@ typedef struct s_node
 	struct s_node	*next;
 }					t_node;
 
-void	free_errors(t_node **a);
+void	free_errors(t_node **a, char **each_int);
+void	free_stack(t_node **stack);
+void	free_after_split(char **each_int);
 void	build_stack_a(t_node **a, char **argv);
 int		stack_size(t_node *stack);
 void	indexing(t_node *stack);

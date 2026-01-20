@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/11 11:26:24 by wcheung           #+#    #+#             */
-/*   Updated: 2026/01/19 18:36:58 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/01/20 17:45:17 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,15 +75,15 @@ void	build_stack_a(t_node **a, char **single_int)
 	while (single_int[i])
 	{
 		if (check_integers(single_int[i]))
-			free_errors(a);
+			free_errors(a, single_int);
 		n = ft_atol(single_int[i]);
 		if (n > 2147483647 || n < -2147483648)
-			free_errors(a);
+			free_errors(a, single_int);
 		if (check_duplicates(*a, (int)n))
-			free_errors(a);
+			free_errors(a, single_int);
 		new_node = put_value((int)n);
 		if (!new_node)
-			free_errors(a);
+			free_errors(a, single_int);
 		stack_add_to_end(a, new_node);
 		i++;
 	}

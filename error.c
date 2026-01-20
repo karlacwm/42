@@ -6,13 +6,13 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 19:56:49 by wcheung           #+#    #+#             */
-/*   Updated: 2026/01/20 12:39:20 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/01/20 17:44:29 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-static void	free_stack(t_node **stack)
+void	free_stack(t_node **stack)
 {
 	t_node	*tmp;
 	t_node	*current;
@@ -29,10 +29,12 @@ static void	free_stack(t_node **stack)
 	*stack = NULL;
 }
 
-void	free_errors(t_node **a)
+void	free_errors(t_node **a, char **each_int)
 {
 	if (a && *a)
 		free_stack(a);
+	if (each_int)
+		free_after_split(each_int);
 	write(2, "Error\n", 6);
 	exit(1);
 }

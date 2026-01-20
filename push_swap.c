@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 17:35:25 by wcheung           #+#    #+#             */
-/*   Updated: 2026/01/20 13:38:28 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/01/20 17:29:15 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static int	is_sorted(t_node *a)
 	return (1);
 }
 
-static void	free_after_split(char **each_int)
+void	free_after_split(char **each_int)
 {
 	int	i;
 
@@ -60,22 +60,23 @@ int	main(int argc, char **argv)
 	t_node	*b;
 	char	*join_all;
 	char	**each_int;
-	int		size;
 
 	a = NULL;
 	b = NULL;
 	if (argc < 2 || !argv)
-		return (0);
+		return (1);
 	join_all = combine_argv(argc, argv);
 	each_int = ft_split(join_all, ' ');
 	free(join_all);
 	build_stack_a(&a, each_int);
 	free_after_split(each_int);
-	if (is_sorted(a))
-		return (0);
-	indexing(a);
-	size = stack_size(a);
-	sorting(&a, &b, size);
+	if (!is_sorted(a))
+	{
+		indexing(a);
+		sorting(&a, &b, stack_size(a));
+	}
+	free_stack(&a);
+	free_stack(&b);
 	return (0);
 }
 

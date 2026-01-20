@@ -23,9 +23,8 @@ $(LIBFT):
 	make -C $(LIBFT_DIR)
 
 $(NAME): $(LIBFT) $(OBJ)
-	cp $(LIBFT) $(NAME)
-	$(AR) $(ARFLAGS) $(NAME) $(OBJ)
-
+	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME)
+	
 clean:
 	make -C $(LIBFT_DIR) clean
 	$(RM) $(OBJ)

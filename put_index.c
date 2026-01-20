@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/11 16:37:29 by wcheung           #+#    #+#             */
-/*   Updated: 2026/01/19 18:40:42 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/01/20 17:26:42 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ void	indexing(t_node *stack)
 
 	size = stack_size(stack);
 	array = stack_to_array(stack, size);
+	if (!array)
+		return ;
 	bubble_sort(array, size);
 	tmp = stack;
 	while (tmp)

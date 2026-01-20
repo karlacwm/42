@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 19:57:28 by wcheung           #+#    #+#             */
-/*   Updated: 2026/01/20 12:54:19 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/01/20 17:14:24 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,20 +16,6 @@
 // Do nothing if a is empty.
 
 #include "push_swap.h"
-
-// static void	push(t_node **from_stack, t_node **to_stack)
-// {
-// 	t_node	*to_be_pushed;
-
-// 	if (!from_stack || !to_stack)
-// 		return ;
-// 	to_be_pushed = *from_stack;
-// 	(*from_stack)->prev = NULL;
-// 	*from_stack = (*from_stack)->next;
-// 	to_be_pushed->next = *to_stack;
-// 	to_be_pushed->prev = NULL;
-// 	*to_stack = to_be_pushed;
-// }
 
 static void	push(t_node **from_stack, t_node **to_stack)
 {

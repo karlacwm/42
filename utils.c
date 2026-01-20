@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/16 12:41:44 by wcheung           #+#    #+#             */
-/*   Updated: 2026/01/16 22:04:29 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/01/20 17:31:37 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,12 @@ char	*combine_argv(int argc, char **argv)
 	{
 		tmp = ft_strjoin(combined, argv[i]);
 		free(combined);
+		if (!tmp)
+			return (NULL);
 		combined = ft_strjoin(tmp, " ");
 		free(tmp);
+		if (!combined)
+			return (NULL);
 		i++;
 	}
 	return (combined);
