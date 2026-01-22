@@ -24,7 +24,7 @@ Tester:
 AI was used for debugging, explaining the algorithm and explaining confusing concepts about linked lists.
 
 Youtube playlist for linked lists:
-[https://youtube.com/playlist?list=PLfqABt5AS4FmXeWuuNDS3XGENJO1VYGxl&)]
+[https://youtube.com/playlist?list=PLfqABt5AS4FmXeWuuNDS3XGENJO1VYGxl&]
 
 push swap tester on GitHub:
 [https://github.com/gemartin99/Push-Swap-Tester/tree/master]
