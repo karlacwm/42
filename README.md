@@ -9,27 +9,25 @@ Before sorting, the input is checked if it is in valid format. Invalid format in
 
 # Instructions
 Compile:
-make
-cc -Wall -Werror -Wextra push_swap.c push_swap.a -o push_swap
-./push_swap 4 2 1 5 3
-./push_swap "1 5 2 3 4"
-(any invalid format in input will print Error\n)
+- make
+- ./push_swap 4 2 1 5 3
+- ./push_swap "1 5 2 3 4"
+- (any invalid format in input will print Error\n)
 
 Tester:
-download tester from 42 intra
-chmod +x checker_linux
-ARG=""
-./push_swap $ARG | ~/checker_linux $ARG
-(tester shows either OK or KO)
+- download tester from 42 intra
+- chmod +x checker_linux
+- ARG="(enter integers)"; ./push_swap $ARG | ./checker_linux $ARG
+- (tester shows either OK or KO)
 
 # Resources
 AI was used for debugging, explaining the algorithm and explaining confusing concepts about linked lists.
 
 Youtube playlist for linked lists:
-https://youtube.com/playlist?list=PLfqABt5AS4FmXeWuuNDS3XGENJO1VYGxl&
+[https://youtube.com/playlist?list=PLfqABt5AS4FmXeWuuNDS3XGENJO1VYGxl&)]
 
 push swap tester on GitHub:
-https://github.com/gemartin99/Push-Swap-Tester/tree/master
+[https://github.com/gemartin99/Push-Swap-Tester/tree/master]
 
 push swap visualizer:
-https://push-swap42-visualizer.vercel.app/
+[https://push-swap42-visualizer.vercel.app/]
