@@ -8,17 +8,25 @@ Push swap is about sorting data with two stacks within limited operations with m
 Before sorting, the input is checked if it is in valid format. Invalid format includes non-integers, duplicates and values outside the int range. Next, numbers will be indexed by their rank, which are ranked by a bubble sort. The index of the numbers are helpful, as I can efficiently compare it and roughly sort the numbers to stack b. And lastly, to find the largest one in stack B and push it back to stack a. For under 5 numbers, the sorting is hard-coded for lowest possible moves. The logic of sort_four and sort_five are based on sort_three.
 
 # Instructions
-Compile:
+#### Compile:
 - make
 - ./push_swap 4 2 1 5 3
 - ./push_swap "1 5 2 3 4"
 - (any invalid format in input will print Error\n)
 
-Tester:
+#### Tester:
 - download tester from 42 intra
 - chmod +x checker_linux
 - ARG="(enter integers)"; ./push_swap $ARG | ./checker_linux $ARG
 - (tester shows either OK or KO)
+
+#### Generate 100 random numbers
+- shuf -i 1-1000 -n 100 > numbers_100.txt
+- ./push_swap $(cat numbers_100.txt)
+
+#### Generate 500 random numbers
+- shuf -i 1-1000 -n 500 > numbers_500.txt
+- ./push_swap $(cat numbers_500.txt)
 
 # Resources
 AI was used for debugging, explaining the algorithm and explaining confusing concepts about linked lists.
