@@ -1,0 +1,37 @@
+class Plant:
+    '''
+    Class Plant defines a plant with its name, height in cm, and age in days.
+    '''
+
+    def __init__(self, name: str, height_cm: int, age_days: int) -> None:
+        '''
+        Sets the name, height in cm, and age in days of the plant.
+        '''
+        self.name: str = name
+        self.height_cm: int = height_cm
+        self.age_days: int = age_days
+
+    def __str__(self) -> str:
+        '''
+        Returns a string of the plant information.
+        '''
+        return f"{self.name}: {self.height_cm}cm, {self.age_days} days old"
+
+
+def ft_garden_data() -> None:
+    '''
+    Displays plants information in an organized way.
+    No return value and no user input required.
+    '''
+    garden: list[Plant] = [
+        Plant("Orchid", 40, 20),
+        Plant("Rose", 25, 15),
+        Plant("Tulip", 20, 10)
+    ]
+    print("=== Garden Plant Registry ===")
+    for plant in garden:
+        print(plant)
+
+
+if __name__ == "__main__":
+    ft_garden_data()
