@@ -15,7 +15,7 @@ class Plant:
 def ft_plant_factory() -> None:
     '''
     Creates plants with initial values and add to a garden list.
-    No return value and no user input required.
+    Counts total plants created.
     '''
     garden: list[Plant] = [
         Plant("Orchid", 40, 20),

@@ -15,7 +15,7 @@ class SecurePlant:
         '''
         Sets the height of the plant if the value is valid.
         '''
-        if height >= 0:
+        if height > 0:
             self._height = height
             print(f"Height updated: {height}cm [OK]")
         else:
@@ -29,7 +29,7 @@ class SecurePlant:
         '''
         Sets the age of the plant if the value is valid.
         '''
-        if age >= 0:
+        if age > 0:
             self._age = age
             print(f"Age updated: {age} days [OK]")
         else:
@@ -56,20 +56,16 @@ def ft_garden_security() -> None:
     Creates a secure plant and demonstrates the security features.
     No return value and no user input required.
     '''
-    garden: list[SecurePlant] = [
-        SecurePlant("Orchid", 40, 20),
-        SecurePlant("Rose", 40, 20)
-    ]
+    rose = SecurePlant("Rose", 40, 20)
     print("=== Garden Security System ===")
-    for plant in garden:
-        print(f"Plant created: {plant._name}")
-    SecurePlant.set_height(garden[0], 25)
-    SecurePlant.set_age(garden[0], 5)
-    SecurePlant.set_height(garden[0], -10)
-    SecurePlant.set_age(garden[0], -5)
+    print(f"Plant created: {rose._name}")
+    SecurePlant.set_height(rose, rose.get_height())
+    SecurePlant.set_age(rose, rose.get_age())
+    SecurePlant.set_height(rose, -10)
+    SecurePlant.set_age(rose, -5)
     print(
-        f"\nCurrent plant: {garden[0]._name} "
-        f"({plant.get_height()}cm, {plant.get_age()} days)"
+        f"\nCurrent plant: {rose._name} "
+        f"({rose.get_height()}cm, {rose.get_age()} days)"
     )
 
 

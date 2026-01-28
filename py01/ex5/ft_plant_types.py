@@ -110,7 +110,8 @@ def ft_plant_types() -> None:
         Tree("Oak", 500, 1825, 50),
         Tree("Pine", 300, 1095, 30),
         Vegetable("Tomato", 80, 90, "summer", "vitamin C"),
-        Vegetable("Potato", 60, 120, "fall", "carbohydrates")]
+        Vegetable("Potato", 60, 120, "fall", "carbohydrates")
+        ]
     print("=== Garden Plant Types ===")
     for plant in garden:
         print(plant)

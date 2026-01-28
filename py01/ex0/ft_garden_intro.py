@@ -2,7 +2,6 @@ def ft_garden_intro() -> None:
     '''
     Displays information about a plant in my garden,
     including its name, height, and age.
-    No return value and no user input required.
     '''
     plant: str = "Orchid"
     height: int = 40
