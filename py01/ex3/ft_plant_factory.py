@@ -1,3 +1,9 @@
+'''
+A program that reuses the Plant class, uses it to create plants,
+as well as showing the total of plants created.
+'''
+
+
 class Plant:
     '''
     Class Plant defines a plant with its name, height in cm, and age in days.

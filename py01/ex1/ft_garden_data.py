@@ -1,3 +1,9 @@
+'''
+A program that organises information with a Plant class,
+which serves as a blue print to represent any plant.
+'''
+
+
 class Plant:
     '''
     Class Plant defines a plant with its name, height in cm, and age in days.
@@ -21,7 +27,7 @@ class Plant:
 def ft_garden_data() -> None:
     '''
     Displays plants information in an organized way,
-    including its name, height, and age.
+    including their name, height, and age.
     '''
     garden: list[Plant] = [
         Plant("Orchid", 40, 20),

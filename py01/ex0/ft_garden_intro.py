@@ -1,3 +1,8 @@
+'''
+A program that display the plant information when executed.
+'''
+
+
 def ft_garden_intro() -> None:
     '''
     Displays information about a plant in my garden,

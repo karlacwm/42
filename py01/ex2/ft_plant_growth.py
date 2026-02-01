@@ -1,16 +1,22 @@
+'''
+A program that reuses the Plant class from ex1 to represent any plant data,
+as well simulating the growth and aging of plants.
+'''
+
+
 class Plant:
     '''
     Class Plant defines a plant with its name, height in cm, and age in days.
     '''
 
-    def __init__(self, name: str, height: int, age_days: int) -> None:
+    def __init__(self, name: str, height: int, age: int) -> None:
         '''
         Sets the name, height in cm, and age in days of the plant.
         '''
         self.name: str = name
         self.starting_height: int = height
         self.height: int = height
-        self.age_days: int = age_days
+        self.age_days: int = age
 
     def get_info(self) -> str:
         '''
@@ -34,7 +40,7 @@ class Plant:
 def ft_plant_growth() -> None:
     '''
     Simulates the growth of each plant over a week.
-    Shows starting and ending height and age.
+    Shows height and age at the start and end of the week.
     '''
     garden: list[Plant] = [
         Plant("Orchid", 40, 20),

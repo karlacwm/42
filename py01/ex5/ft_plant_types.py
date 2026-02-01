@@ -1,3 +1,11 @@
+'''
+Class Plant is reused as parent class and three child classes are created
+to handle different types of plants, which are flowers, trees and vegetables.
+The child class inherits common plant features and handles additional ones.
+The program then displays plant information according to their types.
+'''
+
+
 class Plant:
     '''
     Class Plant defines a plant with its name, height in cm, and age in days.
@@ -110,8 +118,7 @@ def ft_plant_types() -> None:
         Tree("Oak", 500, 1825, 50),
         Tree("Pine", 300, 1095, 30),
         Vegetable("Tomato", 80, 90, "summer", "vitamin C"),
-        Vegetable("Potato", 60, 120, "fall", "carbohydrates")
-        ]
+        Vegetable("Potato", 60, 120, "fall", "carbohydrates")]
     print("=== Garden Plant Types ===")
     for plant in garden:
         print(plant)
