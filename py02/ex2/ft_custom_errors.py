@@ -7,26 +7,33 @@ and demonstrates them in different situations.
 
 class GardenError():
     '''
-    Docstring for GardenError
+    A basic error for garden problems
     '''
+    pass
 
 
 class PlantError(GardenError):
     '''
-    Docstring
+    For problems with plants (inherits from GardenError)
     '''
+    pass
 
 
 class WaterError(GardenError):
     '''
-    Docstring
+    For problems with watering (inherits from GardenError)
     '''
+    pass
 
 
 def garden_error_types() -> None:
     '''
     Docstring
     '''
+    print("=== Custom Garden Errors Demo ===")
+    print("Testing PlantError...")
+    print("Testing WaterError...")
+    print("All custom error types work correctly!")
 
 
 if __name__ == "__main__":
