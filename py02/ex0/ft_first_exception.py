@@ -7,9 +7,7 @@ does not crash.
 
 def check_temperature(temp_str: str) -> int:
     '''
-    Converts the string parameter into integer only when it is a valid number,
-    otherwise, a ValueError is raised.
-    Checks if the temperature is too high or too low for plants,
+    Validates temperature input (integers and 0-40) and
     returns the temperature as integer if it passes the checks.
     '''
     try:
@@ -38,8 +36,8 @@ def test_temperature_input() -> None:
         try:
             checked: int = check_temperature(i)
             print(f"'{checked} is perfect for plants")
-        except ValueError as error:
-            print(error)
+        except ValueError as ve:
+            print(ve)
         print()
     print("All tests completed - program didn't crash!")
 
