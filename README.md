@@ -1,103 +1,105 @@
 
-*This project has been created as part of the 42 curriculum by **``` lde-krui ```**.*
+*This project has been created as part of the 42 curriculum by **``` lde-krui ```** and **```` wcheung``` **.
 
-# Push Swap
+# A-Maze-ing
 
 ## 📌 Description
 
-**Push Swap** is an algorithmic sorting project whose goal is to sort a stack of integers using a very limited set of operations, while producing the **smallest number of moves possible**.
+**A-Maze-ing** is a Python-based algorithmic project focused on **maze generation**, graph theory, and procedural content creation. The goal is to build a robust system that generates random (and optionally "perfect") mazes, encodes them into a specific hexadecimal format, and provides a visual representation for the user. 
 
-You are given two stacks:
-- **Stack A** (initially filled with random integers, without duplicates)
-- **Stack B** (initially empty)
-
-The challenge is to use a restricted set of instructions to sort **Stack A in ascending order**, using **Stack B as auxiliary storage**, and to do so as efficiently as possible.
+The challenge is to ensure full connectivity between an entry and exit point while adhering to strict structural constraints (no large open areas, coherent wall logic). 
 
 This project is designed to deepen understanding of:
-- Sorting algorithms
-- Optimization strategies
-- Stack data structures
-- Time and space complexity
 
-### Allowed operations:
+* **Graph Algorithms** (Prim's, Kruskal's, or Recursive Backtracking) 
+* **Python 3.10 Best Practices** (Type hinting, `mypy`, `flake8`) 
+* **Resource Management** (Context managers and exception handling) 
+* **Software Packaging** (Building reusable Python distributions) 
 
-| Operation	| Description 							|
-|----------	|---------------------------------------|
-| `sa` 		| swap the first 2 elements of stack A	|
-| `sb` 		| swap the first 2 elements of stack B	|
-| `ss` 		| `sa` and `sb` at the same time		|
-| `pa` 		| push the top of B to A				|
-| `pb` 		| push the top of A to B				|
-| `ra` 		| rotate A up by one					|
-| `rb` 		| rotate B up by one					|
-| `rr` 		| `ra` and `rb` at the same time		|
-| `rra` 	| reverse rotate A						|
-| `rrb` 	| reverse rotate B						|
-| `rrr` 	| `rra` and `rrb` at the same time		|
+
+
+### Configuration keys (config.txt):
+
+| Key | Description | Example |
+| --- | --- | --- |
+| `WIDTH` | Maze width in number of cells | `WIDTH=20` |
+| `HEIGHT` | Maze height in number of cells | `HEIGHT=15` |
+| `ENTRY` | Entry coordinates (x,y) | `ENTRY=0,0` |
+| `EXIT` | Exit coordinates (x,y) | `EXIT=19,14` |
+| `OUTPUT_FILE` | Target filename for generated data | `OUTPUT_FILE=maze.txt` |
+| `PERFECT` | If `True`, creates exactly one path | `PERFECT=True` |
 
 ---
 
 ## Instructions
 
-Reading the Markdown file (if in VSCODE)
-- click somewhere in the Markdown file
-- use the command: ``` CTL + SHIFT + V ```
+**Setting up the workspace**
 
-After cloning
-1. make
-2. make clean
-3. go to the PushSwap visualizer : [here](https://push.eliotlucas.ch/)
-4. change the number of numbers to be generated
-5. hit load
-6. hit copy (under comman to execute similar to : ./push_swap 30 etc.)
-7. run the command
-8. retrieve the results from the generated log.txt file,
-9. paste it back in the visualizer under "Operations (one per line)"
-10. hit start
+1. `make install` : Installs necessary dependencies (pip/uv). 
+2. `make lint` : Runs `flake8` and `mypy` to ensure code quality. 
 
-If you want to check inside the code you can use the following function:
-```c
-void	print_stack(t_stack *stack)
-{
-	while (stack != NULL)
-	{
-		ft_printf("%d, lis_size %d, in_lis %d, c %p n %p, p %p\n", stack->value, stack->lis_size, stack->in_lis, stack, stack->next, stack->prev);
-		stack = stack->next;
-	}
-}
-```
 
-Bonus : test your PushSwap checker with the linux PushSwap-checker
-1. download the linux checker from the 42 project page
-2. ``` ./push_swap 5 2 1 4 3 | ./checker 5 2 1 4 3 ```
-3. If the operation is sucessful the terminal will display ``` OK ``` else ``` KO ``` , or nothing if no input is given
 
-• For maximum project validation (100%) and eligibility for bonuses, you must:
+**Running the Generator**
 
-	◦ Sort 100 random numbers in fewer than 700 operations.
-	◦ Sort 500 random numbers in no more than 5500 operations.
+* Execute the main program: `python3 a_maze_ing.py config.txt` 
+* The program will generate the maze data and the shortest path (N, E, S, W) in the specified output file. 
+
+
+
+**Visualizing the Maze**
+
+* The visualizer (Terminal ASCII or MLX) allows for several interactions: 
+* **Re-generate**: Create a new maze instantly. 
+* **Toggle Path**: Show or hide the shortest solution path. 
+* **Color Change**: Adjust maze wall colors for better visibility. 
+* **The "42"**: Look for the Easter egg pattern in the maze structure! 
+
+
+
+**Building the Reusable Module**
+
+* To build the `mazegen-*` package: `python3 -m build` 
+* This produces a `.whl` or `.tar.gz` file at the root for later installation. 
+
+
 
 ---
 
 ## ▶️ Resources - What I used to complete the project
 
-- AI was used to create the description part of the README.md file
-- Video from Thuggonaut [here](https://www.google.com/search?q=push+swap+K+strategy&oq=push+swap+K+strategy&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIHCAEQIRigAdIBCTg5MzZqMGoxNagCCLACAfEFtdGDFZmhXyU&sourceid=chrome&ie=UTF-8#fpstate=ive&vld=cid:fb33a2cb,vid:wRvipSG4Mmk,st:0)
-- Video from Oceano [here](https://www.youtube.com/watch?v=OaG81sDEpVk)
-- The strategy used is K-distribution sort from Sylvain Maitre 's guide [here](https://medium.com/@brakebein42/k-distribution-sort-applied-to-the-push-swap-problem-ae2d96d68376)
-- The visualizer from Eliot Lucas : [here](https://push.eliotlucas.ch/)
-- Special thank you to the students I was able to evaluate or ask for help at 42 Heilbronn for the different strategies
-- AI helped me filtering the different strategies
-- AI was used to understand k-sort and turc sort at a deeper level
-- good reminder for linked list is the CodeVault series [here](https://www.youtube.com/watch?v=29OANTQ826Y)
 
-Here are a few strategies to consider for this project (only k-sort & turc-sort was used here):
-- k-sort
-- turn-sort
-- lis
-- greed
-- turk-sort
+**Algorithm**:
+* [Insert Algorithm Name, e.g., Prim's Algorithm] was chosen because [Insert Reason, e.g., it creates a more "organic" look compared to backtracker]. 
 
-! some implemented 2 strategies, e.g.
-* Turk-sort strategy for 100 random numbers
-* K-sort strategy for 500 random numbers
+
+**AI Usage**:
+* Used to generate the project description and README structure. 
+* Assisted in designing the hexagonal wall bitmask logic (Bits 0-3 for N, E, S, W). 
+* Helped verify the `mypy` strict type-hinting configurations. 
+* **42 Curriculum**: Special thanks to peers at 42 Heilbronn for logic walkthroughs and peer-reviews. 
+* **Technical Docs**: Python 3.10 `typing` and `contextlib` documentation. 
+
+
+
+---
+
+## 🛠️ Reusability & Features
+
+* **The `MazeGenerator` Class**: The core logic is encapsulated in a standalone module that can be imported into any future Python project. 
+* **Error Handling**: Graceful management of invalid configurations or impossible parameters to prevent crashes. 
+* **Reproducibility**: Supports seed-based generation for consistent results. 
+
+
+---
+
+## 👥 Team & Project Management
+
+* **Roles**:
+* **[lde-krui]**: Logic implementation, `MazeGenerator` packaging, and Makefile automation.
+* **[wcheung]**: Logic implementation, `MazeGenerator` packaging, and Makefile automation.
+
+
+* **[Teammate Name]**: Visual representation (ASCII/MLX), input parsing, and error handling. 
+* **Tools**: GitHub (version control), `flake8` (linting), `mypy` (type checking). 
+* **Evolution**: Initially planned for [X], but evolved to include [Y] due to [Z].
