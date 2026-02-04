@@ -28,8 +28,7 @@ def test_temperature_input() -> None:
     Functions as a checker to take in input value for checking.
     Checks the input with check_temperature method.
     '''
-    print("=== Garden Temperature Checker ===")
-    print()
+    print("=== Garden Temperature Checker ===", end="\n\n")
     temp_test: list[str] = ["25", "abc", "100", "-50"]
     for i in temp_test:
         print(f"Testing temperature: {i}")

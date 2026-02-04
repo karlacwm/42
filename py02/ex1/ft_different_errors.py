@@ -1,14 +1,14 @@
 '''
 Demonstrates common errors and handles them as exceptions,
 to ensure the program will not crash at runtime and print them out
-to know where went wrong
+to know where went wrong.
 '''
 
 
 def garden_operations(error_type: str) -> None:
     '''
     Simulates ValueError, ZeroDivisionError, FileNotFoundError and KeyError
-    situations
+    situations.
     '''
     if error_type == "ValueError":
         print("Testing ValueError...")
@@ -29,10 +29,9 @@ def test_error_types() -> None:
     '''
     Catches errors at runtime as exceptions and prints error messages.
     Test cases are defined in garden_operations, and lastly, an additional
-    case of multiple errors
+    case of multiple errors.
     '''
-    print("=== Garden Error Types Demo ===")
-    print()
+    print("=== Garden Error Types Demo ===", end="\n\n")
     error_test: list[str] = ["ValueError", "ZeroDivisionError",
                              "FileNotFoundError", "KeyError"]
     for i in error_test:
@@ -55,7 +54,7 @@ def test_error_types() -> None:
         int("abc")
         10 / 0
         open("anotherone.txt", "r")
-        d: dict = {}
+        d: dict[str, str] = {}
         d["key"]
     except (ValueError, ZeroDivisionError, FileNotFoundError, KeyError):
         print("Caught an error, but program continues!")
