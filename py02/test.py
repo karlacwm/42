@@ -1,11 +1,12 @@
-def get_id(name: str):
+def get_id(name: str) -> str | None:
     try:
         return name + "_42"
     except Exception as e:
         print("Error:", e)
-    return
+    # return
     finally:
         print("end")
+    return name
 
 
-print(get_id(2))
+print(get_id("ponyo"))
