@@ -12,18 +12,18 @@ def check_plant_health(plant_name: str | None, water_level: int,
     '''
     try:
         if plant_name is None:
-            raise Exception("Plant name cannot be empty!")
+            raise ValueError("Plant name cannot be empty!")
         if water_level > 10:
-            raise Exception(f"Water level {water_level} is too high (max 10)")
+            raise ValueError(f"Water level {water_level} is too high (max 10)")
         if water_level < 1:
-            raise Exception(f"Water level {water_level} is too low (min 1)")
+            raise ValueError(f"Water level {water_level} is too low (min 1)")
         if sunlight_hours > 12:
-            raise Exception(
+            raise ValueError(
                 f"Sunlight hours {sunlight_hours} is too high (max 12)")
         if sunlight_hours < 2:
-            raise Exception(
+            raise ValueError(
                 f"Sunlight hours {sunlight_hours} is too low (min 2)")
-    except Exception as e:
+    except ValueError as e:
         print("Error:", e)
     else:
         print(f"Plant '{plant_name}' is healthy!")

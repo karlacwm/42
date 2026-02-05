@@ -53,12 +53,12 @@ def garden_error_types() -> None:
     try:
         wilting("tomato", True)
     except PlantError as e:
-        print("Caught WaterError:", e, end="\n\n")
+        print("Caught PlantError:", e, end="\n\n")
     print("Testing WaterError...")
     try:
         watering(1)
     except WaterError as e:
-        print("Caught PlantError:", e, end="\n\n")
+        print("Caught WaterError:", e, end="\n\n")
     print("Testing catching all garden errors...")
     try:
         wilting("tomato", True)
