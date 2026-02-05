@@ -31,9 +31,9 @@ class Plant:
     Blueprint for class Plant, including name, water level and sunlight hours.
     '''
 
-    def __init__(self, name: str | None, water_level: int,
+    def __init__(self, name: str | int | None, water_level: int,
                  sunlight_hours: int) -> None:
-        self.name: str | None = name
+        self.name: str | int | None = name
         self.water_level: int = water_level
         self.sunlight_hours: int = sunlight_hours
 
@@ -46,18 +46,21 @@ class GardenManager:
 
     def __init__(self) -> None:
         '''
-        Initializes a list of plants in the garden.
+        Initializes a list of plants and the water tank level in the garden.
         '''
         self.garden: list[Plant] = []
-        self.water_tank: int = 0
+        self.water_tank: int = 10
 
     def add_plants(self, plant: Plant) -> None:
         '''
         Adds a plant to the garden list.
         '''
         try:
-            if plant.name is None:
+            if isinstance(plant.name, int):
+                raise PlantError("Plant name cannot be numbers!")
+            if plant.name is None or len(plant.name) < 1:
                 raise PlantError("Plant name cannot be empty!")
+
             if plant.water_level < 0:
                 raise PlantError("Water level cannot be negative!")
             if plant.sunlight_hours < 0:
@@ -75,13 +78,16 @@ class GardenManager:
         print("Opening watering system")
         try:
             for plant in self.garden:
-                if plant is not None:
-                    print(f"Watering {plant.name} - success")
-                else:
-                    raise PlantError(
-                        f"Error: Cannot water {plant.name} - invalid plant!")
-        except PlantError as e:
-            print(e)
+                try:
+                    if self.water_tank > 1:
+                        print(f"Watering {plant.name}")
+                        self.water_tank -= 1
+                    else:
+                        raise WaterError(
+                            f"Error: Cannot water {plant.name} - empty tank!")
+                except WaterError as e:
+                    print(e)
+                    break
         finally:
             print("Closing watering system (cleanup)")
 
@@ -116,7 +122,7 @@ class GardenManager:
         '''
         Raises a WaterError when the tank level is lower than 3.
         '''
-        if self.water_tank < 2:
+        if self.water_tank < 3:
             raise WaterError("Not enough water in the tank!")
 
     def error_recovery(self) -> None:
@@ -139,7 +145,8 @@ def test_garden_management() -> None:
     garden: list[Plant] = [
         Plant("tomato", 5, 8),
         Plant("lettuce", 15, 5),
-        Plant(None, 5, 5)
+        Plant(None, 5, 5),
+        Plant(22, 5, 5)
     ]
     print("=== Garden Management System ===", end="\n\n")
     print("Adding plants to garden...")
@@ -153,6 +160,7 @@ def test_garden_management() -> None:
     manager.check_plant_health()
     print()
     print("Testing error recovery...")
+    manager.water_tank = 0
     manager.error_recovery()
     print()
     print("Garden management system test complete!")

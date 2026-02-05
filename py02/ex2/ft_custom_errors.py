@@ -68,7 +68,8 @@ def garden_error_types() -> None:
         watering(1)
     except GardenError as e:
         print("Caught a garden error:", e)
-    print("\nAll custom error types work correctly!")
+    print()
+    print("All custom error types work correctly!")
 
 
 if __name__ == "__main__":

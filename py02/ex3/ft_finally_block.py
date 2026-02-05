@@ -4,20 +4,21 @@ whether there was an error or not at runtime.
 '''
 
 
-def water_plants(plant_list: list[str | None]) -> None:
+def water_plants(plant_list: list[str | int | None]) -> None:
     '''
     Simulates a watering system that waters plants one by one.
     '''
     print("Opening watering system")
     try:
         for plant in plant_list:
-            if plant is not None:
-                print(f"Watering {plant}")
-            else:
-                raise Exception(
-                    f"Error: Cannot water {plant} - invalid plant!")
-    except Exception as e:
-        print(e)
+            try:
+                if isinstance(plant, str) and len(plant) > 0:
+                    print(f"Watering {plant}")
+                else:
+                    raise Exception(
+                        f"Error: Cannot water {plant} - invalid plant!")
+            except Exception as e:
+                print(e)
     finally:
         print("Closing watering system (cleanup)")
 
@@ -29,8 +30,8 @@ def test_watering_system() -> None:
     block at the end as cleanup.
     '''
     print("=== Garden Watering System ===", end="\n\n")
-    plant_list: list[str | None] = ["tomato", "lettuce", "carrots"]
-    plant_list_error: list[str | None] = ["tomato", None]
+    plant_list: list[str | int | None] = ["tomato", "lettuce", "carrots"]
+    plant_list_error: list[str | int | None] = ["tomato", None, 12, ""]
     print("Testing normal watering...")
     water_plants(plant_list)
     print("Watering completed successfully!", end="\n\n")

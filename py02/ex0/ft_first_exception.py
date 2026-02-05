@@ -1,11 +1,11 @@
 '''
-Two methods are used to check if the temperature value is valid,
+Two functions are used to check if the temperature value is valid,
 and to handle error cases when it is invalid, to make sure the program
 does not crash.
 '''
 
 
-def check_temperature(temp_str: str) -> int:
+def check_temperature(temp_str: str | int) -> int:
     '''
     Validates temperature input (integers and 0-40) and
     returns the temperature as integer if it passes the checks.
@@ -26,10 +26,10 @@ def check_temperature(temp_str: str) -> int:
 def test_temperature_input() -> None:
     '''
     Functions as a checker to take in input value for checking.
-    Checks the input with check_temperature method.
+    Checks the input with check_temperature function.
     '''
     print("=== Garden Temperature Checker ===", end="\n\n")
-    temp_test: list[str] = ["25", "abc", "100", "-50"]
+    temp_test: list[str | int] = ["25", "abc", 100, "-50"]
     for i in temp_test:
         print(f"Testing temperature: {i}")
         try:
