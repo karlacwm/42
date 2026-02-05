@@ -34,7 +34,7 @@ def test_temperature_input() -> None:
         print(f"Testing temperature: {i}")
         try:
             checked: int = check_temperature(i)
-            print(f"'{checked} is perfect for plants")
+            print(f"Temperature {checked}°C is perfect for plants!")
         except ValueError as ve:
             print(ve)
         print()
