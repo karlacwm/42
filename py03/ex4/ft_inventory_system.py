@@ -67,7 +67,7 @@ def inventory_system() -> None:
     print()
     print("=== Item Categories ===")
     print("Moderate:")
-    print("Scare:")
+    print("Scarce:")
     print()
     print("=== Management Suggestions ===")
     print("Restock needed:")
