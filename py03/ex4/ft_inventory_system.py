@@ -55,31 +55,61 @@ def inventory_system() -> None:
     print()
     print("=== Current Inventory ===")
     for i in sorted_inventory:
+        percentage: float = sorted_inventory[i] / total_items * 100
         if sorted_inventory[i] > 1:
-            percentage: float = sorted_inventory[i] / total_items * 100
             print(f"{i}: {sorted_inventory[i]} units ({percentage:.1f}%)")
         else:
             print(f"{i}: {sorted_inventory[i]} unit ({percentage:.1f}%)")
     print()
     print("=== Inventory Statistics ===")
+    inventory_list = list(sorted_inventory)
     most: int = max(sorted_inventory.values())
     least: int = min(sorted_inventory.values())
-    print("Most abundant:", )
-    print("Least abundant:")
+    if most > 1:
+        print("Most abundant:", inventory_list[0], f"({most} units)")
+    else:
+        print("Most abundant:", inventory_list[0], f"({most} unit)")
+    if least > 1:
+        print("Least abundant:", inventory_list[(len(inventory_list) - 1)],
+              f"({least} units)")
+    else:
+        print("Least abundant:", inventory_list[(len(inventory_list) - 1)],
+              f"({least} unit)")
     print()
     print("=== Item Categories ===")
-    print("Moderate:")
-    print("Scarce:")
+    moderate_int: dict[str, int] = {}
+    scarce_int: dict[str, int] = {}
+    organised_inventory: dict[str, dict[str, int]] = {
+        "moderate": moderate_int,
+        "scarce": scarce_int
+    }
+    for i in inventory:
+        if inventory[i] < 5:
+            scarce_int[i] = inventory[i]
+        else:
+            moderate_int[i] = inventory[i]
+    print("Moderate:", organised_inventory["moderate"])
+    print("Scarce:", organised_inventory["scarce"])
     print()
     print("=== Management Suggestions ===")
-    print("Restock needed:")
+    restock = {}
+    for i in scarce_int:
+        if scarce_int[i] < 2:
+            restock[i] = scarce_int[i]
+    print("Restock needed:", list(restock.keys()))
     print()
     print("=== Dictionary Properties Demo ===")
-    all_keys = sorted_inventory.keys()
-    all_values = sorted_inventory.values()
+    all_keys: list[str] = list(inventory.keys())
+    all_values: list[int] = list(inventory.values())
+    lookup_item = "sword"
+    lookup = inventory.get(lookup_item)
+    if lookup is not None:
+        lookup = True
+    else:
+        lookup = False
     print(f"Dictionary keys: {all_keys}")
     print(f"Dictionary values: {all_values}")
-    print("Sample lookup - ")
+    print(f"Sample lookup - '{lookup_item}' in inventory: {lookup}")
 
 
 if __name__ == "__main__":
