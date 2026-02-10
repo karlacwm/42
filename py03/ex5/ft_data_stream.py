@@ -1,24 +1,25 @@
 from typing import Any, Generator
-import time
 
 
 def gen_events(n: int) -> Generator[str, Any, None]:
-    players_list: list[str] = ["alice", "bob", "charlie", "danny", "erica",
-                               "frank", "george", "hannah", "izzie"]
-    levels_list: list[int] = [5, 12, 8, 1, 6, 2, 3, 11, 4, 3, 2, 6, 2, 3, 1,
-                               4, 13, 12, 5, 9, 2, 15, 5]
-    actions_list: list[str] = ["killed monster", "found treasure",
-                               "leveled up", "completed quest",
-                               "discovered new recipe", "collected gems",
-                               "forged new weapon", "healed other player",
-                               "leveled up", "leveled up", "found treasure",
-                               "collected gems", "killed monster",
-                               "leveled up", "completed quest",
-                               "discovered new recipe", "collected gems",
-                               "forged new weapon", "healed other player",
-                               "leveled up",
-                               "forged new weapon", "healed other player",
-                               "leveled up", "found treasure"]
+    players_list: list[str] = [
+        "alice", "bob", "charlie", "danny", "erica", "frank", "george",
+        "hannah", "izzie", "jackie", "kelvin", "lily", "marcus", "neo",
+        "oliver", "penny", "quinn", "robert", "sara", "thomas", "ursula",
+        "violet", "wilson", "xen", "yumi", "zelda"]
+    levels_list: list[int] = [
+        5, 12, 8, 1, 6, 2, 3, 7, 4, 3, 13, 19, 5, 11, 5, 2, 12, 16, 4, 1,
+        1, 7, 6, 8, 14, 5]
+    actions_list: list[str] = [
+        "killed monster", "found treasure", "leveled up", "completed quest",
+        "discovered new recipe", "leveled up", "collected gems",
+        "collected gems", "forged new weapon", "healed other player",
+        "accepted a challenge", "collected gems", "completed quest",
+        "leveled up", "accepted a challenge", "collected gems",
+        "completed quest", "killed monster", "found treasure", "leveled up",
+        "found treasure", "forged new weapon", "healed other player",
+        "accepted a challenge", "forged new weapon", "healed other player",
+        "accepted a challenge", "discovered new recipe", "leveled up"]
     id = 0
     for i in range(n):
         id += 1
