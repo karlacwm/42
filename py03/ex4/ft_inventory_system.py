@@ -43,38 +43,53 @@ def inventory_system() -> None:
         item_to_add: dict[str, int] | None = parse_items(arg)
         if item_to_add is not None:
             inventory.update(item_to_add)
-    sorted_inventory: dict[str, int] = dict(
-        sorted(inventory.items(), key=get_quantity, reverse=True))
     total_items: int = 0
-    for i in sorted_inventory:
-        total_items += sorted_inventory[i]
-    unique_items: int = len(sorted_inventory)
+    for i in inventory:
+        total_items += inventory[i]
+    unique_items: int = len(inventory)
     print("=== Inventory System Analysis ===")
     print("Total items in inventory:", total_items)
     print("Unique item types:", unique_items)
     print()
+    if len(inventory) < 1:
+        print("Empty inventory! No further inventory data is available.")
+        return
+    sorted_inventory = []
+    for item, quantity in inventory.items():
+        sorted_inventory.append([item, quantity])
+    n: int = len(sorted_inventory)
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            if sorted_inventory[j][1] < sorted_inventory[j + 1][1]:
+                temp = sorted_inventory[j]
+                sorted_inventory[j] = sorted_inventory[j + 1]
+                sorted_inventory[j + 1] = temp
     print("=== Current Inventory ===")
-    for i in sorted_inventory:
-        percentage: float = sorted_inventory[i] / total_items * 100
-        if sorted_inventory[i] > 1:
-            print(f"{i}: {sorted_inventory[i]} units ({percentage:.1f}%)")
+    for item in sorted_inventory:
+        name = item[0]
+        unit = item[1]
+        percentage: float = unit / total_items * 100
+        if unit > 1:
+            print(f"{name}: {unit} units ({percentage:.1f}%)")
         else:
-            print(f"{i}: {sorted_inventory[i]} unit ({percentage:.1f}%)")
+            print(f"{name}: {unit} unit ({percentage:.1f}%)")
     print()
     print("=== Inventory Statistics ===")
-    inventory_list = list(sorted_inventory)
-    most: int = max(sorted_inventory.values())
-    least: int = min(sorted_inventory.values())
-    if most > 1:
-        print("Most abundant:", inventory_list[0], f"({most} units)")
+    if len(sorted_inventory) > 0:
+        most_item = sorted_inventory[0][0]
+        most_count = sorted_inventory[0][1]
+        least_item = sorted_inventory[-1][0]
+        least_count = sorted_inventory[-1][1]
+        if most_count > 1:
+            print("Most abundant:", most_item, f"({most_count} units)")
+        else:
+            print("Most abundant:", most_item, f"({most_count} unit)")
+        if least_count > 1:
+            print("Least abundant:", least_item, f"({least_count} units)")
+        else:
+            print("Least abundant:", least_item, f"({least_count} unit)")
     else:
-        print("Most abundant:", inventory_list[0], f"({most} unit)")
-    if least > 1:
-        print("Least abundant:", inventory_list[(len(inventory_list) - 1)],
-              f"({least} units)")
-    else:
-        print("Least abundant:", inventory_list[(len(inventory_list) - 1)],
-              f"({least} unit)")
+        print("Empty inventory! No most or least abundant items.")
     print()
     print("=== Item Categories ===")
     moderate_int: dict[str, int] = {}
