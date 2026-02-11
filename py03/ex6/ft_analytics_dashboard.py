@@ -1,42 +1,67 @@
 def ft_analytics_dashboard() -> None:
     player_data = [
-        {"name": "alice", "score": 2300, "active": True, "achievement": 5},
-        {"name": "bob", "score": 1800, "active": True, "achievement": 3},
-        {"name": "charlie", "score": 2150, "active": True, "achievement": 7},
-        {"name": "diana", "score": 2050, "active": False, "achievement": 2}
+        {"name": "alice", "score": 2300, "active": True, "region": "north",
+         "achievements": {"level_10", "treasure_hunter", "boss_slayer",
+                          "speed_demon", "perfectionist"}},
+        {"name": "bob", "score": 1800, "active": True, "region": "east",
+         "achievements": {"first_kill", "boss_slayer", "collector"}},
+        {"name": "charlie", "score": 2150, "active": True, "region": "central",
+         "achievements": {"treasure_hunter", "boss_slayer", "collector",
+                          "speed_demon", "perfectionist", "level_10",
+                          "first_kill"}},
+        {"name": "diana", "score": 2050, "active": False, "region": "north",
+         "achievements": {"treasure_hunter", "speed_demon", "perfectionist"}},
+        {"name": "eva", "score": 1992, "active": False, "region": "east",
+         "achievements": {"treasure_hunter", "speed_demon", "perfectionist",
+                          "boss_slayer", "collector"}},
+        {"name": "fred", "score": 653, "active": False, "region": "central",
+         "achievements": {"collector", "perfectionist"}}
     ]
     print("=== Game Analytics Dashboard ===")
     print()
     print("=== List Comprehension Examples ===")
     high_scorers = [
-        player["name"] for player in player_data if player["score"] > 2000]
-    score_doubled = [player["score"] * 2 for player in player_data]
-    active_players = [player["name"] for player in player_data if player["active"]]
+        p["name"] for p in player_data if p["score"] > 2000]
+    score_doubled = [p["score"] * 2 for p in player_data]
+    active_players = [p["name"]
+                      for p in player_data if p["active"]]
     print("High scorers (>2000):", high_scorers)
     print("Scores doubled:", score_doubled)
     print("Active players:", active_players)
     print()
     print("=== Dict Comprehension Examples ===")
-    print("Player scores:", player_data)
-    print("Score categories:", )
-    print("Achievement counts:", )
+    player_scores = {p["name"]: p["score"] for p in player_data if p["active"]}
+    achievement_counts = {
+        p["name"]: len(p["achievements"]) for p in player_data if p["active"]}
+    score_categories: dict[str, int] = {
+        "high": len([p for p in player_data if p["score"] >= 2000]),
+        "medium": len([p for p in player_data if 800 <= p["score"] < 2000]),
+        "low": len([p for p in player_data if p["score"] < 800])
+    }
+    print("Player scores:", player_scores)
+    print("Score categories:", score_categories)
+    print("Achievement counts:", achievement_counts)
     print()
     print("=== Set Comprehension Examples ===")
-    print("Unique players:", )
-    print("Unique achievements:", )
-    print("Active regions:", )
+    unique_players = {p["name"] for p in player_data}
+    unique_achievements = {a for p in player_data for a in p["achievements"]}
+    active_regions = {p["region"] for p in player_data}
+    print("Unique players:", unique_players)
+    print("Unique achievements:", unique_achievements)
+    print("Active regions:", active_regions)
     print()
     print("=== Combined Analysis ===")
-    print("Total players:", )
-    print("Total unique achievements:", )
-    print("Average score:", )
-    print("Top performer:", )
-
-
-# {"level_10", "treasure_hunter", "boss_slayer", "speed_demon", "perfectionist"}
-# {"first_kill", "boss_slayer", "collector"}
-# {"treasure_hunter", "boss_slayer", "collector", "speed_demon", "perfectionist"}
-# {"treasure_hunter", "speed_demon", "perfectionist"}
+    total_players: int = len(player_data)
+    total_score: int = sum(p["score"] for p in player_data)
+    average_score = total_score / total_players if total_players > 0 else 0
+    max_score = max([p["score"] for p in player_data if p["active"]])
+    top_performer = [p for p in player_data if p["score"] == max_score][0]
+    print("Total players:", total_players)
+    print("Total unique achievements:", len(unique_achievements))
+    print(f"Average score: {average_score:.1f}")
+    print("Top performer:", top_performer["name"],
+          f"({top_performer['score']} points, "
+          f"{len(top_performer['achievements'])} achievements)")
 
 
 if __name__ == "__main__":
