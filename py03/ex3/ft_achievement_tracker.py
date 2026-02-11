@@ -8,9 +8,9 @@ def achievement_tracker() -> None:
     total_unique_achievements: int = len(unique_achievements)
     common_achievements: set[str] = alice.intersection(bob, charlie)
     rare_achievements: set[str] = (
-        alice.difference(bob.union(charlie)) |
-        bob.difference(alice.union(charlie)) |
-        charlie.difference(bob.union(alice)))
+        alice.difference(bob.union(charlie)).union(
+            bob.difference(alice.union(charlie))).union(
+                charlie.difference(bob.union(alice))))
     alice_bob_common: set[str] = alice.intersection(bob)
     alice_unique: set[str] = alice.difference(bob)
     bob_unique: set[str] = bob.difference(alice)
