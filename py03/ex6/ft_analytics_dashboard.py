@@ -1,3 +1,7 @@
+def get_score(player_data: dict) -> int:
+    return player_data['score']
+
+
 def ft_analytics_dashboard() -> None:
     player_data = [
         {"name": "alice", "score": 2300, "active": True, "region": "north",
@@ -54,8 +58,8 @@ def ft_analytics_dashboard() -> None:
     total_players: int = len(player_data)
     total_score: int = sum(p["score"] for p in player_data)
     average_score = total_score / total_players if total_players > 0 else 0
-    max_score = max([p["score"] for p in player_data if p["active"]])
-    top_performer = [p for p in player_data if p["score"] == max_score][0]
+    sorted_players = sorted(player_data, key=get_score, reverse=True)
+    top_performer = sorted_players[0]
     print("Total players:", total_players)
     print("Total unique achievements:", len(unique_achievements))
     print(f"Average score: {average_score:.1f}")

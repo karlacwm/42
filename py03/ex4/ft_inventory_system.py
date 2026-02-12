@@ -30,10 +30,6 @@ def reject_item(item: str, message: str) -> None:
     print(f"Item '{item}' is not added to the inventory.", end="\n\n")
 
 
-def get_quantity(item: tuple[str, int]) -> int:
-    return item[1]
-
-
 def inventory_system() -> None:
     if len(sys.argv) < 2:
         print("Empty input! No items added to the inventory.")
@@ -54,9 +50,8 @@ def inventory_system() -> None:
     if len(inventory) < 1:
         print("Empty inventory! No further inventory data is available.")
         return
-    sorted_inventory = []
-    for item, quantity in inventory.items():
-        sorted_inventory.append([item, quantity])
+    sorted_inventory = [
+        [item, quantity] for item, quantity in inventory.items()]
     n: int = len(sorted_inventory)
     for i in range(n):
         for j in range(0, n - i - 1):
