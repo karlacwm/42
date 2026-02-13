@@ -16,7 +16,7 @@ def ft_archive_creation() -> None:
         print(data)
         file.close()
     except Exception as e:
-        print("Error caught:", e)
+        print("ERROR:", e)
     else:
         print("Data inscription complete. Storage unit sealed.")
         print("Archive", file_name, "ready for long-term preservation.")
