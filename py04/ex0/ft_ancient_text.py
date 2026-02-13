@@ -4,12 +4,13 @@ def ft_ancient_text() -> None:
     file_name = "ancient_fragment.txt"
     print("Accessing Storage Vault:", file_name)
     try:
-        with open(file_name, "r") as file:
-            print("Connection established...")
-            print()
-            data = file.read()
-            print(data)
+        file = open(file_name, "r")
+        print("Connection established...")
         print()
+        data = file.read()
+        print(data)
+        print()
+        file.close()
     except FileNotFoundError:
         print("ERROR: Storage vault not found. Run data generator first.")
     except Exception as e:
