@@ -20,8 +20,8 @@ def ft_crisis_response() -> None:
     print()
     try:
         print(f"CRISIS ALERT: Attempting access to '{vault_name}'...")
-        with open(vault_name, "r") as vault:
-            vault.write("New update for vault data")
+        with open(vault_name, "w") as vault:
+            vault.write("Trying to overwrite vault data")
     except FileNotFoundError:
         print("RESPONSE: Archive not found in storage matrix")
     except PermissionError:
@@ -35,7 +35,7 @@ def ft_crisis_response() -> None:
         print(f"ROUTINE ACCESS: Attempting access to '{file_name}'...")
         with open(file_name, "r") as file:
             data = file.read()
-            print(f"SUCCESS: Archive recoverd - \"{data}\"")
+            print(f"SUCCESS: Archive recovered - \"{data}\"")
     except FileNotFoundError:
         print("RESPONSE: Archive not found in storage matrix")
     except PermissionError:
