@@ -20,7 +20,7 @@ def parse_coordinate(p1: str) -> tuple[int, int, int] | None:
         z: int = int(pos[2])
         return x, y, z
     except (IndexError, ValueError) as e:
-        print("Error parsing coordinats:", e)
+        print("Error parsing coordinates:", e)
         print(f"Error details - Type: {type(e).__name__}, Args: {e.args}")
         print()
         return None
@@ -40,9 +40,9 @@ def coordinate_system() -> None:
     if parsed is not None:
         x1, y1, z1 = parsed
         distance1: float = calculate_distance(start, parsed)
-    print(f"Parsed position: {parsed}")
-    print(f"Distance between {start} and {parsed}: {distance1:.2f}")
-    print()
+        print(f"Parsed position: {parsed}")
+        print(f"Distance between {start} and {parsed}: {distance1:.2f}")
+        print()
     pos_bad: str = "abc,def,ghi"
     print(f"Parsing invalid coordinates: \"{pos_bad}\"")
     parse_coordinate(pos_bad)
@@ -61,9 +61,10 @@ def coordinate_system() -> None:
             print(f"Player at x={x2}, y={y2}, z={z2}")
             print(f"Coordinates: X={x2}, Y={y2}, Z={z2}")
     else:
-        print("Unpacking demonstration:")
-        print(f"Player at x={x1}, y={y1}, z={z1}")
-        print(f"Coordinates: X={x1}, Y={y1}, Z={z1}")
+        if parsed is not None:
+            print("Unpacking demonstration:")
+            print(f"Player at x={x1}, y={y1}, z={z1}")
+            print(f"Coordinates: X={x1}, Y={y1}, Z={z1}")
 
 
 if __name__ == "__main__":
