@@ -1,5 +1,5 @@
 def get_score(player_data: dict) -> int:
-    return player_data['score']
+    return player_data["score"]
 
 
 def ft_analytics_dashboard() -> None:

@@ -8,8 +8,8 @@ def gen_events(n: int) -> Generator[str, Any, None]:
         "oliver", "penny", "quinn", "robert", "sara", "thomas", "ursula",
         "violet", "wilson", "xen", "yumi", "zelda"]
     levels_list: list[int] = [
-        5, 12, 8, 1, 6, 2, 3, 7, 4, 3, 13, 19, 5, 11, 5, 2, 12, 16, 4, 1,
-        1, 7, 6, 8, 14, 5]
+        5, 12, 8, 1, 6, 2, 3, 7, 4, 3, 13, 19, 5, 11, 5, 2, 12, 16, 14, 1,
+        1, 7, 6, 18, 14, 5]
     actions_list: list[str] = [
         "killed monster", "found treasure", "leveled up", "completed quest",
         "discovered new recipe", "leveled up", "collected gems",
@@ -38,13 +38,9 @@ def fibonacci(n: int) -> Generator[int, Any, None]:
 
 def prime(n: int) -> Generator[int, Any, None]:
     num = 2
-    count = 1
-    while count <= n:
+    count = 0
+    while count < n:
         divisor = 2
-        if num == 2:
-            yield num
-            count += 1
-            num += 1
         while num > divisor:
             if num % divisor == 0:
                 break
@@ -68,7 +64,7 @@ def ft_data_stream() -> None:
     treasure_events = 0
     level_up_events = 0
     for event in stream:
-        if "level 1" in event and "level 1 " not in event:
+        if "level 1" in event and "level 1)" not in event:
             high_level_players += 1
         if "found treasure" in event:
             treasure_events += 1

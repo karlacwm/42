@@ -7,19 +7,16 @@ def ft_score_analytics() -> None:
     if argv_count < 2:
         print(f"No scores provided. Usage: python3 {sys.argv[0]}"
               "<score1> <score2> ...")
-        return
+        return None
     scores: list[int] = []
     for arg in sys.argv[1:]:
         try:
             scores.append(int(arg))
         except ValueError:
             print("Scores must be numbers! This score will be skipped:", arg)
-    try:
-        if len(scores) < 1:
-            raise ValueError
-    except ValueError:
+    if len(scores) < 1:
         print("Less than one valid score processed. Please try again.")
-        return
+        return None
     total_players: int = len(scores)
     total_score: int = sum(scores)
     average_score: float = total_score / total_players
@@ -33,7 +30,6 @@ def ft_score_analytics() -> None:
     print("High score:", max_score)
     print("Low score:", min_score)
     print("Score range:", range_score)
-    print()
 
 
 if __name__ == "__main__":

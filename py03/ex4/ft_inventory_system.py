@@ -15,7 +15,7 @@ def parse_items(item: str) -> dict[str, int] | None:
     try:
         unit = int(quantity)
     except ValueError:
-        reject_item(item, f"Item quantity '{quantity}' must be numbers.")
+        reject_item(item, f"Item quantity '{quantity}' must be integers.")
         return None
     if unit < 0:
         reject_item(item, f"Item quantity '{unit}' cannot be negative.")
@@ -33,12 +33,16 @@ def reject_item(item: str, message: str) -> None:
 def inventory_system() -> None:
     if len(sys.argv) < 2:
         print("Empty input! No items added to the inventory.")
-        return
+        return None
     inventory: dict[str, int] = {}
     for arg in sys.argv[1:]:
         item_to_add: dict[str, int] | None = parse_items(arg)
         if item_to_add is not None:
-            inventory.update(item_to_add)
+            for name, units in item_to_add.items():
+                if name in inventory:
+                    inventory[name] += units
+                else:
+                    inventory[name] = units
     total_items: int = 0
     for i in inventory:
         total_items += inventory[i]
@@ -49,7 +53,7 @@ def inventory_system() -> None:
     print()
     if len(inventory) < 1:
         print("Empty inventory! No further inventory data is available.")
-        return
+        return None
     sorted_inventory = [
         [item, quantity] for item, quantity in inventory.items()]
     n: int = len(sorted_inventory)
@@ -83,8 +87,6 @@ def inventory_system() -> None:
             print("Least abundant:", least_item, f"({least_count} units)")
         else:
             print("Least abundant:", least_item, f"({least_count} unit)")
-    else:
-        print("Empty inventory! No most or least abundant items.")
     print()
     print("=== Item Categories ===")
     moderate_int: dict[str, int] = {}
