@@ -10,7 +10,7 @@ def ft_analytics_dashboard() -> None:
     Transforms data by using list, dict and set comprehensions
     to filter and extract data for analysis.
     '''
-    player_data: list[dict[str, str | int | bool | set[str]]] = [
+    player_data = [
         {"name": "alice", "score": 2300, "active": True, "region": "north",
          "achievements": {"level_10", "treasure_hunter", "boss_slayer",
                           "speed_demon", "perfectionist"}},
@@ -67,17 +67,21 @@ def ft_analytics_dashboard() -> None:
     total_players: int = len(player_data)
     total_score: int = sum(p["score"] for p in player_data)
     average_score: float = 0.0
-    if total_players > 0:
-        average_score = total_score / total_players
-    sorted_players: list[dict[str, str | int | bool | set[str]]] = sorted(
-        player_data, key=get_score, reverse=True)
-    top_performer: dict[str, str | int | bool | set[str]] = sorted_players[0]
+    sorted_players: list = []
     print("Total players:", total_players)
     print("Total unique achievements:", len(unique_achievements))
+    if total_players > 0:
+        average_score = total_score / total_players
+        sorted_players = sorted(
+            player_data, key=get_score, reverse=True)
     print(f"Average score: {average_score:.1f}")
-    print("Top performer:", top_performer["name"],
-          f"({top_performer['score']} points, "
-          f"{len(top_performer['achievements'])} achievements)")
+    if sorted_players:
+        top_performer = sorted_players[0]
+        print("Top performer:", top_performer["name"],
+              f"({top_performer['score']} points, "
+              f"{len(top_performer['achievements'])} achievements)")
+    else:
+        print("Not enough players to pick a top performer.")
 
 
 if __name__ == "__main__":
