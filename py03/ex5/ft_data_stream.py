@@ -2,6 +2,9 @@ from typing import Any, Generator
 
 
 def gen_events(n: int) -> Generator[str, Any, None]:
+    '''
+    Generates event about what action which player on which level did.
+    '''
     players_list: list[str] = [
         "alice", "bob", "charlie", "danny", "erica", "frank", "george",
         "hannah", "izzie", "jackie", "kelvin", "lily", "marcus", "neo",
@@ -30,6 +33,9 @@ def gen_events(n: int) -> Generator[str, Any, None]:
 
 
 def fibonacci(n: int) -> Generator[int, Any, None]:
+    '''
+    Generates fibonacci numbers for n times.
+    '''
     a, b = 0, 1
     for i in range(n):
         yield a
@@ -37,6 +43,9 @@ def fibonacci(n: int) -> Generator[int, Any, None]:
 
 
 def prime(n: int) -> Generator[int, Any, None]:
+    '''
+    Generates prime numbers for n times.
+    '''
     num = 2
     count = 0
     while count < n:
@@ -52,6 +61,10 @@ def prime(n: int) -> Generator[int, Any, None]:
 
 
 def ft_data_stream() -> None:
+    '''
+    Simulates data stream process and generates one event each time,
+    instead of all events at one time.
+    '''
     print("=== Game Data Stream Processor ===")
     print()
     total_events: int = 1000

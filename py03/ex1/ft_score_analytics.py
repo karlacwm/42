@@ -2,6 +2,9 @@ import sys
 
 
 def ft_score_analytics() -> None:
+    '''
+    Takes scores from terminal input and calculates them for analysis.
+    '''
     argv_count: int = len(sys.argv)
     print("=== Player Score Analytics ===")
     if argv_count < 2:

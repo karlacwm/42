@@ -2,6 +2,9 @@ import sys
 
 
 def parse_items(item: str) -> dict[str, int] | None:
+    '''
+    Parses items from terminal input and reject if they are invalid.
+    '''
     if ":" not in item:
         reject_item(item, 'Item is not formatted as "item:quantity".')
         return None
@@ -26,11 +29,18 @@ def parse_items(item: str) -> dict[str, int] | None:
 
 
 def reject_item(item: str, message: str) -> None:
+    '''
+    Returns a descriptive error message.
+    '''
     print(f"Error: {message}")
     print(f"Item '{item}' is not added to the inventory.", end="\n\n")
 
 
 def inventory_system() -> None:
+    '''
+    Demonstrates an inventory system which manages inventory,
+    shows item details and statistics, restock reminder and lookup demo.
+    '''
     if len(sys.argv) < 2:
         print("Empty input! No items added to the inventory.")
         return None

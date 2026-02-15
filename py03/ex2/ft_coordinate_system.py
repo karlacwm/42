@@ -4,12 +4,18 @@ import math
 
 def calculate_distance(p1: tuple[int, int, int],
                        p2: tuple[int, int, int]) -> float:
+    '''
+    Calculates distance between two coordinates.
+    '''
     x1, y1, z1 = p1
     x2, y2, z2 = p2
     return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2 + (z2 - z1) ** 2)
 
 
 def parse_coordinate(p1: str) -> tuple[int, int, int] | None:
+    '''
+    Parses coordinates and splits them from a string if it is valid.
+    '''
     try:
         pos: list[str] = p1.split(",")
         if len(pos) != 3:
@@ -27,6 +33,9 @@ def parse_coordinate(p1: str) -> tuple[int, int, int] | None:
 
 
 def coordinate_system() -> None:
+    '''
+    Parses coordinates, calculates distances and shows player's location.
+    '''
     print("=== Game Coordinate System ===", end="\n\n")
     start: tuple[int, int, int] = (0, 0, 0)
     pos: tuple[int, int, int] = (10, 20, 5)

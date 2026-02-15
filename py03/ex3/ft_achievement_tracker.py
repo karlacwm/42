@@ -1,4 +1,7 @@
 def achievement_tracker() -> None:
+    '''
+    Shows details of players' achievements and compares them among players.
+    '''
     alice: set[str] = {"first_kill", "level_10", "treasure_hunter",
                        "speed_demon"}
     bob: set[str] = {"first_kill", "level_10", "boss_slayer", "collector"}
