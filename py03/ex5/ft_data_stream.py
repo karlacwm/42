@@ -1,7 +1,7 @@
-from typing import Any, Generator
+from typing import Generator
 
 
-def gen_events(n: int) -> Generator[str, Any, None]:
+def gen_events(n: int) -> Generator[str, None, None]:
     '''
     Generates event about what action which player on which level did.
     '''
@@ -32,7 +32,7 @@ def gen_events(n: int) -> Generator[str, Any, None]:
         yield f"Event {id}: Player {player} (level {level}) {action}"
 
 
-def fibonacci(n: int) -> Generator[int, Any, None]:
+def fibonacci(n: int) -> Generator[int, None, None]:
     '''
     Generates fibonacci numbers for n times.
     '''
@@ -42,7 +42,7 @@ def fibonacci(n: int) -> Generator[int, Any, None]:
         a, b = b, a + b
 
 
-def prime(n: int) -> Generator[int, Any, None]:
+def prime(n: int) -> Generator[int, None, None]:
     '''
     Generates prime numbers for n times.
     '''
@@ -70,7 +70,7 @@ def ft_data_stream() -> None:
     total_events: int = 1000
     print("Processing", total_events, "game events...")
     print()
-    stream: Generator[str, Any, None] = gen_events(total_events)
+    stream: Generator[str, None, None] = gen_events(total_events)
     for i in range(0, 3):
         print(next(stream))
     high_level_players = 0

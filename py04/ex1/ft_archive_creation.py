@@ -2,8 +2,9 @@ def ft_archive_creation() -> None:
     print("=== CYBER ARCHIVES - PRESERVATION SYSTEM ===")
     file_name = "new_discovery.txt"
     file = None
-    print("Initializing new storage unit:", file_name)
     try:
+        print("Initializing new storage unit:", file_name)
+        open(file_name, "x")
         file = open(file_name, "w")
         print("Storage unit created successfully...")
         print()
@@ -14,9 +15,12 @@ def ft_archive_creation() -> None:
             "[ENTRY 003] Archived by Data Archivist trainee"
         ]
         for entry in entries:
-            file.write(entry + "\n")
+            file.write(f"{entry}\n")
             print(entry)
         print()
+    except FileExistsError as e:
+        print("ERROR:", e)
+        print("Operation stopped to avoid overwriting an existing archive.")
     except Exception as e:
         print("ERROR:", e)
     else:

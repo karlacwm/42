@@ -7,27 +7,29 @@ def ft_crisis_response() -> None:
     try:
         print(f"CRISIS ALERT: Attempting access to '{text_name}'...")
         with open(text_name, "r") as text:
-            data = text.read()
+            data: str = text.read()
             print(data)
     except FileNotFoundError:
         print("RESPONSE: Archive not found in storage matrix")
     except PermissionError:
         print("RESPONSE: Security protocols deny access")
-    except Exception:
-        print("RESPONSE: Unexpected system anomaly detected")
+    except Exception as e:
+        print("RESPONSE: Something went wrong -", e)
     finally:
         print("STATUS: Crisis handled, system stable")
     print()
     try:
         print(f"CRISIS ALERT: Attempting access to '{vault_name}'...")
+        if "classified" in vault_name:
+            raise PermissionError
         with open(vault_name, "w") as vault:
             vault.write("Trying to overwrite vault data")
     except FileNotFoundError:
         print("RESPONSE: Archive not found in storage matrix")
     except PermissionError:
         print("RESPONSE: Security protocols deny access")
-    except Exception:
-        print("RESPONSE: Unexpected system anomaly detected")
+    except Exception as e:
+        print("RESPONSE: Something went wrong -", e)
     finally:
         print("STATUS: Crisis handled, security maintained")
     print()
@@ -40,8 +42,8 @@ def ft_crisis_response() -> None:
         print("RESPONSE: Archive not found in storage matrix")
     except PermissionError:
         print("RESPONSE: Security protocols deny access")
-    except Exception:
-        print("RESPONSE: Unexpected system anomaly detected")
+    except Exception as e:
+        print("RESPONSE: Something went wrong -", e)
     finally:
         print("STATUS: Normal operations resumed")
     print()

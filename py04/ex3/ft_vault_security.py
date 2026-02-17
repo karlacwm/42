@@ -13,10 +13,10 @@ def ft_vault_security() -> None:
     print("SECURE EXTRACTION:")
     try:
         with open("classified_data.txt", "r") as vault:
-            data = vault.read()
+            data: str = vault.read()
             print(data)
         with open("security_protocols.txt", "r") as vault:
-            new_data = vault.read()
+            new_data: str = vault.read()
         print()
     except FileNotFoundError:
         print("ERROR: Storage vault not found. Run data generator first.")
@@ -25,7 +25,7 @@ def ft_vault_security() -> None:
     print("SECURE PRESERVATION:")
     try:
         with open("classified_data.txt", "a") as vault:
-            vault.write(new_data)
+            vault.write("\n" + new_data)
             print(new_data)
         print("Vault automatically sealed upon completion")
         print()
