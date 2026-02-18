@@ -1,5 +1,5 @@
 
-*This project has been created as part of the 42 curriculum by **``` lde-krui ```** and **```` wcheung``` **.
+*This project has been created as part of the 42 curriculum by **``` lde-krui ```** and **``` wcheung ```**.
 
 # A-Maze-ing
 
