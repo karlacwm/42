@@ -1,0 +1,16 @@
+1. What is a "Seed"? (The Analogy)
+Imagine you are playing a game like Minecraft. When you create a new world, the game asks you for a "Seed."
+If you leave it blank, you get a totally random world.
+If you type "MountainView" (or any specific word/number), the game creates a specific world.
+Crucially: If your friend types "MountainView" on their computer, they get the exact same world as you.
+In programming, a "Seed" is just a number that forces the computer to make the "random" choices in the exact same order every time.
+
+2. Why do we need it?
+Computers cannot actually be random. They are logical machines. When you ask for a "random number," the computer is actually reading from a massive, pre-written list of scrambled numbers.
+No Seed: The computer picks a starting spot on that list based on the current time (which changes every millisecond).
+With Seed: You tell the computer: "Start reading the list at line 42." Since the list never changes, the numbers you get will always be the same.
+
+
+prim's algorithm
+resources:
+https://weblog.jamisbuck.org/2011/1/10/maze-generation-prim-s-algorithm
