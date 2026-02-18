@@ -1,0 +1,32 @@
+# mandatory keys:
+
+# maze width (number of cells)
+width = 20
+
+# maze height
+height = 15
+
+# entry coordinates (x, y)
+entry = 0, 0
+
+
+# exit coordinates (x, y)
+exit = 19, 14
+
+# output filename
+output_file = maze.txt
+
+# if the maze is perfect
+perfect = true
+
+# additional keys
+
+#
+seed =
+
+# which algorithm is used
+algorithm =
+
+#
+display_mode =
+
