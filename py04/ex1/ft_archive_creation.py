@@ -8,7 +8,7 @@ def ft_archive_creation() -> None:
         file = open(file_name, "w")
         print("Storage unit created successfully...")
         print()
-        print("Inscribing presentation data...")
+        print("Inscribing preservation data...")
         entries: list[str] = [
             "[ENTRY 001] New quantum algorithm discovered",
             "[ENTRY 002] Efficiency increased by 347%",

@@ -8,6 +8,7 @@ def ft_ancient_text() -> None:
         file = open(file_name, "r")
         print("Connection established...")
         print()
+        print("RECOVERED DATA:")
         data: str = file.read()
         print(data)
         print()
