@@ -16,7 +16,7 @@ exit = 19, 14
 # output filename
 output_file = maze.txt
 
-# if the maze is perfect
+# true if the maze contains exactly one path
 perfect = true
 
 # additional keys
