@@ -14,11 +14,19 @@ def spell_recording() -> None:
     print()
 
 
+def late_imports() -> None:
+    from alchemy.grimoire import record_spell
+    print("Testing late import technique:")
+    print(f"record_spell(\"Lightning\", \"air\"): {record_spell('Lightning', 'air')}")
+    print()
+
+
 def ft_circular_curse() -> None:
     print("=== Circular Curse Breaking ===")
     print()
     ingredient_validation()
     spell_recording()
+    late_imports()
     print("Circular dependency curse avoided using late imports!")
     print("All spells processed safely!")
 
