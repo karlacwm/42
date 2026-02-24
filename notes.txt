@@ -10,7 +10,47 @@ Computers cannot actually be random. They are logical machines. When you ask for
 No Seed: The computer picks a starting spot on that list based on the current time (which changes every millisecond).
 With Seed: You tell the computer: "Start reading the list at line 42." Since the list never changes, the numbers you get will always be the same.
 
+-----------------------
 
+LSB = least significant bit
+Bit 0 (North) 2^0 = 1 (decimal) = 0001 (binary)
+Bit 1 (East)  2^1 = 2           = 0010
+Bit 2 (South) 2^2 = 4           = 0100
+Bit 3 (West)  2^3 = 8           = 1000
+
+When you start generating a maze, every cell begins with all four walls closed
+1 + 2 + 4 + 8 = 15 (binary 1111, hex 0xF)
+15 means every wall is closed
+
+examples:
+Value: 3 (Binary 0011)
+N: closed
+E: closed
+S: opened
+W: opened
+
+Value: A (Binary 1010)
+N: opened
+E: closed
+S: opened
+W: closed
+
+-----------------------
 prim's algorithm
 resources:
 https://weblog.jamisbuck.org/2011/1/10/maze-generation-prim-s-algorithm
+https://stackoverflow.com/questions/29739751/implementing-a-randomly-generated-maze-using-prims-algorithm
+https://professor-l.github.io/mazes/
+
+
+
+wiki:
+1. A Grid consists of a 2 dimensional array of cells.
+2. A Cell has 2 states: Blocked or Passage.
+3. Start with a Grid full of Cells in state Blocked.
+4. Pick a random Cell, set it to state Passage and Compute its frontier cells. A frontier cell of a Cell is a cell with distance 2 in state Blocked and within the grid.
+5. While the list of frontier cells is not empty:
+   - Pick a random frontier cell from the list of frontier cells.
+   - Let neighbors(frontierCell) = All cells in distance 2 in state Passage. Pick a random neighbor and connect the frontier cell with the neighbor by setting the cell in-between to state Passage. Compute the frontier cells of the chosen frontier cell and add them to the frontier list. Remove the chosen frontier cell from the list of frontier cells.
+
+
