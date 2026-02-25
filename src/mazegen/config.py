@@ -104,7 +104,7 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
 
     # Validate algorithm if specified
     if 'algorithm' in config:
-        valid_algorithms = ['prim', 'kruskal', 'recursive_backtracking']
+        valid_algorithms = ['prim', 'kruskal', 'iterative_backtracking']
         algo = str(config['algorithm']).lower()
         if algo not in valid_algorithms:
             raise ConfigError(

@@ -2,7 +2,7 @@
 import random
 from typing import Optional, List, Tuple, Set
 from .maze import Maze
-from .recursive_backtracking import generate_recursive_backtracking
+from .iterative_backtracking import generate_iterative_backtracking
 
 
 class UnionFind:
@@ -150,7 +150,7 @@ def generate_maze(width: int, height: int,
     Args:
         width: Width of the maze
         height: Height of the maze
-        algorithm: Algorithm to use ('prim', 'kruskal', or 'recursive_backtracking')
+        algorithm: Algorithm to use ('prim', 'kruskal', or 'iterative_backtracking')
         seed: Random seed for reproducibility
 
     Returns:
@@ -165,7 +165,7 @@ def generate_maze(width: int, height: int,
         return generate_prim(width, height, seed)
     elif algorithm == 'kruskal':
         return generate_kruskal(width, height, seed)
-    elif algorithm == 'recursive_backtracking':
-        return generate_recursive_backtracking(width, height, seed)
+    elif algorithm == 'iterative_backtracking':
+        return generate_iterative_backtracking(width, height, seed)
     else:
         raise ValueError(f"Unsupported algorithm: {algorithm}")

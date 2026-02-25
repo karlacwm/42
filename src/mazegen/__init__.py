@@ -8,8 +8,8 @@ rendering formats with color support.
 
 from .maze import Maze, Cell, Wall, Direction
 from .generator import generate_maze, generate_prim, generate_kruskal
-from .recursive_backtracking import generate_recursive_backtracking
-from .render import render_ascii, render_ascii_compact, render_mlx, render_mlx_detailed
+from .iterative_backtracking import generate_recursive_backtracking
+from .render import render_unicode
 from .render_color import (
     CellColorizer,
     hsv_to_rgb,
