@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 from src.mazegen import (
     parse_config, validate_maze_config, generate_maze,
-    render_unicode)
+    render_unicode_animated)
 
 
 def main() -> None:
@@ -23,7 +23,7 @@ def main() -> None:
         print("Example 1: Loading from config file")
         config = parse_config(config_file)
         print(f"Config: {config}")
-        validate_maze_config(config)
+
 
         maze = generate_maze(
             width=config['width'],
@@ -33,7 +33,7 @@ def main() -> None:
         )
 
         print(f"\nGenerated {config['algorithm']} maze ({maze.width}x{maze.height}):")
-        print(render_unicode(maze))
+        render_unicode_animated(maze, 0.05)
         print()
 
     print("=== A-Maze-ing ===")
@@ -46,7 +46,16 @@ def main() -> None:
 
     if choice == '1':
         print("Regenerating maze...")
-        # Here we would call your maze generation function again
+        config = parse_config(config_file)
+        maze = generate_maze(
+            width=config['width'],
+            height=config['height'],
+            algorithm=config['algorithm'],
+            seed=config.get('seed')
+        )
+        print(f"\nGenerated {config['algorithm']} maze ({maze.width}x{maze.height}):")
+        render_unicode_animated(maze, 0.05)
+        print()
     elif choice == '2':
         print("Toggling path solution...")
         # Here we would toggle the path solution visibility
