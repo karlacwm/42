@@ -1,32 +1,30 @@
+# Example maze configuration file
+# Format: KEY=VALUE
+
+# Maze dimensions
+width=8
+height=8
+
+# Generation algorithm (prim or kruskal)
+algorithm=recursive_backtracking
+
+# Generate perfect maze (no loops)
+perfect=true
+
+# Random seed for reproducibility (optional)
+# seed=42
+
+# ======================================================
+
 # mandatory keys:
 
-# maze width (number of cells)
-width = 20
-
-# maze height
-height = 15
-
 # entry coordinates (x, y)
-entry = 0, 0
-
+# entry = 0, 0
 
 # exit coordinates (x, y)
-exit = 19, 14
+# exit = x_max, y_max
 
 # output filename
-output_file = maze.txt
+# output_file = maze.txt
 
-# true if the maze contains exactly one path
-perfect = true
-
-# additional keys
-
-#
-seed =
-
-# which algorithm is used
-algorithm =
-
-#
-display_mode =
-
+# display_mode =
