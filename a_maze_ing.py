@@ -3,13 +3,12 @@
 
 import sys
 import os
+from src.mazegen import (
+    parse_config, validate_maze_config, generate_maze,
+    render_unicode)
 
 # Add src to path for development
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
-
-from src.mazegen import (
-    parse_config, validate_maze_config, generate_maze,
-    render_unicode_animated)
 
 
 def main() -> None:
@@ -24,16 +23,15 @@ def main() -> None:
         config = parse_config(config_file)
         print(f"Config: {config}")
 
-
         maze = generate_maze(
             width=config['width'],
             height=config['height'],
             algorithm=config['algorithm'],
             seed=config.get('seed')
         )
-
+        speed = 0.01
         print(f"\nGenerated {config['algorithm']} maze ({maze.width}x{maze.height}):")
-        render_unicode_animated(maze, 0.05)
+        render_unicode(maze, speed)
         print()
 
     print("=== A-Maze-ing ===")
@@ -45,22 +43,22 @@ def main() -> None:
     choice = input("Enter your choice: ")
 
     if choice == '1':
-        print("Regenerating maze...")
-        config = parse_config(config_file)
-        maze = generate_maze(
-            width=config['width'],
-            height=config['height'],
-            algorithm=config['algorithm'],
-            seed=config.get('seed')
-        )
-        print(f"\nGenerated {config['algorithm']} maze ({maze.width}x{maze.height}):")
-        render_unicode_animated(maze, 0.05)
-        print()
+        main()
+        # print("Regenerating maze...")
+        # config = parse_config(config_file)
+        # maze = generate_maze(
+        #     width=config['width'],
+        #     height=config['height'],
+        #     algorithm=config['algorithm'],
+        #     seed=config.get('seed')
+        # )
+        # print(f"\nGenerated {config['algorithm']} maze ({maze.width}x{maze.height}):")
+        # render_unicode_animated(maze, speed)
     elif choice == '2':
         print("Toggling path solution...")
         # Here we would toggle the path solution visibility
     elif choice == '3':
-        print("Changing background colour...")
+        print("Changing 42 easter egg colour...")
         # Here we would change the background colour in the rendering
     elif choice == '4':
         print("Changing maze wall colour...")
@@ -68,6 +66,7 @@ def main() -> None:
     elif choice == '5':
         print("Exiting...")
         sys.exit(0)
+
 
 if __name__ == '__main__':
     main()

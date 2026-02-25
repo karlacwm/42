@@ -96,10 +96,10 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
         raise ConfigError(f"Invalid height: {height}. Must be an integer >= 2")
 
     # Check for impossibly large mazes
-    if width > 10000 or height > 10000:
+    if width > 1000 or height > 1000:
         raise ConfigError(
             f"Maze dimensions too large: {width}x{height}. "
-            f"Maximum is 10000x10000"
+            f"Maximum is over 1000x1000"
         )
 
     # Validate algorithm if specified
@@ -113,7 +113,41 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
             )
         config['algorithm'] = algo
 
+    if 'maze_color' in config:
+        valid_color = ['white', 'blue_green', 'brown', 'light_gray',
+                       'blue', 'marroon', 'forest_green', 'dark_gray',
+                       'green', 'lime', 'navy_blue', 'tan',
+                       'red', 'pink', 'rust', 'coffee_brown',
+                       'black', 'purple', 'dandilion_yellow', 'moon_glow',
+                       'orange', 'gray', 'highlighter',
+                       'yellow', 'magenta', 'sky_blue']
+        color = str(config['maze_color']).lower()
+        if color not in valid_color:
+            raise ConfigError(
+                f"Invalid maze_color: {config['maze_color']}. "
+                f"Must be one of: {', '.join(valid_color)}"
+            )
+        config['maze_color'] = color.lstrip('#')
+
+    if 'egg42' in config:
+        valid_42 = ['white', 'blue_green', 'brown', 'light_gray',
+                    'blue', 'marroon', 'forest_green', 'dark_gray',
+                    'green', 'lime', 'navy_blue', 'tan',
+                    'red', 'pink', 'rust', 'coffee_brown',
+                    'black', 'purple', 'dandilion_yellow', 'moon_glow',
+                    'orange', 'gray', 'highlighter',
+                    'yellow', 'magenta', 'sky_blue']
+        color = str(config['egg42']).lower()
+        if color not in valid_42:
+            raise ConfigError(
+                f"Invalid egg42: {config['egg42']}. "
+                f"Must be one of: {', '.join(valid_42)}"
+            )
+        config['egg42'] = color.lstrip('#')
+
     # Set defaults
-    config.setdefault('algorithm', 'prim')
+    config.setdefault('algorithm', 'prim', 'iterative_backtracking')
     config.setdefault('perfect', True)
     config.setdefault('seed', None)
+    config.setdefault('maze_color', 'pink')
+    config.setdefault('egg42', 'yellow')

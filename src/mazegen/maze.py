@@ -164,6 +164,8 @@ class Maze:
             hex_grid.append(hex_row)
         return hex_grid
 
+    # def start(self)
+
     def __repr__(self) -> str:
         """String representation of maze."""
         return f"Maze({self.width}x{self.height})"

@@ -2,8 +2,8 @@
 # Format: KEY=VALUE
 
 # Maze dimensions
-width=8
-height=8
+width=20
+height=15
 
 # Generation algorithm (prim, kruskal or iterative_backtracking)
 algorithm=iterative_backtracking
@@ -33,5 +33,5 @@ perfect=true
 # black     |   purple      |   dandilion_yellow     |   moon_glow
 # orange    |   gray        |   highlighter          |
 # yellow    |   magenta     |   sky_blue             |
-# backgroung_color = dark_gray
-# maze_color = yellow
+maze_color = dark_gray
+egg42 = yellow
