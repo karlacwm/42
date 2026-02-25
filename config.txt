@@ -5,8 +5,8 @@
 width=8
 height=8
 
-# Generation algorithm (prim or kruskal)
-algorithm=recursive_backtracking
+# Generation algorithm (prim, kruskal or iterative_backtracking)
+algorithm=iterative_backtracking
 
 # Generate perfect maze (no loops)
 perfect=true
@@ -15,8 +15,6 @@ perfect=true
 # seed=42
 
 # ======================================================
-
-# mandatory keys:
 
 # entry coordinates (x, y)
 # entry = 0, 0
@@ -27,4 +25,13 @@ perfect=true
 # output filename
 # output_file = maze.txt
 
-# display_mode =
+# colors to choose from :
+# white     |   blue_green  |   brown                |   light_gray
+# blue      |   marroon     |   forest_green         |   dark_gray
+# green     |   lime        |   navy_blue            |   tan
+# red       |   pink        |   rust                 |   coffee_brown
+# black     |   purple      |   dandilion_yellow     |   moon_glow
+# orange    |   gray        |   highlighter          |
+# yellow    |   magenta     |   sky_blue             |
+# backgroung_color = dark_gray
+# maze_color = yellow

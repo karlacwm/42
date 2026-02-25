@@ -3,157 +3,98 @@ from typing import List
 from .maze import Maze, Wall
 
 
-def render_ascii(maze: Maze) -> str:
-    """
-    Render maze as ASCII art.
+def render_unicode(maze: Maze) -> str:
+    width = maze.width
+    height = maze.height
 
-    Args:
-        maze: Maze to render
+    render_w = width * 2 + 1
+    render_h = height * 2 + 1
 
-    Returns:
-        ASCII representation of the maze
-    """
-    lines: List[str] = []
+    # Precompute wall grid
+    vertical = [[False] * render_w for _ in range(render_h)]
+    horizontal = [[False] * render_w for _ in range(render_h)]
 
-    # Top border
-    lines.append('+' + '---+' * maze.width)
-
-    # Render each row
-    for y in range(maze.height):
-        # Cell row with vertical walls
-        cell_line = '|'
-        for x in range(maze.width):
+    # Fill walls from maze cells
+    for y in range(height):
+        for x in range(width):
             cell = maze.get_cell(x, y)
-            # Cell interior
-            cell_line += '   '
-            # East wall
+
+            rx = x * 2 + 1
+            ry = y * 2 + 1
+
+            # WEST wall (left border)
+            if x == 0 and cell.has_wall(Wall.WEST):
+                vertical[ry][rx - 1] = True
+
+            # NORTH wall (top border)
+            if y == 0 and cell.has_wall(Wall.NORTH):
+                horizontal[ry - 1][rx] = True
+
+            # EAST wall
             if cell.has_wall(Wall.EAST):
-                cell_line += '|'
-            else:
-                cell_line += ' '
-        lines.append(cell_line)
+                vertical[ry][rx + 1] = True
 
-        # Bottom walls row
-        wall_line = '+'
-        for x in range(maze.width):
-            cell = maze.get_cell(x, y)
-            # South wall
+            # SOUTH wall
             if cell.has_wall(Wall.SOUTH):
-                wall_line += '---'
-            else:
-                wall_line += '   '
-            wall_line += '+'
-        lines.append(wall_line)
+                horizontal[ry + 1][rx] = True
 
-    return '\n'.join(lines)
+    lines = []
 
+    for ry in range(render_h):
+        line = ""
+        for rx in range(render_w):
 
-def render_ascii_compact(maze: Maze) -> str:
-    """
-    Render maze as compact ASCII art (single character cells).
-
-    Args:
-        maze: Maze to render
-
-    Returns:
-        Compact ASCII representation of the maze
-    """
-    lines: List[str] = []
-
-    # Top border
-    lines.append('┌' + '─' * (maze.width * 2 - 1) + '┐')
-
-    # Render each row
-    for y in range(maze.height):
-        line = '│'
-        for x in range(maze.width):
-            cell = maze.get_cell(x, y)
-            line += ' '
-
-            # East wall or passage
-            if x < maze.width - 1:
-                if cell.has_wall(Wall.EAST):
-                    line += '│'
-                else:
-                    line += ' '
-        line += '│'
-        lines.append(line)
-
-        # South walls row (except for last row)
-        if y < maze.height - 1:
-            line = '│'
-            for x in range(maze.width):
-                cell = maze.get_cell(x, y)
-
-                # South wall or passage
-                if cell.has_wall(Wall.SOUTH):
-                    line += '─'
-                else:
-                    line += ' '
-
-                # Corner
-                if x < maze.width - 1:
-                    # Determine corner character based on surrounding walls
-                    has_south = cell.has_wall(Wall.SOUTH)
-                    has_east = cell.has_wall(Wall.EAST)
-
-                    if has_south and has_east:
-                        line += '┼'
-                    elif has_south:
-                        line += '─'
-                    elif has_east:
-                        line += '│'
+            if ry % 2 == 1 and rx % 2 == 0:
+                # vertical segment
+                if vertical[ry][rx]:
+                    if rx == width * 2:
+                        line += "║   "
                     else:
-                        line += ' '
-            line += '│'
-            lines.append(line)
+                        line += "║░░░"
+                else:
+                    line += "░░░░"
 
-    # Bottom border
-    lines.append('└' + '─' * (maze.width * 2 - 1) + '┘')
+            elif ry % 2 == 0 and rx % 2 == 1:
+                # horizontal segment
+                if horizontal[ry][rx]:
+                    line += "════"
+                else:
+                    line += "░░░░"
 
-    return '\n'.join(lines)
+            elif ry % 2 == 0 and rx % 2 == 0:
+                # intersection — compute connections
+                up = ry > 0 and vertical[ry - 1][rx]
+                down = ry < render_h - 1 and vertical[ry + 1][rx]
+                left = rx > 0 and horizontal[ry][rx - 1]
+                right = rx < render_w - 1 and horizontal[ry][rx + 1]
 
+                if up and down and left and right:
+                    line += "╬"
+                elif up and down and left:
+                    line += "╣"
+                elif up and down and right:
+                    line += "╠"
+                elif left and right and up:
+                    line += "╩"
+                elif left and right and down:
+                    line += "╦"
+                elif up and down:
+                    line += "║"
+                elif left and right:
+                    line += "═"
+                elif up and left:
+                    line += "╝"
+                elif up and right:
+                    line += "╚"
+                elif down and left:
+                    line += "╗"
+                elif down and right:
+                    line += "╔"
+                else:
+                    line += "░"
 
-def render_mlx(maze: Maze) -> str:
-    """
-    Render maze in MLX format (hex grid).
+            else:
+                line += "░"
 
-    MLX format is a simple text representation where each cell
-    is represented by its hexadecimal wall encoding.
-
-    Args:
-        maze: Maze to render
-
-    Returns:
-        MLX representation of the maze
-    """
-    lines: List[str] = []
-    hex_grid = maze.to_hex_grid()
-
-    for row in hex_grid:
-        lines.append(' '.join(row))
-
-    return '\n'.join(lines)
-
-
-def render_mlx_detailed(maze: Maze) -> str:
-    """
-    Render maze in detailed MLX format with dimensions.
-
-    Args:
-        maze: Maze to render
-
-    Returns:
-        Detailed MLX representation
-    """
-    lines: List[str] = []
-    lines.append(f"# Maze dimensions: {maze.width}x{maze.height}")
-    lines.append("# Wall encoding: N=0x1, E=0x2, S=0x4, W=0x8")
-    lines.append("")
-
-    hex_grid = maze.to_hex_grid()
-    for y, row in enumerate(hex_grid):
-        line = f"{y:3d}: " + ' '.join(f"{cell:>2s}" for cell in row)
         lines.append(line)
-
-    return '\n'.join(lines)
+    return "\n".join(lines)

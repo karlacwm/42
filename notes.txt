@@ -11,7 +11,6 @@ No Seed: The computer picks a starting spot on that list based on the current ti
 With Seed: You tell the computer: "Start reading the list at line 42." Since the list never changes, the numbers you get will always be the same.
 
 -----------------------
-
 LSB = least significant bit
 Bit 0 (North) 2^0 = 1 (decimal) = 0001 (binary)
 Bit 1 (East)  2^1 = 2           = 0010
@@ -36,13 +35,15 @@ S: opened
 W: closed
 
 -----------------------
+unicode drawing shapes:
+http://xahlee.info/comp/unicode_drawing_shapes.html
+
+-----------------------
 prim's algorithm
 resources:
 https://weblog.jamisbuck.org/2011/1/10/maze-generation-prim-s-algorithm
 https://stackoverflow.com/questions/29739751/implementing-a-randomly-generated-maze-using-prims-algorithm
 https://professor-l.github.io/mazes/
-
-
 
 wiki:
 1. A Grid consists of a 2 dimensional array of cells.
@@ -53,4 +54,11 @@ wiki:
    - Pick a random frontier cell from the list of frontier cells.
    - Let neighbors(frontierCell) = All cells in distance 2 in state Passage. Pick a random neighbor and connect the frontier cell with the neighbor by setting the cell in-between to state Passage. Compute the frontier cells of the chosen frontier cell and add them to the frontier list. Remove the chosen frontier cell from the list of frontier cells.
 
-
+-----------------------------
+make debug (Pdb) prompt
+n	|Next	      |Run the current line and move to the next one. (Does not go inside functions).
+s	|Step	      |Step into a function call (useful to see how generate() works).
+c	|Continue	|Run normally until the program crashes or hits a "breakpoint".
+l	|List	      |Show the code around the current line so you know where you are.
+p	|Print	   |p variable_name prints the value of a variable (e.g., p width).
+q	|Quit	      |Stop the debugger and exit.
