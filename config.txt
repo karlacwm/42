@@ -19,10 +19,10 @@ perfect=true
 # ======================================================
 
 # entry coordinates (x, y)
-# entry = 0, 0
+# entry = 1, 1
 
 # exit coordinates (x, y)
-# exit = x_max, y_max
+# exit = x_max - 1, y_max - 1
 
 # output filename
 # output_file = maze.txt
@@ -35,5 +35,5 @@ perfect=true
 # black     |   purple      |   dandilion_yellow     |   moon_glow
 # orange    |   gray        |   highlighter          |
 # yellow    |   magenta     |   sky_blue             |
-maze_color = dark_gray
+maze_color = forest_green
 egg42 = yellow

@@ -17,6 +17,8 @@ from .render_color import (
     blend_colors,
     get_gradient_color,
     create_color_palette,
+    colorize_token,
+    get_maze_color_from_config
 )
 from .config import parse_config, validate_maze_config, ConfigError
 
@@ -42,6 +44,8 @@ __all__ = [
     "blend_colors",
     "get_gradient_color",
     "create_color_palette",
+    "colorize_token",
+    "get_maze_color_from_config",
     # Config
     "parse_config",
     "validate_maze_config",

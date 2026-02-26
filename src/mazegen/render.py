@@ -3,6 +3,8 @@ import sys
 import time
 from typing import List, Tuple, Set
 from .maze import Maze, Wall
+from .render_color import colorize_token, get_maze_color_from_config
+from .config import parse_config  # still used for validation if needed
 
 
 def get_pattern_cells(width: int, height: int) -> Set[Tuple[int, int]]:
@@ -74,18 +76,12 @@ def _build_wall_grids(maze: Maze) -> Tuple[List[List[bool]], List[List[bool]], i
     return vertical, horizontal, render_w, render_h
 
 
-# def break_isolated(maze: Maze, pattern: Set[Tuple[int, int]]) -> None:
-#     """
-#     To make sure there is no isolated path in the maze
-#     """
-#     for x, y in pattern:
-
-
-def render_unicode(maze: Maze, delay: float = 0.01) -> str:
+def render_unicode(maze: Maze, delay: float = 0.01, config_path: str = "config.txt") -> str:
     width, height = maze.width, maze.height
+    # load and validate configuration; helper returns an RGB tuple
+    maze_color = get_maze_color_from_config(config_path)
     vertical, horizontal, render_w, render_h = _build_wall_grids(maze)
     pattern = get_pattern_cells(width, height)
-    # break_isolated(maze, pattern)
 
     # Standard intersection map
     wall_unicode = {
@@ -162,8 +158,9 @@ def render_unicode(maze: Maze, delay: float = 0.01) -> str:
             else:
                 token = "███" if curr_in_pat else "░░░"
 
-            line += token
-            sys.stdout.write(token)
+            colored = colorize_token(token, maze_color)
+            line += colored
+            sys.stdout.write(colored)
             sys.stdout.flush()
             time.sleep(delay)
 
@@ -252,216 +249,3 @@ def render_unicode(maze: Maze, delay: float = 0.01) -> str:
 # ║░░░╚═══╗░░░░░░░░░░░╔═══╝░░░░═══╩═══░░░░╔═══╝░░░░░░░╔═══░░░░╚═══════╝░░░║░░░░═══╣
 # ║░░░░░░░║░░░░░░░░░░░║░░░░░░░░░░░░░░░░░░░║░░░░░░░░░░░║░░░░░░░░░░░░░░░░░░░║░░░░░░░║
 # ╚═══════╩═══════════╩═══════════════════╩═══════════╩═══════════════════╩═══════╝
-
-# def render_unicode(maze: Maze) -> str:
-#     width = maze.width
-
-#     vertical, horizontal, render_w, render_h = _build_wall_grids(maze)
-
-#     if maze.width > 10 and maze.height > 9:
-#         pattern = get_pattern_cells(maze.width, maze.height)
-#     else:
-#         pattern = set()
-
-#     lines = []
-
-#     for ry in range(render_h):
-#         line = ""
-#         for rx in range(render_w):
-
-#             if ry % 2 == 1 and rx % 2 == 0:
-#                 # vertical segment
-#                 if vertical[ry][rx]:
-#                     if rx == width * 2:
-#                         line += "║   "
-#                     else:
-#                         line += "║░░░"
-#                 else:
-#                     line += "░░░░"
-
-#             elif ry % 2 == 0 and rx % 2 == 1:
-#                 # horizontal segment
-#                 if horizontal[ry][rx]:
-#                     line += "════"
-#                 else:
-#                     line += "░░░░"
-
-#             elif ry % 2 == 0 and rx % 2 == 0:
-#                 # intersection — compute connections
-#                 up = ry > 0 and vertical[ry - 1][rx]╬
-#                 down = ry < render_h - 1 and vertical[ry + 1][rx]
-#                 left = rx > 0 and horizontal[ry][rx - 1]
-#                 right = rx < render_w - 1 and horizontal[ry][rx + 1]
-
-#                 if up and down and left and right:
-#                     line += "╬"
-#                 elif up and down and left:
-#                     line += "╣"
-#                 elif up and down and right:
-#                     line += "╠"
-#                 elif left and right and up:
-#                     line += "╩"
-#                 elif left and right and down:
-#                     line += "╦"
-#                 elif up and down:
-#                     line += "║"
-#                 elif left and right:
-#                     line += "═"
-#                 elif up and left:
-#                     line += "╝"
-#                 elif up and right:
-#                     line += "╚"
-#                 elif down and left:
-#                     line += "╗"
-#                 elif down and right:
-#                     line += "╔"
-#                 else:
-#                     line += "░"
-
-#             else:
-#                 line += "░"
-
-#         lines.append(line)
-#     return "\n".join(lines)
-# def render_unicode(maze: Maze) -> str:
-#     width = maze.width
-#     height = maze.height
-
-#     vertical, horizontal, render_w, render_h = _build_wall_grids(maze)
-
-#     # Fetch the 42 pattern
-#     if width > 5 and height > 5:
-#         pattern = get_pattern_cells(width, height)
-#     else:
-#         pattern = set()
-
-#     lines = []
-
-#     for ry in range(render_h):
-#         line = ""
-#         for rx in range(render_w):
-#             # 1. Determine if this specific spot is inside a "pattern" cell
-#             # Mapping render coordinates back to maze cell coordinates (x, y)
-#             cell_x, cell_y = (rx - 1) // 2, (ry - 1) // 2
-#             is_pattern = (cell_x, cell_y) in pattern
-
-#             # 2. Vertical Walls/Spaces
-#             if ry % 2 == 1 and rx % 2 == 0:
-#                 if vertical[ry][rx]:
-#                     line += "║" + ("███" if is_pattern else "░░░")
-#                 else:
-#                     line += "████" if is_pattern else "░░░░"
-
-#             # 3. Horizontal Walls/Spaces
-#             elif ry % 2 == 0 and rx % 2 == 1:
-#                 line += "████" if is_pattern else ("════" if horizontal[ry][rx] else "░░░░")
-
-#             # 4. Intersections
-#             elif ry % 2 == 0 and rx % 2 == 0:
-#                 up = ry > 0 and vertical[ry - 1][rx]
-#                 down = ry < render_h - 1 and vertical[ry + 1][rx]
-#                 left = rx > 0 and horizontal[ry][rx - 1]
-#                 right = rx < render_w - 1 and horizontal[ry][rx + 1]
-
-#                 # Use full block if the intersection is part of the pattern path
-#                 if is_pattern:
-#                     line += "█"
-#                 else:
-#                     if up and down and left and right: line += "╬"
-#                     elif up and down and left: line += "╣"
-#                     elif up and down and right: line += "╠"
-#                     elif left and right and up: line += "╩"
-#                     elif left and right and down: line += "╦"
-#                     elif up and down: line += "║"
-#                     elif left and right: line += "═"
-#                     elif up and left: line += "╝"
-#                     elif up and right: line += "╚"
-#                     elif down and left: line += "╗"
-#                     elif down and right: line += "╔"
-#                     else: line += "░"
-
-#             # 5. The Cell Center
-#             else:
-#                 line += "████" if is_pattern else "░░░░"
-
-#         lines.append(line)
-#     return "\n".join(lines)
-
-
-# def render_unicode_animated(maze: Maze, delay: float = 0.1) -> str:
-#     """Render the maze while printing each (x, y) position with a delay."""
-#     width = maze.width
-#     height = maze.height
-
-#     vertical, horizontal, render_w, render_h = _build_wall_grids(maze)
-
-#     if width > 5 and height > 5:
-#         pattern = get_pattern_cells(width, height)
-#     else:
-#         pattern = set()
-
-#     lines = []
-#     for ry in range(render_h):
-#         line = ""
-#         for rx in range(render_w):
-#             cell_x, cell_y = (rx - 1) // 2, (ry - 1) // 2
-#             is_pattern = (cell_x, cell_y) in pattern
-
-#             if ry % 2 == 1 and rx % 2 == 0:
-#                 # vertical segment
-#                 if vertical[ry][rx]:
-#                     if is_pattern:
-#                         token = "║███"
-#                     else:
-#                         token = "║   " if rx == width * 2 else "║░░░"
-#                 else:
-#                     token = "░░░░"
-
-#             elif ry % 2 == 0 and rx % 2 == 1:
-#                 # horizontal segment
-#                 token = "████" if is_pattern else ("════" if horizontal[ry][rx] else "░░░░")
-
-#             elif ry % 2 == 0 and rx % 2 == 0:
-#                 # intersection — compute connections
-#                 up = ry > 0 and vertical[ry - 1][rx]
-#                 down = ry < render_h - 1 and vertical[ry + 1][rx]
-#                 left = rx > 0 and horizontal[ry][rx - 1]
-#                 right = rx < render_w - 1 and horizontal[ry][rx + 1]
-
-#                 if up and down and left and right:
-#                     token = "╬"
-#                 elif up and down and left:
-#                     token = "╣"
-#                 elif up and down and right:
-#                     token = "╠"
-#                 elif left and right and up:
-#                     token = "╩"
-#                 elif left and right and down:
-#                     token = "╦"
-#                 elif up and down:
-#                     token = "║"
-#                 elif left and right:
-#                     token = "═"
-#                 elif up and left:
-#                     token = "╝"
-#                 elif up and right:
-#                     token = "╚"
-#                 elif down and left:
-#                     token = "╗"
-#                 elif down and right:
-#                     token = "╔"
-#                 else:
-#                     token = "░"
-#             else:
-#                 token = "░"
-
-#             line += token
-#             sys.stdout.write(token)
-#             sys.stdout.flush()
-#             time.sleep(delay)
-
-#         lines.append(line)
-#         sys.stdout.write("\n")
-#         sys.stdout.flush()
-
-#     return "\n".join(lines)

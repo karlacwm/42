@@ -1,6 +1,7 @@
 """Color rendering utilities for maze visualization."""
-from typing import Tuple, Optional, Dict, Any
+from typing import Tuple, Dict
 from .maze import Maze, Cell
+# import the color module for namespace access
 from . import color as colors
 import colorsys
 
@@ -38,6 +39,7 @@ def get_color_by_name(color_name: str) -> ColorTuple:
         AttributeError: If color name doesn't exist
     """
     color_name_lower = color_name.lower()
+    # the `colors` module is imported above; attribute names are lower‑case
     if hasattr(colors, color_name_lower):
         return getattr(colors, color_name_lower)
     raise AttributeError(f"Color '{color_name}' not found in color module")
@@ -60,6 +62,36 @@ def blend_colors(color1: ColorTuple, color2: ColorTuple, ratio: float) -> ColorT
     g = int(color1[1] * (1 - ratio) + color2[1] * ratio)
     b = int(color1[2] * (1 - ratio) + color2[2] * ratio)
     return (r, g, b)
+
+
+def colorize_token(token: str, color: ColorTuple) -> str:
+    """Apply ANSI color codes to token.
+
+    Works with any string (walls, cells, or empty space) so the caller
+    can uniformly color an entire maze line or even a whole output
+    string.
+    """
+    r, g, b = color
+    return f"\033[38;2;{r};{g};{b}m{token}\033[0m"
+
+
+def get_maze_color_from_config(config_path: str = "config.txt") -> ColorTuple:
+    """Load configuration file and return the RGB tuple for ``maze_color``.
+
+    The helper wraps :func:`parse_config`/``validate_maze_config`` and
+    :func:`get_color_by_name` so callers (like ``render_unicode``) don't
+    need to repeat the lookup logic.
+    """
+    from .config import parse_config, validate_maze_config
+
+    cfg = parse_config(config_path)
+    validate_maze_config(cfg)
+    name = cfg.get("maze_color", "white")
+    try:
+        return get_color_by_name(name)
+    except AttributeError:
+        # fall back to white if validation somehow missed it
+        return colors.white
 
 
 class CellColorizer:

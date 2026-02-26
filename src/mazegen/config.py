@@ -96,7 +96,7 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
         raise ConfigError(f"Invalid height: {height}. Must be an integer >= 2")
 
     # Check for impossibly large mazes
-    if width > 1000 or height > 1000:
+    if width > 100 or height > 100:
         raise ConfigError(
             f"Maze dimensions too large: {width}x{height}. "
             f"Maximum is over 1000x1000"
@@ -127,7 +127,7 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
                 f"Invalid maze_color: {config['maze_color']}. "
                 f"Must be one of: {', '.join(valid_color)}"
             )
-        config['maze_color'] = color.lstrip('#')
+        config['maze_color'] = color
 
     if 'egg42' in config:
         valid_42 = ['white', 'blue_green', 'brown', 'light_gray',
@@ -143,10 +143,10 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
                 f"Invalid egg42: {config['egg42']}. "
                 f"Must be one of: {', '.join(valid_42)}"
             )
-        config['egg42'] = color.lstrip('#')
+        config['egg42'] = color
 
     # Set defaults
-    config.setdefault('algorithm', 'prim', 'iterative_backtracking')
+    config.setdefault('algorithm', 'iterative_backtracking')
     config.setdefault('perfect', True)
     config.setdefault('seed', None)
     config.setdefault('maze_color', 'pink')
