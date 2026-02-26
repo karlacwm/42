@@ -3,6 +3,7 @@ from typing import Dict, Any
 import re
 
 
+
 class ConfigError(Exception):
     """Exception raised for configuration errors."""
     pass
@@ -81,7 +82,6 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
     Raises:
         ConfigError: If configuration is invalid
     """
-    # Check required parameters
     if 'width' not in config:
         raise ConfigError("Missing required parameter: width")
     if 'height' not in config:
@@ -267,19 +267,26 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
                     'orange', 'gray', 'highlighter',
                     'yellow', 'magenta', 'sky_blue']
         color = str(config['egg42']).lower()
+    if color not in valid_42:
         if color not in valid_42:
             raise ConfigError(
                 f"Invalid egg42: {config['egg42']}. "
                 f"Must be one of: {', '.join(valid_42)}"
             )
         config['egg42'] = color
+    if 'wall_color' in config:
+        color = str(config['wall_color']).lower()
+        if color not in valid_color:
+            raise ConfigError(
+                f"Invalid wall_color: {config['wall_color']}. "
+                f"Must be one of: {', '.join(valid_color)}"
+            )
+        config['wall_color'] = color
 
     # Set defaults
-    config.setdefault('algorithm', 'iterative_backtracking')
-    config.setdefault('perfect', True)
-    config.setdefault('seed', None)
-    config.setdefault('maze_color', 'pink')
-    config.setdefault('egg42', 'yellow')
-    config.setdefault('solving_path_color', 'orange')
-    config.setdefault('entry', (config['entry_x'], config['entry_y']))
-    config.setdefault('exit', (config['exit_x'], config['exit_y']))
+    # config.setdefault('algorithm', 'iterative_backtracking')
+    # config.setdefault('perfect', True)
+    # config.setdefault('seed', None)
+    # config.setdefault('maze_color', 'pink')
+    # config.setdefault('egg42', 'yellow')
+    # config.setdefault('wall_color', 'white')

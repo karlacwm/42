@@ -38,6 +38,6 @@ exit_y = height - 1
 # orange    |   gray        |   highlighter          |
 # yellow    |   magenta     |   sky_blue             |
 
-solving_path_color = orange
+wall_color = coffee_brown
 maze_color = dandilion_yellow
-egg42 = green
+egg42 = pink
