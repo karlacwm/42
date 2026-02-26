@@ -4,7 +4,7 @@
 import sys
 import os
 from src.mazegen import (
-    parse_config, validate_maze_config, generate_maze,
+    parse_config, generate_maze,
     render_unicode)
 
 # Add src to path for development
@@ -29,7 +29,7 @@ def main() -> None:
             algorithm=config['algorithm'],
             seed=config.get('seed')
         )
-        speed = 0.01
+        speed = 0.001
         print(f"\nGenerated {config['algorithm']} maze ({maze.width}x{maze.height}):")
         render_unicode(maze, speed)
         print()

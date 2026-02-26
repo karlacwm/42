@@ -27,6 +27,7 @@ __all__ = [
     "Cell",
     "Wall",
     "Direction",
+    "is_valid",
     # Generation
     "generate_maze",
     "generate_prim",

@@ -6,7 +6,9 @@ width=20
 height=15
 
 # Generation algorithm (prim, kruskal or iterative_backtracking)
-algorithm=iterative_backtracking
+# algorithm=prim
+algorithm=kruskal
+# algorithm=iterative_backtracking
 
 # Generate perfect maze (no loops)
 perfect=true

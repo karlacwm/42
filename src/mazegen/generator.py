@@ -113,10 +113,10 @@ def generate_kruskal(width: int, height: int, seed: Optional[int] = None) -> Maz
     for y in range(height):
         for x in range(width):
             # Add east wall if not on right edge
-            if x < width - 1:
+            if x < width - 1 and maze.is_valid(x, y) and maze.is_valid(x + 1, y):
                 edges.append((x, y, x + 1, y))
             # Add south wall if not on bottom edge
-            if y < height - 1:
+            if y < height - 1 and maze.is_valid(x, y) and maze.is_valid(x, y + 1):
                 edges.append((x, y, x, y + 1))
 
     # Shuffle edges
@@ -137,6 +137,8 @@ def generate_kruskal(width: int, height: int, seed: Optional[int] = None) -> Maz
         # If cells are in different sets, remove wall and union them
         if uf.union(idx1, idx2):
             maze.remove_wall_between(x1, y1, x2, y2)
+        else:
+            pass
 
     return maze
 
