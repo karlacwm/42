@@ -34,7 +34,7 @@ lint-strict: $(VENV_BIN)/$(PYTHON)
 clean:
 	rm -rf $(VENV) \
 		__pycache__ \
-		**/__pycache__/ \
+		**/*/__pycache__/ \
 		.mypy_cache/ \
 		*.pyc \
 		*.pyo \
