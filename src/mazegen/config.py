@@ -53,7 +53,8 @@ def parse_config(filepath: str) -> Dict[str, Any]:
            (value.startswith("'") and value.endswith("'")):
             value = value[1:-1]
         # Try to convert to int
-        elif value.isdigit() or (value.startswith('-') and value[1:].isdigit()):
+        elif value.isdigit() or (value.startswith('-')
+                                 and value[1:].isdigit()):
             value = int(value)
         # Try to convert to float
         elif '.' in value:
@@ -85,6 +86,22 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
         raise ConfigError("Missing required parameter: width")
     if 'height' not in config:
         raise ConfigError("Missing required parameter: height")
+    if 'algorithm' not in config:
+        raise ConfigError("Missing required parameter: algorithm")
+    if 'entry_x' not in config:
+        raise ConfigError("Missing required parameter: entry_x")
+    if 'entry_y' not in config:
+        raise ConfigError("Missing required parameter: entry_y")
+    if 'exit_x' not in config:
+        raise ConfigError("Missing required parameter: exit_x")
+    if 'exit_y' not in config:
+        raise ConfigError("Missing required parameter: exit_y")
+    if 'solving_path_color' not in config:
+        raise ConfigError("Missing required parameter: solving_path_color")
+    if 'maze_color' not in config:
+        raise ConfigError("Missing required parameter: maze_color")
+    if 'egg42' not in config:
+        raise ConfigError("Missing required parameter: egg42")
 
     width = config['width']
     height = config['height']
@@ -94,6 +111,28 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
         raise ConfigError(f"Invalid width: {width}. Must be an integer >= 2")
     if not isinstance(height, int) or height < 2:
         raise ConfigError(f"Invalid height: {height}. Must be an integer >= 2")
+
+    # Calculate the "42" pattern cells (same logic as Maze.is_valid)
+    cx, cy = width // 2, height // 2
+    digit_4 = {
+        (0, 0), (0, 1), (0, 2),
+        (1, 2),
+        (2, 2), (2, 3), (2, 4)
+    }
+    digit_2 = {
+        (0, 0), (1, 0), (2, 0),
+        (2, 1),
+        (0, 2), (1, 2), (2, 2),
+        (0, 3),
+        (0, 4), (1, 4), (2, 4)
+    }
+    start_x = cx - 3
+    start_y = cy - 2
+    pattern_42 = set()
+    for dx, dy in digit_4:
+        pattern_42.add((start_x + dx, start_y + dy))
+    for dx, dy in digit_2:
+        pattern_42.add((start_x + 4 + dx, start_y + dy))
 
     # Check for impossibly large mazes
     if width > 100 or height > 100:
@@ -112,6 +151,96 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
                 f"Must be one of: {', '.join(valid_algorithms)}"
             )
         config['algorithm'] = algo
+
+    if 'entry_x' in config:
+        entry_x = config['entry_x']
+        # Evaluate expression if it's a string
+        if isinstance(entry_x, str):
+            try:
+                entry_x = eval(entry_x, {"width": width, "height": height})
+            except Exception:
+                raise ConfigError(
+                    f"Invalid entry_x expression: {config['entry_x']}")
+        config['entry_x'] = entry_x
+    if 'entry_y' in config:
+        entry_y = config['entry_y']
+        # Evaluate expression if it's a string
+        if isinstance(entry_y, str):
+            try:
+                entry_y = eval(entry_y, {"width": width, "height": height})
+            except Exception:
+                raise ConfigError(
+                    f"Invalid entry_y expression: {config['entry_y']}")
+        config['entry_y'] = entry_y
+        if not isinstance(entry_x, int) or not isinstance(entry_y, int):
+            raise ConfigError(
+                f"Invalid entry coordinates: ({entry_x}, {entry_y})")
+        # Basic bounds check
+        if not (0 <= entry_x < width and 0 <= entry_y < height):
+            raise ConfigError(
+                f"Invalid entry point: ({entry_x}, {entry_y}). "
+                f"Must be within maze bounds (0-{width-1}, 0-{height-1})")
+        # Check if entry falls on the "42" pattern
+        if (entry_x, entry_y) in pattern_42:
+            raise ConfigError(
+                f"Invalid entry point: ({entry_x}, {entry_y}). "
+                f"Cannot place entry on the '42' pattern in the "
+                f"center of the maze")
+
+    if 'exit_x' in config:
+        exit_x = config['exit_x']
+        # Evaluate expression if it's a string
+        if isinstance(exit_x, str):
+            try:
+                exit_x = eval(exit_x, {"width": width, "height": height})
+            except Exception:
+                raise ConfigError(
+                    f"Invalid exit_x expression: {config['exit_x']}")
+        config['exit_x'] = exit_x
+    if 'exit_y' in config:
+        exit_y = config['exit_y']
+        # Evaluate expression if it's a string
+        if isinstance(exit_y, str):
+            try:
+                exit_y = eval(exit_y, {"width": width, "height": height})
+            except Exception:
+                raise ConfigError(
+                    f"Invalid exit_y expression: {config['exit_y']}")
+        config['exit_y'] = exit_y
+        if not isinstance(exit_x, int) or not isinstance(exit_y, int):
+            raise ConfigError(
+                f"Invalid exit coordinates: ({exit_x}, {exit_y})")
+        # Basic bounds check
+        if not (0 <= exit_x < width and 0 <= exit_y < height):
+            raise ConfigError(
+                f"Invalid exit point: ({exit_x}, {exit_y}). "
+                f"Must be within maze bounds (0-{width-1}, 0-{height-1})")
+        # Check if exit falls on the "42" pattern
+        if (exit_x, exit_y) in pattern_42:
+            raise ConfigError(
+                f"Invalid exit point: ({exit_x}, {exit_y}). "
+                f"Cannot place exit on the '42' pattern in the "
+                f"center of the maze")
+        if exit_x == entry_x and exit_y == entry_y:
+            raise ConfigError(
+                f"Exit point ({exit_x}, {exit_y}) cannot be the same "
+                f"as entry point ({entry_x}, {entry_y})")
+
+    if 'solving_path_color' in config:
+        valid_colors = ['white', 'blue_green', 'brown', 'light_gray',
+                        'blue', 'marroon', 'forest_green', 'dark_gray',
+                        'lime', 'navy_blue', 'tan',
+                        'pink', 'rust', 'coffee_brown',
+                        'black', 'purple', 'dandilion_yellow', 'moon_glow',
+                        'orange', 'gray', 'highlighter',
+                        'yellow', 'magenta', 'sky_blue']
+        color = str(config['solving_path_color']).lower()
+        if color not in valid_colors:
+            raise ConfigError(
+                f"Invalid solving_path_color: {config['solving_path_color']}. "
+                f"Must be one of: {', '.join(valid_colors)}"
+            )
+        config['solving_path_color'] = color
 
     if 'maze_color' in config:
         valid_color = ['white', 'blue_green', 'brown', 'light_gray',
@@ -151,3 +280,6 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
     config.setdefault('seed', None)
     config.setdefault('maze_color', 'pink')
     config.setdefault('egg42', 'yellow')
+    config.setdefault('solving_path_color', 'orange')
+    config.setdefault('entry', (config['entry_x'], config['entry_y']))
+    config.setdefault('exit', (config['exit_x'], config['exit_y']))

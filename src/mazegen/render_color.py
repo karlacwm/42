@@ -45,7 +45,9 @@ def get_color_by_name(color_name: str) -> ColorTuple:
     raise AttributeError(f"Color '{color_name}' not found in color module")
 
 
-def blend_colors(color1: ColorTuple, color2: ColorTuple, ratio: float) -> ColorTuple:
+def blend_colors(
+        color1: ColorTuple, color2: ColorTuple, ratio: float
+) -> ColorTuple:
     """
     Blend two colors based on a ratio.
 
@@ -75,7 +77,10 @@ def colorize_token(token: str, color: ColorTuple) -> str:
     return f"\033[38;2;{r};{g};{b}m{token}\033[0m"
 
 
-def get_maze_color_from_config(config_path: str = "config.txt", what_to_color: str = "") -> ColorTuple:
+def get_maze_color_from_config(
+        config_path: str = "config.txt",
+        what_to_color: str = ""
+) -> ColorTuple:
     """Load configuration file and return the RGB tuple for ``maze_color``.
 
     The helper wraps :func:`parse_config`/``validate_maze_config`` and
@@ -106,15 +111,18 @@ class CellColorizer:
         Initialize the colorizer with a color scheme.
 
         Args:
-            color_scheme: Color scheme name ('RED', 'BLUE', 'GREEN', 'YELLOW',
-                         'CYAN', 'PURPLE', 'HSV', or color name from color module)
+            color_scheme: Color scheme name ('RED', 'BLUE', 'GREEN',
+                         'YELLOW', 'CYAN', 'PURPLE', 'HSV', or color name
+                         from color module)
         """
         self.color_scheme = color_scheme.upper()
         self.distance_data: Dict[Tuple[int, int], float] = {}
         self.max_distance = 1.0
         self.min_distance = 0.0
 
-    def set_distance_data(self, distances: Dict[Tuple[int, int], float]) -> None:
+    def set_distance_data(
+            self, distances: Dict[Tuple[int, int], float]
+    ) -> None:
         """
         Set distance data for cells (for gradient coloring).
 
@@ -141,7 +149,9 @@ class CellColorizer:
             return self._get_hsv_color(cell)
 
         # Distance-based gradients
-        if self.color_scheme in ["RED", "BLUE", "GREEN", "YELLOW", "CYAN", "PURPLE"]:
+        if self.color_scheme in [
+            "RED", "BLUE", "GREEN", "YELLOW", "CYAN", "PURPLE"
+        ]:
             return self._get_gradient_color(cell)
 
         # Named color from color module
@@ -168,7 +178,10 @@ class CellColorizer:
             distance = 0
 
         # Hue based on distance (0-360 degrees)
-        hue = (distance / max(self.max_distance, 1)) if self.max_distance > 0 else 0
+        hue = (
+            (distance / max(self.max_distance, 1))
+            if self.max_distance > 0 else 0
+        )
         return hsv_to_rgb(hue, 1.0, 1.0)
 
     def _get_gradient_color(self, cell: Cell) -> ColorTuple:
@@ -186,7 +199,10 @@ class CellColorizer:
 
         # Calculate intensity based on distance
         if self.max_distance > self.min_distance:
-            intensity = (distance - self.min_distance) / (self.max_distance - self.min_distance)
+            intensity = (
+                (distance - self.min_distance) /
+                (self.max_distance - self.min_distance)
+            )
         else:
             intensity = 0
 
@@ -236,7 +252,8 @@ def get_gradient_color(
 
     Args:
         value: Value to map to color
-        scheme: Color scheme ('RED', 'BLUE', 'GREEN', 'YELLOW', 'CYAN', 'PURPLE')
+        scheme: Color scheme ('RED', 'BLUE', 'GREEN', 'YELLOW',
+                'CYAN', 'PURPLE')
         min_val: Minimum value for normalization
         max_val: Maximum value for normalization
 

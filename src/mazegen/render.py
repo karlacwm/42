@@ -4,7 +4,7 @@ import time
 from typing import List, Tuple, Set
 from .maze import Maze, Wall
 from .render_color import colorize_token, get_maze_color_from_config
-from .config import parse_config  # still used for validation if needed
+# from .config import parse_config  # still used for validation if needed
 
 
 def get_pattern_cells(width: int, height: int) -> Set[Tuple[int, int]]:
@@ -38,7 +38,9 @@ def get_pattern_cells(width: int, height: int) -> Set[Tuple[int, int]]:
     return pattern
 
 
-def _build_wall_grids(maze: Maze) -> Tuple[List[List[bool]], List[List[bool]], int, int]:
+def _build_wall_grids(
+        maze: Maze
+) -> Tuple[List[List[bool]], List[List[bool]], int, int]:
     width = maze.width
     height = maze.height
 
@@ -76,7 +78,10 @@ def _build_wall_grids(maze: Maze) -> Tuple[List[List[bool]], List[List[bool]], i
     return vertical, horizontal, render_w, render_h
 
 
-def render_unicode(maze: Maze, delay: float = 0.01, config_path: str = "config.txt") -> str:
+def render_unicode(
+        maze: Maze, delay: float = 0.01,
+        config_path: str = "config.txt"
+) -> str:
     width, height = maze.width, maze.height
     # load and validate configuration; helper returns an RGB tuple
     maze_color = get_maze_color_from_config(config_path, "maze")
@@ -112,7 +117,10 @@ def render_unicode(maze: Maze, delay: float = 0.01, config_path: str = "config.t
             curr_in_pat = (cx, cy) in pattern
             left_in_pat = (cx - 1, cy) in pattern if rx > 0 else False
             up_in_pat = (cx, cy - 1) in pattern if ry > 0 else False
-            diag_in_pat = (cx - 1, cy - 1) in pattern if (rx > 0 and ry > 0) else False
+            diag_in_pat = (
+                (cx - 1, cy - 1) in pattern
+                if (rx > 0 and ry > 0) else False
+            )
 
             token = ""
 
@@ -120,16 +128,21 @@ def render_unicode(maze: Maze, delay: float = 0.01, config_path: str = "config.t
             if ry % 2 == 0 and rx % 2 == 0:
                 # If any of the 4 surrounding cells is a pattern cell,
                 # we recalculate the intersection to ensure a "box" look.
-                is_pat_corner = curr_in_pat or left_in_pat or up_in_pat or diag_in_pat
+                is_pat_corner = (
+                    curr_in_pat or left_in_pat or
+                    up_in_pat or diag_in_pat
+                )
 
                 up = ry > 0 and vertical[ry - 1][rx]
                 down = ry < render_h - 1 and vertical[ry + 1][rx]
                 left = rx > 0 and horizontal[ry][rx - 1]
                 right = rx < render_w - 1 and horizontal[ry][rx + 1]
 
-                # Override: If it's a pattern corner, force the connections
+                # Override: If it's a pattern corner,
+                # force the connections
                 if is_pat_corner:
-                    # Logic: If I'm the Top-Left of a pattern cell, I need Right and Down.
+                    # Logic: If I'm the Top-Left of a pattern cell,
+                    # I need Right and Down.
                     # This builds the box connections.
                     u = up or (up_in_pat or diag_in_pat)
                     d = down or (curr_in_pat or left_in_pat)

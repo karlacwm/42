@@ -4,7 +4,8 @@ from typing import Optional, Set, List, Tuple
 from .maze import Maze
 
 
-def generate_iterative_backtracking(width: int, height: int, seed: Optional[int] = None) -> Maze:
+def generate_iterative_backtracking(
+        width: int, height: int, seed: Optional[int] = None) -> Maze:
     """
     Generate a perfect maze using the Iterative Backtracking algorithm.
 

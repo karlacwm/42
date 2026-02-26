@@ -29,7 +29,10 @@ class Direction:
     @staticmethod
     def all() -> List[Tuple[int, int]]:
         """Return all directions."""
-        return [Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST]
+        return [
+            Direction.NORTH, Direction.EAST,
+            Direction.SOUTH, Direction.WEST
+        ]
 
     @staticmethod
     def to_wall(direction: Tuple[int, int]) -> Wall:
@@ -137,12 +140,15 @@ class Maze:
             pattern.add((start_x + dx, start_y + dy))
         for dx, dy in digit_2:
             pattern.add((start_x + 4 + dx, start_y + dy))
-        if 0 <= x < self.width and 0 <= y < self.height and (x, y) not in pattern:
+        if (0 <= x < self.width and 0 <= y < self.height and
+                (x, y) not in pattern):
             return True
         else:
             return False
 
-    def get_neighbors(self, x: int, y: int) -> List[Tuple[int, int, Tuple[int, int]]]:
+    def get_neighbors(
+            self, x: int, y: int
+    ) -> List[Tuple[int, int, Tuple[int, int]]]:
         """
         Get valid neighbors of a cell.
 

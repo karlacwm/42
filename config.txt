@@ -10,7 +10,7 @@ height=15
 algorithm=kruskal
 # algorithm=iterative_backtracking
 
-# Generate perfect maze (no loops)
+# Generate perfect maze (no loops) : either true or false
 perfect=true
 
 # Random seed for reproducibility (optional)
@@ -19,10 +19,12 @@ perfect=true
 # ======================================================
 
 # entry coordinates (x, y)
-# entry = 1, 1
+entry_x = 1
+entry_y = 1
 
 # exit coordinates (x, y)
-# exit = x_max - 1, y_max - 1
+exit_x = width - 1
+exit_y = height - 1
 
 # output filename
 # output_file = maze.txt
@@ -36,5 +38,6 @@ perfect=true
 # orange    |   gray        |   highlighter          |
 # yellow    |   magenta     |   sky_blue             |
 
+solving_path_color = orange
 maze_color = dandilion_yellow
 egg42 = green

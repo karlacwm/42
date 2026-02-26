@@ -1,7 +1,10 @@
 """
 A_Maze_Ing - Maze Generation Package.
 
-This package provides maze generation algorithms (Prim's, Kruskal's, and Recursive Backtracking)
+This package provides maze generation algorithms:
+- Prim's,
+- Kruskal's, and
+- Iterative Backtracking)
 with support for perfect mazes, hexadecimal wall encoding, and various
 rendering formats with color support.
 """
