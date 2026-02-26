@@ -58,11 +58,12 @@ def main() -> None:
     print("| 4 | change maze_wall colour         |")
     print("| 5 | exit                            |")
     print("--------------------------------------")
-    choice = input("Enter your choice: ") {
-                        'blue', 'marroon', 'forest_green', 'dark_gray',
-                        'coffee_brown', 'black', 'purple', 'dandelion_yellow',
-                        'moon_glow', 'orange', 'gray', 'highlighter',
-                        'yellow', 'magenta', 'sky_blue'}
+    choice = input("Enter your choice: ")
+    valid_color = {
+        'blue', 'marroon', 'forest_green', 'dark_gray',
+        'coffee_brown', 'black', 'purple', 'dandelion_yellow',
+        'moon_glow', 'orange', 'gray', 'highlighter',
+        'yellow', 'magenta', 'sky_blue'}
 
     if choice == '1':
         main()
