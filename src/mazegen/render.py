@@ -79,7 +79,8 @@ def _build_wall_grids(maze: Maze) -> Tuple[List[List[bool]], List[List[bool]], i
 def render_unicode(maze: Maze, delay: float = 0.01, config_path: str = "config.txt") -> str:
     width, height = maze.width, maze.height
     # load and validate configuration; helper returns an RGB tuple
-    maze_color = get_maze_color_from_config(config_path)
+    maze_color = get_maze_color_from_config(config_path, "maze")
+    egg_color = get_maze_color_from_config(config_path, "egg")
     vertical, horizontal, render_w, render_h = _build_wall_grids(maze)
     pattern = get_pattern_cells(width, height)
 
@@ -158,7 +159,10 @@ def render_unicode(maze: Maze, delay: float = 0.01, config_path: str = "config.t
             else:
                 token = "███" if curr_in_pat else "░░░"
 
-            colored = colorize_token(token, maze_color)
+            if token == "███":
+                colored = colorize_token(token, egg_color)
+            else:
+                colored = colorize_token(token, maze_color)
             line += colored
             sys.stdout.write(colored)
             sys.stdout.flush()

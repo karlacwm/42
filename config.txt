@@ -35,5 +35,6 @@ perfect=true
 # black     |   purple      |   dandilion_yellow     |   moon_glow
 # orange    |   gray        |   highlighter          |
 # yellow    |   magenta     |   sky_blue             |
-maze_color = forest_green
-egg42 = yellow
+
+maze_color = dandilion_yellow
+egg42 = green

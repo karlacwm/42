@@ -1,5 +1,5 @@
 """Color rendering utilities for maze visualization."""
-from typing import Tuple, Dict
+from typing import Tuple, Dict, Any
 from .maze import Maze, Cell
 # import the color module for namespace access
 from . import color as colors
@@ -7,7 +7,7 @@ import colorsys
 
 
 # Color tuple type definition
-ColorTuple = Tuple[int, int, int]
+ColorTuple = Tuple[int, ...] | Any
 
 
 def hsv_to_rgb(h: float, s: float, v: float) -> ColorTuple:
@@ -75,7 +75,7 @@ def colorize_token(token: str, color: ColorTuple) -> str:
     return f"\033[38;2;{r};{g};{b}m{token}\033[0m"
 
 
-def get_maze_color_from_config(config_path: str = "config.txt") -> ColorTuple:
+def get_maze_color_from_config(config_path: str = "config.txt", what_to_color: str = "") -> ColorTuple:
     """Load configuration file and return the RGB tuple for ``maze_color``.
 
     The helper wraps :func:`parse_config`/``validate_maze_config`` and
@@ -86,7 +86,11 @@ def get_maze_color_from_config(config_path: str = "config.txt") -> ColorTuple:
 
     cfg = parse_config(config_path)
     validate_maze_config(cfg)
-    name = cfg.get("maze_color", "white")
+    name = ""
+    if what_to_color == "maze":
+        name = cfg.get("maze_color", "white")
+    elif what_to_color == "egg":
+        name = cfg.get("egg42", "white")
     try:
         return get_color_by_name(name)
     except AttributeError:
