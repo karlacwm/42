@@ -15,7 +15,8 @@ def update_config(config_file: str, key: str, value: str) -> None:
         lines = file.readlines()
 
     for i, line in enumerate(lines):
-        if line.strip().startswith(key + ' ') or line.strip().startswith(key + '='):
+        if (line.strip().startswith(key + ' ') or
+                line.strip().startswith(key + '=')):
             lines[i] = f"{key} = {value}\n"
             break
     else:
@@ -75,32 +76,40 @@ def main() -> None:
         #     algorithm=config['algorithm'],
         #     seed=config.get('seed')
         # )
-        # print(f"\nGenerated {config['algorithm']} maze ({maze.width}x{maze.height}):")
+        # print(f"\nGenerated {config['algorithm']} maze \n"
+        #       f"({maze.width}x{maze.height}):")
         # render_unicode_animated(maze, speed)
     elif choice == '2':
         print("Toggling path solution...")
         # Here we would toggle the path solution visibility
     elif choice == '3':
         print(f"Available colours:\n{', '.join(valid_color)}")
-        color = input("What colour do you want for the 42 egg?\n").strip().lower()
+        color = input(
+            "What colour do you want for the 42 egg?\n"
+        ).strip().lower()
         if color in valid_color:
             update_config(config_file, 'egg42', color)
             main()
         else:
             print(f"Sorry this colour '{color}' is not available :(")
-            print(f"Choose one from the available colours:\n{', '.join(valid_color)}")
+            msg = (f"Choose one from the available colours:\n"
+                   f"{', '.join(valid_color)}")
+            print(msg)
             # or go back to menu?
     elif choice == '4':
         print(f"Available colours:\n{', '.join(valid_color)}")
-        color = input("What colour do you want for the maze walls?\n").strip().lower()
+        color = input(
+            "What colour do you want for the maze walls?\n"
+        ).strip().lower()
         if color in valid_color:
             update_config(config_file, 'wall_color', color)
             main()
         else:
             print(f"Sorry this colour '{color}' is not available :(")
-            print(f"Choose one from the available colours:\n{', '.join(valid_color)}")
+            msg = (f"Choose one from the available colours:\n"
+                   f"{', '.join(valid_color)}")
+            print(msg)
             # or go back to menu?
-    elif choice == '5':
         print("Exiting...")
         sys.exit(0)
 

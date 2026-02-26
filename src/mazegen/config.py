@@ -3,7 +3,6 @@ from typing import Dict, Any
 import re
 
 
-
 class ConfigError(Exception):
     """Exception raised for configuration errors."""
     pass
@@ -96,8 +95,8 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
         raise ConfigError("Missing required parameter: exit_x")
     if 'exit_y' not in config:
         raise ConfigError("Missing required parameter: exit_y")
-    if 'solving_path_color' not in config:
-        raise ConfigError("Missing required parameter: solving_path_color")
+    if 'wall_color' not in config:
+        raise ConfigError("Missing required parameter: wall_color")
     if 'maze_color' not in config:
         raise ConfigError("Missing required parameter: maze_color")
     if 'egg42' not in config:
@@ -108,9 +107,11 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
 
     # Validate dimensions
     if not isinstance(width, int) or width < 2:
-        raise ConfigError(f"Invalid width: {width}. Must be an integer >= 2")
+        raise ConfigError(
+            f"Invalid width: {width}. Must be an integer >= 2")
     if not isinstance(height, int) or height < 2:
-        raise ConfigError(f"Invalid height: {height}. Must be an integer >= 2")
+        raise ConfigError(
+            f"Invalid height: {height}. Must be an integer >= 2")
 
     # Calculate the "42" pattern cells (same logic as Maze.is_valid)
     cx, cy = width // 2, height // 2
@@ -226,21 +227,21 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
                 f"Exit point ({exit_x}, {exit_y}) cannot be the same "
                 f"as entry point ({entry_x}, {entry_y})")
 
-    if 'solving_path_color' in config:
+    if 'wall_color' in config:
         valid_colors = ['white', 'blue_green', 'brown', 'light_gray',
                         'blue', 'marroon', 'forest_green', 'dark_gray',
-                        'lime', 'navy_blue', 'tan',
-                        'pink', 'rust', 'coffee_brown',
+                        'green', 'lime', 'navy_blue', 'tan',
+                        'red', 'pink', 'rust', 'coffee_brown',
                         'black', 'purple', 'dandilion_yellow', 'moon_glow',
                         'orange', 'gray', 'highlighter',
                         'yellow', 'magenta', 'sky_blue']
-        color = str(config['solving_path_color']).lower()
+        color = str(config['wall_color']).lower()
         if color not in valid_colors:
             raise ConfigError(
-                f"Invalid solving_path_color: {config['solving_path_color']}. "
+                f"Invalid wall_color: {config['wall_color']}. "
                 f"Must be one of: {', '.join(valid_colors)}"
             )
-        config['solving_path_color'] = color
+        config['wall_color'] = color
 
     if 'maze_color' in config:
         valid_color = ['white', 'blue_green', 'brown', 'light_gray',
@@ -263,25 +264,35 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
                     'blue', 'marroon', 'forest_green', 'dark_gray',
                     'green', 'lime', 'navy_blue', 'tan',
                     'red', 'pink', 'rust', 'coffee_brown',
-                    'black', 'purple', 'dandilion_yellow', 'moon_glow',
-                    'orange', 'gray', 'highlighter',
+                    'black', 'purple', 'dandilion_yellow',
+                    'moon_glow', 'orange', 'gray', 'highlighter',
                     'yellow', 'magenta', 'sky_blue']
         color = str(config['egg42']).lower()
-    if color not in valid_42:
         if color not in valid_42:
             raise ConfigError(
                 f"Invalid egg42: {config['egg42']}. "
                 f"Must be one of: {', '.join(valid_42)}"
             )
         config['egg42'] = color
-    if 'wall_color' in config:
-        color = str(config['wall_color']).lower()
-        if color not in valid_color:
+
+    if 'path_color' in config:
+        valid_path = ['white', 'blue_green', 'brown',
+                      'light_gray', 'blue', 'marroon',
+                      'forest_green', 'dark_gray', 'green',
+                      'lime', 'navy_blue', 'tan', 'red',
+                      'pink', 'rust', 'coffee_brown', 'black',
+                      'purple', 'dandilion_yellow', 'moon_glow',
+                      'orange', 'gray', 'highlighter', 'yellow',
+                      'magenta', 'sky_blue']
+        color = str(config['path_color']).lower()
+        if color not in valid_path:
             raise ConfigError(
-                f"Invalid wall_color: {config['wall_color']}. "
-                f"Must be one of: {', '.join(valid_color)}"
+                f"Invalid path_color: "
+                f"{config['path_color']}. "
+                f"Must be one of: "
+                f"{', '.join(valid_path)}"
             )
-        config['wall_color'] = color
+        config['path_color'] = color
 
     # Set defaults
     # config.setdefault('algorithm', 'iterative_backtracking')

@@ -10,8 +10,12 @@ rendering formats with color support.
 """
 
 from .maze import Maze, Cell, Wall, Direction
-from .generator import generate_maze, generate_prim, generate_kruskal
-from .iterative_backtracking import generate_recursive_backtracking
+from .generator import (
+    generate_maze, generate_prim, generate_kruskal
+)
+from .iterative_backtracking import (
+    generate_recursive_backtracking
+)
 from .render import render_unicode
 from .render_color import (
     CellColorizer,

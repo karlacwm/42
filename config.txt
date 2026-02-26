@@ -41,3 +41,4 @@ exit_y = height - 1
 wall_color = coffee_brown
 maze_color = dandilion_yellow
 egg42 = pink
+path_color = highlighter
