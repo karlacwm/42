@@ -61,10 +61,9 @@ def main() -> None:
 
     valid_color = {'white', 'blue_green', 'brown', 'light_gray',
                         'blue', 'marroon', 'forest_green', 'dark_gray',
-                        'green', 'lime', 'navy_blue', 'tan',
-                        'red', 'pink', 'rust', 'coffee_brown',
-                        'black', 'purple', 'dandilion_yellow', 'moon_glow',
-                        'orange', 'gray', 'highlighter',
+                        'lime', 'navy_blue', 'tan', 'pink', 'rust',
+                        'coffee_brown', 'black', 'purple', 'dandilion_yellow',
+                         'moon_glow', 'orange', 'gray', 'highlighter',
                         'yellow', 'magenta', 'sky_blue'}
 
     if choice == '1':
@@ -83,18 +82,25 @@ def main() -> None:
         print("Toggling path solution...")
         # Here we would toggle the path solution visibility
     elif choice == '3':
-        print(f"Available colours: {', '.join(valid_color)}")
+        print(f"Available colours:\n{', '.join(valid_color)}")
         color = input("What colour do you want for the 42 egg?\n").strip().lower()
         if color in valid_color:
             update_config(config_file, 'egg42', color)
             main()
         else:
             print(f"Sorry this colour '{color}' is not available :(")
-            print(f"Choose one from the available colours: {', '.join(valid_color)}")
+            print(f"Choose one from the available colours:\n{', '.join(valid_color)}")
             # or go back to menu?
     elif choice == '4':
-        print("Changing maze wall colour...")
-        # Here we would change the maze wall colour in the rendering
+        print(f"Available colours:\n{', '.join(valid_color)}")
+        color = input("What colour do you want for the maze walls?\n").strip().lower()
+        if color in valid_color:
+            update_config(config_file, 'wall_color', color)
+            main()
+        else:
+            print(f"Sorry this colour '{color}' is not available :(")
+            print(f"Choose one from the available colours:\n{', '.join(valid_color)}")
+            # or go back to menu?
     elif choice == '5':
         print("Exiting...")
         sys.exit(0)
