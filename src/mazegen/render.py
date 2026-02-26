@@ -81,6 +81,7 @@ def render_unicode(maze: Maze, delay: float = 0.01, config_path: str = "config.t
     # load and validate configuration; helper returns an RGB tuple
     maze_color = get_maze_color_from_config(config_path, "maze")
     egg_color = get_maze_color_from_config(config_path, "egg")
+    wall_color = get_maze_color_from_config(config_path, "wall")
     vertical, horizontal, render_w, render_h = _build_wall_grids(maze)
     pattern = get_pattern_cells(width, height)
 
@@ -161,8 +162,10 @@ def render_unicode(maze: Maze, delay: float = 0.01, config_path: str = "config.t
 
             if token == "███":
                 colored = colorize_token(token, egg_color)
-            else:
+            elif token == "░░░" or token == "░":
                 colored = colorize_token(token, maze_color)
+            else:
+                colored = colorize_token(token, wall_color)
             line += colored
             sys.stdout.write(colored)
             sys.stdout.flush()

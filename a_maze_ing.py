@@ -13,15 +13,15 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 def main() -> None:
     """Main demo function."""
-    print("=== A_Maze_Ing Maze Generator Demo ===\n")
+    print("=== A_Maze_Ing is amazing ===\n")
 
     # Example 1: Generate from config file
     config_file = os.path.join(os.path.dirname(__file__), 'config.txt')
 
     if os.path.exists(config_file):
-        print("Example 1: Loading from config file")
+        print("Getting maze generation request from the 'config.txt' file...")
         config = parse_config(config_file)
-        print(f"Config: {config}")
+        print(f"Request is parsed as follows:\n{config}")
 
         maze = generate_maze(
             width=config['width'],
@@ -30,7 +30,7 @@ def main() -> None:
             seed=config.get('seed')
         )
         speed = 0.001
-        print(f"\nGenerated {config['algorithm']} maze ({maze.width}x{maze.height}):")
+        print(f"\nMaze ({maze.width} x {maze.height}) is generated using {config['algorithm']} algorithm:")
         render_unicode(maze, speed)
         print()
 

@@ -2,6 +2,8 @@
 from typing import Dict, Any
 import re
 
+# from idna import valid_contextj
+
 
 class ConfigError(Exception):
     """Exception raised for configuration errors."""
@@ -80,74 +82,82 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
     Raises:
         ConfigError: If configuration is invalid
     """
+    try:
     # Check required parameters
-    if 'width' not in config:
-        raise ConfigError("Missing required parameter: width")
-    if 'height' not in config:
-        raise ConfigError("Missing required parameter: height")
+        if 'width' not in config:
+            raise ConfigError("Missing required parameter: width")
+        if 'height' not in config:
+            raise ConfigError("Missing required parameter: height")
 
-    width = config['width']
-    height = config['height']
+        width = config['width']
+        height = config['height']
 
-    # Validate dimensions
-    if not isinstance(width, int) or width < 2:
-        raise ConfigError(f"Invalid width: {width}. Must be an integer >= 2")
-    if not isinstance(height, int) or height < 2:
-        raise ConfigError(f"Invalid height: {height}. Must be an integer >= 2")
+        # Validate dimensions
+        if not isinstance(width, int) or width < 2:
+            raise ConfigError(f"Invalid width: {width}. Must be an integer >= 2")
+        if not isinstance(height, int) or height < 2:
+            raise ConfigError(f"Invalid height: {height}. Must be an integer >= 2")
 
-    # Check for impossibly large mazes
-    if width > 100 or height > 100:
-        raise ConfigError(
-            f"Maze dimensions too large: {width}x{height}. "
-            f"Maximum is over 1000x1000"
-        )
-
-    # Validate algorithm if specified
-    if 'algorithm' in config:
-        valid_algorithms = ['prim', 'kruskal', 'iterative_backtracking']
-        algo = str(config['algorithm']).lower()
-        if algo not in valid_algorithms:
+        # Check for impossibly large mazes
+        if width > 100 or height > 100:
             raise ConfigError(
-                f"Invalid algorithm: {config['algorithm']}. "
-                f"Must be one of: {', '.join(valid_algorithms)}"
+                f"Maze dimensions too large: {width}x{height}. "
+                f"Maximum is over 1000x1000"
             )
-        config['algorithm'] = algo
 
-    if 'maze_color' in config:
-        valid_color = ['white', 'blue_green', 'brown', 'light_gray',
-                       'blue', 'marroon', 'forest_green', 'dark_gray',
-                       'green', 'lime', 'navy_blue', 'tan',
-                       'red', 'pink', 'rust', 'coffee_brown',
-                       'black', 'purple', 'dandilion_yellow', 'moon_glow',
-                       'orange', 'gray', 'highlighter',
-                       'yellow', 'magenta', 'sky_blue']
-        color = str(config['maze_color']).lower()
-        if color not in valid_color:
-            raise ConfigError(
-                f"Invalid maze_color: {config['maze_color']}. "
-                f"Must be one of: {', '.join(valid_color)}"
-            )
-        config['maze_color'] = color
+        # Validate algorithm if specified
+        if 'algorithm' in config:
+            valid_algorithms = ['prim', 'kruskal', 'iterative_backtracking']
+            algo = str(config['algorithm']).lower()
+            if algo not in valid_algorithms:
+                raise ConfigError(
+                    f"Invalid algorithm: {config['algorithm']}. "
+                    f"Must be one of: {', '.join(valid_algorithms)}"
+                )
+            config['algorithm'] = algo
 
-    if 'egg42' in config:
-        valid_42 = ['white', 'blue_green', 'brown', 'light_gray',
-                    'blue', 'marroon', 'forest_green', 'dark_gray',
-                    'green', 'lime', 'navy_blue', 'tan',
-                    'red', 'pink', 'rust', 'coffee_brown',
-                    'black', 'purple', 'dandilion_yellow', 'moon_glow',
-                    'orange', 'gray', 'highlighter',
-                    'yellow', 'magenta', 'sky_blue']
-        color = str(config['egg42']).lower()
-        if color not in valid_42:
-            raise ConfigError(
-                f"Invalid egg42: {config['egg42']}. "
-                f"Must be one of: {', '.join(valid_42)}"
-            )
-        config['egg42'] = color
+        valid_color = {'white', 'blue_green', 'brown', 'light_gray',
+                        'blue', 'marroon', 'forest_green', 'dark_gray',
+                        'green', 'lime', 'navy_blue', 'tan',
+                        'red', 'pink', 'rust', 'coffee_brown',
+                        'black', 'purple', 'dandilion_yellow', 'moon_glow',
+                        'orange', 'gray', 'highlighter',
+                        'yellow', 'magenta', 'sky_blue'}
 
-    # Set defaults
-    config.setdefault('algorithm', 'iterative_backtracking')
-    config.setdefault('perfect', True)
-    config.setdefault('seed', None)
-    config.setdefault('maze_color', 'pink')
-    config.setdefault('egg42', 'yellow')
+        if 'maze_color' in config:
+            color = str(config['maze_color']).lower()
+            if color not in valid_color:
+                raise ConfigError(
+                    f"Invalid maze_color: {config['maze_color']}. "
+                    f"Must be one of: {', '.join(valid_color)}"
+                )
+            config['maze_color'] = color
+
+        if 'egg42' in config:
+            color = str(config['egg42']).lower()
+            if color not in valid_color:
+                raise ConfigError(
+                    f"Invalid egg42: {config['egg42']}. "
+                    f"Must be one of: {', '.join(valid_color)}"
+                )
+            config['egg42'] = color
+
+        if 'wall_color' in config:
+            color = str(config['wall_color']).lower()
+            if color not in valid_color:
+                raise ConfigError(
+                    f"Invalid wall_color: {config['wall_color']}. "
+                    f"Must be one of: {', '.join(valid_color)}"
+                )
+            config['wall_color'] = color
+    except ConfigError as e:
+        print(e)
+        print("Please change invalid value in 'config.txt' before you try again.")
+
+    # # Set defaults
+    # config.setdefault('algorithm', 'iterative_backtracking')
+    # config.setdefault('perfect', True)
+    # config.setdefault('seed', None)
+    # config.setdefault('maze_color', 'pink')
+    # config.setdefault('egg42', 'yellow')
+    # config.setdefault('wall_color', 'white')
