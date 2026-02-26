@@ -38,4 +38,4 @@ perfect=true
 
 wall_color = coffee_brown
 maze_color = dandilion_yellow
-egg42 = purple
+egg42 = pink
