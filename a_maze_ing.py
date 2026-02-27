@@ -80,7 +80,7 @@ def main() -> None:
             (config['entry_x'], config['entry_y']),
             (config['exit_x'], config['exit_y']),
             CURRENT_PATH,
-            "maze.txt"
+            "output_maze.txt"
         )
         speed = 0.001
         print(

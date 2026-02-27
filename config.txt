@@ -17,7 +17,7 @@ perfect=true
 # seed=42
 
 # output filename
-# output_file = maze.txt
+# output_file = output_maze.txt
 
 # ======================================================
 
