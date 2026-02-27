@@ -1,6 +1,7 @@
 """Rendering utilities for mazes."""
 import sys
 import time
+import os
 from typing import List, Tuple, Set
 from .maze import Maze, Wall
 from .render_color import colorize_token, get_maze_color_from_config
@@ -224,23 +225,22 @@ def render_unicode(
     return "\n".join(lines)
 
 
-def render_unicode_with_path(
+def render_path_animation(
         maze: Maze,
         path: List[Tuple[int, int]],
-        delay: float = 0.01,
-        config_path: str = "config.txt"
-) -> str:
+        config_path: str = "config.txt",
+        cell_delay: float = 0.05,
+        wall_delay: float = 0.03
+) -> None:
     """
-    Render maze with the shortest path highlighted.
+    Animate path discovery cell by cell, then show passages.
 
     Args:
         maze: The maze to render
         path: List of (x, y) coordinates representing path
-        delay: Delay between rendering each token
         config_path: Path to configuration file
-
-    Returns:
-        Rendered maze as string with path highlighted
+        cell_delay: Delay between revealing each path cell
+        wall_delay: Delay between revealing each passage
     """
     from .config import parse_config
 
@@ -248,7 +248,9 @@ def render_unicode_with_path(
     maze_color = get_maze_color_from_config(
         config_path, "maze"
     )
-    egg_color = get_maze_color_from_config(config_path, "egg")
+    egg_color = get_maze_color_from_config(
+        config_path, "egg"
+    )
     wall_color = get_maze_color_from_config(
         config_path, "wall"
     )
@@ -284,24 +286,16 @@ def render_unicode_with_path(
     )
     pattern = get_pattern_cells(width, height)
 
-    # Convert path to a set for O(1) lookup
-    path_set: Set[Tuple[int, int]] = set(path)
-
-    # Store render coordinates of walls/passages between path cells
-    path_walls: Set[Tuple[int, int]] = set()
-
-    # Adding open wall coordinates between 2 path cells
+    # Build path walls list
+    path_walls_list = []
     for i in range(len(path) - 1):
         x1, y1 = path[i]
         x2, y2 = path[i + 1]
-
-        # Convert logical cell coords to render coords
         rx1 = x1 * 2 + 1
         ry1 = y1 * 2 + 1
         rx2 = x2 * 2 + 1
         ry2 = y2 * 2 + 1
 
-        # Calculate the render coordinate of the wall/passage between them
         if x1 == x2:  # Vertical move
             wall_rx = rx1
             wall_ry = (ry1 + ry2) // 2
@@ -309,9 +303,8 @@ def render_unicode_with_path(
             wall_rx = (rx1 + rx2) // 2
             wall_ry = ry1
 
-        path_walls.add((wall_rx, wall_ry))
+        path_walls_list.append((wall_rx, wall_ry))
 
-    # Standard intersection map
     wall_unicode = {
         (True, True, True, True): "╬",
         (True, False, True, True): "╣",
@@ -326,130 +319,158 @@ def render_unicode_with_path(
         (False, True, True, False): "╔",
     }
 
-    lines = []
-    for ry in range(render_h):
-        line = ""
-        for rx in range(render_w):
-            cx = rx // 2
-            cy = ry // 2
+    def render_frame(
+            path_cells: Set[Tuple[int, int]],
+            path_passages: Set[Tuple[int, int]]
+    ) -> None:
+        """Render one frame of the animation."""
+        # Clear screen and move cursor to top
+        os.system('clear')
+        sys.stdout.write("\033[2J\033[H")
+        # sys.stdout.flush()
 
-            # Check if current/adjacent cells are in pattern
-            curr_in_pat = (cx, cy) in pattern
-            left_in_pat = (
-                (cx - 1, cy) in pattern if rx > 0 else False
-            )
-            up_in_pat = (
-                (cx, cy - 1) in pattern if ry > 0 else False
-            )
-            diag_in_pat = (
-                (cx - 1, cy - 1) in pattern
-                if (rx > 0 and ry > 0) else False
-            )
+        for ry in range(render_h):
+            for rx in range(render_w):
+                cx = rx // 2
+                cy = ry // 2
 
-            # Check if current cell is on path
-            on_path = (cx, cy) in path_set
-
-            token = ""
-
-            # --- A: Intersections (Corners) ---
-            if ry % 2 == 0 and rx % 2 == 0:
-                is_pat_corner = (
-                    curr_in_pat or left_in_pat or
-                    up_in_pat or diag_in_pat
+                curr_in_pat = (cx, cy) in pattern
+                left_in_pat = (
+                    (cx - 1, cy) in pattern if rx > 0
+                    else False
+                )
+                up_in_pat = (
+                    (cx, cy - 1) in pattern if ry > 0
+                    else False
+                )
+                diag_in_pat = (
+                    (cx - 1, cy - 1) in pattern
+                    if (rx > 0 and ry > 0) else False
                 )
 
-                up = ry > 0 and vertical[ry - 1][rx]
-                down = (
-                    ry < render_h - 1 and vertical[ry + 1][rx]
-                )
-                left = rx > 0 and horizontal[ry][rx - 1]
-                right = (
-                    rx < render_w - 1 and
-                    horizontal[ry][rx + 1]
-                )
+                on_path = (cx, cy) in path_cells
+                token = ""
 
-                if is_pat_corner:
-                    u = up or (up_in_pat or diag_in_pat)
-                    d = down or (
-                        curr_in_pat or left_in_pat
+                # --- A: Intersections (Corners) ---
+                if ry % 2 == 0 and rx % 2 == 0:
+                    is_pat_corner = (
+                        curr_in_pat or left_in_pat or
+                        up_in_pat or diag_in_pat
                     )
-                    ll = left or (
-                        left_in_pat or diag_in_pat
+
+                    up = ry > 0 and vertical[ry - 1][rx]
+                    down = (
+                        ry < render_h - 1 and
+                        vertical[ry + 1][rx]
                     )
-                    r = right or (
-                        curr_in_pat or up_in_pat
+                    left = rx > 0 and horizontal[ry][rx - 1]
+                    right = (
+                        rx < render_w - 1 and
+                        horizontal[ry][rx + 1]
                     )
-                    token = wall_unicode.get(
-                        (u, r, d, ll), "░"
+
+                    if is_pat_corner:
+                        u = up or (up_in_pat or diag_in_pat)
+                        d = down or (
+                            curr_in_pat or left_in_pat
+                        )
+                        ll = left or (
+                            left_in_pat or diag_in_pat
+                        )
+                        r = right or (
+                            curr_in_pat or up_in_pat
+                        )
+                        token = wall_unicode.get(
+                            (u, r, d, ll), "░"
+                        )
+                    else:
+                        token = wall_unicode.get(
+                            (up, right, down, left), "░"
+                        )
+
+                # --- B: Horizontal segments ---
+                elif ry % 2 == 0 and rx % 2 == 1:
+                    if curr_in_pat or up_in_pat:
+                        token = "═══"
+                    elif (rx, ry) in path_passages:
+                        token = "▓▓▓"
+                    else:
+                        token = (
+                            "═══" if horizontal[ry][rx]
+                            else "░░░"
+                        )
+
+                # --- C: Vertical segments ---
+                elif ry % 2 == 1 and rx % 2 == 0:
+                    if curr_in_pat or left_in_pat:
+                        token = "║"
+                    elif (rx, ry) in path_passages:
+                        token = "▓"
+                    else:
+                        token = (
+                            "║" if vertical[ry][rx]
+                            else "░"
+                        )
+
+                # --- D: Cell Interior ---
+                else:
+                    if curr_in_pat:
+                        token = "███"
+                    elif on_path:
+                        token = "▓▓▓"
+                    else:
+                        token = "░░░"
+
+                # Check position
+                is_entry = (cx == entry_x and cy == entry_y)
+                is_exit = (cx == exit_x and cy == exit_y)
+
+                # Colorize
+                if token == "███":
+                    colored = colorize_token(
+                        token, egg_color
+                    )
+                elif is_entry:
+                    colored = colorize_token(
+                        token, entry_color
+                    )
+                elif is_exit:
+                    colored = colorize_token(
+                        token, exit_color
+                    )
+                elif token == "▓▓▓" or token == "▓":
+                    colored = colorize_token(
+                        token, path_color
+                    )
+                elif token == "░░░" or token == "░":
+                    colored = colorize_token(
+                        token, maze_color
                     )
                 else:
-                    token = wall_unicode.get(
-                        (up, right, down, left), "░"
+                    colored = colorize_token(
+                        token, wall_color
                     )
 
-            # --- B: Horizontal segments ---
-            elif ry % 2 == 0 and rx % 2 == 1:
-                if curr_in_pat or up_in_pat:
-                    token = "═══"
-                elif (rx, ry) in path_walls:
-                    token = "▓▓▓"  # Path passage through horizontal wall
-                else:
-                    token = (
-                        "═══" if horizontal[ry][rx]
-                        else "░░░"
-                    )
+                sys.stdout.write(colored)
+            sys.stdout.write("\n")
+        sys.stdout.flush()
 
-            # --- C: Vertical segments ---
-            elif ry % 2 == 1 and rx % 2 == 0:
-                if curr_in_pat or left_in_pat:
-                    token = "║"
-                elif (rx, ry) in path_walls:
-                    token = "▓"  # Path passage through vertical wall
-                else:
-                    token = (
-                        "║" if vertical[ry][rx] else "░"
-                    )
+    # Animation: reveal path cells one by one
+    time.sleep(0.5)
 
-            # --- D: Cell Interior ---
-            else:
-                if curr_in_pat:
-                    token = "███"
-                elif on_path:
-                    token = "▓▓▓"
-                else:
-                    token = "░░░"
+    for i in range(len(path) + 1):
+        path_subset = set(path[:i])
+        render_frame(path_subset, set())
+        time.sleep(cell_delay)
 
-            # Check if current position is entry or exit
-            is_entry = (cx == entry_x and cy == entry_y)
-            is_exit = (cx == exit_x and cy == exit_y)
+    # Animation: reveal passages between path cells
+    print("\nRevealing passages...\n")
+    time.sleep(0.3)
 
-            # Colorize based on content
-            if token == "███":
-                colored = colorize_token(token, egg_color)
-            elif is_entry:
-                colored = colorize_token(
-                    token, entry_color
-                )
-            elif is_exit:
-                colored = colorize_token(
-                    token, exit_color
-                )
-            elif token == "▓▓▓" or token == "▓":
-                colored = colorize_token(
-                    token, path_color
-                )
-            elif token == "░░░" or token == "░":
-                colored = colorize_token(token, maze_color)
-            else:
-                colored = colorize_token(
-                    token, wall_color
-                )
-            line += colored
-            sys.stdout.write(colored)
-            sys.stdout.flush()
-            time.sleep(delay)
+    path_set = set(path)
+    for i in range(len(path_walls_list) + 1):
+        passages_subset = set(path_walls_list[:i])
+        render_frame(path_set, passages_subset)
+        time.sleep(wall_delay)
 
-        lines.append(line)
-        sys.stdout.write("\n")
-
-    return "\n".join(lines)
+    print("\nPath animation complete!\n")

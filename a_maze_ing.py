@@ -7,7 +7,7 @@ from mazegen import (
     parse_config,
     generate_maze,
     render_unicode,
-    render_unicode_with_path,
+    render_path_animation,
     find_shortest_path
 )
 
@@ -86,8 +86,8 @@ def main() -> None:
         # Render with or without path
         if SHOW_PATH and CURRENT_PATH:
             print("(Path is shown)\n")
-            render_unicode_with_path(
-                CURRENT_MAZE, CURRENT_PATH, speed
+            render_path_animation(
+                CURRENT_MAZE, CURRENT_PATH
             )
         else:
             render_unicode(CURRENT_MAZE, speed)

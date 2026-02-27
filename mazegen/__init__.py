@@ -16,7 +16,9 @@ from .generator import (
 from .iterative_backtracking import (
     generate_recursive_backtracking
 )
-from .render import render_unicode, render_unicode_with_path
+from .render import (
+    render_unicode, render_path_animation
+)
 from .solver import find_shortest_path
 from .render_color import (
     CellColorizer,
@@ -45,6 +47,7 @@ __all__ = [
     # Rendering
     "render_unicode",
     "render_unicode_with_path",
+    "render_path_animation",
     # Solver
     "find_shortest_path",
     # Color rendering
