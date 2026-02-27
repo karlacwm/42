@@ -19,8 +19,8 @@ perfect=true
 # ======================================================
 
 # entry coordinates (x, y)
-entry_x = 1
-entry_y = 1
+entry_x = 0
+entry_y = 0
 
 # exit coordinates (x, y)
 exit_x = width - 1
