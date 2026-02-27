@@ -465,7 +465,7 @@ def render_path_animation(
 
     # Animation: reveal passages between path cells
     print("\nRevealing passages...\n")
-    time.sleep(0.3)
+    time.sleep(0.5)
 
     path_set = set(path)
     for i in range(len(path_walls_list) + 1):
