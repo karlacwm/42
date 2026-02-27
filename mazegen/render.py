@@ -287,6 +287,30 @@ def render_unicode_with_path(
     # Convert path to a set for O(1) lookup
     path_set: Set[Tuple[int, int]] = set(path)
 
+    # Store render coordinates of walls/passages between path cells
+    path_walls: Set[Tuple[int, int]] = set()
+
+    # Adding open wall coordinates between 2 path cells
+    for i in range(len(path) - 1):
+        x1, y1 = path[i]
+        x2, y2 = path[i + 1]
+
+        # Convert logical cell coords to render coords
+        rx1 = x1 * 2 + 1
+        ry1 = y1 * 2 + 1
+        rx2 = x2 * 2 + 1
+        ry2 = y2 * 2 + 1
+
+        # Calculate the render coordinate of the wall/passage between them
+        if x1 == x2:  # Vertical move
+            wall_rx = rx1
+            wall_ry = (ry1 + ry2) // 2
+        else:  # Horizontal move
+            wall_rx = (rx1 + rx2) // 2
+            wall_ry = ry1
+
+        path_walls.add((wall_rx, wall_ry))
+
     # Standard intersection map
     wall_unicode = {
         (True, True, True, True): "╬",
@@ -367,6 +391,8 @@ def render_unicode_with_path(
             elif ry % 2 == 0 and rx % 2 == 1:
                 if curr_in_pat or up_in_pat:
                     token = "═══"
+                elif (rx, ry) in path_walls:
+                    token = "▓▓▓"  # Path passage through horizontal wall
                 else:
                     token = (
                         "═══" if horizontal[ry][rx]
@@ -377,6 +403,8 @@ def render_unicode_with_path(
             elif ry % 2 == 1 and rx % 2 == 0:
                 if curr_in_pat or left_in_pat:
                     token = "║"
+                elif (rx, ry) in path_walls:
+                    token = "▓"  # Path passage through vertical wall
                 else:
                     token = (
                         "║" if vertical[ry][rx] else "░"
@@ -406,7 +434,7 @@ def render_unicode_with_path(
                 colored = colorize_token(
                     token, exit_color
                 )
-            elif token == "▓▓▓":
+            elif token == "▓▓▓" or token == "▓":
                 colored = colorize_token(
                     token, path_color
                 )
