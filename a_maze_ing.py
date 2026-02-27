@@ -98,13 +98,14 @@ def main() -> None:
     print("--------------------------------------")
     print("| 1 | regenerate a maze               |")
     print("| 2 | show/hide path solution         |")
-    print("| 3 | change 42 colour                |")
-    print("| 4 | change maze_wall colour         |")
-    print("| 5 | exit                            |")
+    print("| 3 | change colour - maze wall       |")
+    print("| 4 | change colour - maze background |")
+    print("| 5 | change colour - 42              |")
+    print("| 6 | exit                            |")
     print("--------------------------------------")
     choice = input("Enter your choice: ")
     valid_color = {
-        'blue', 'marroon', 'forest_green', 'dark_gray',
+        'blue', 'marroon', 'forest_green', 'dark_gray', 'pink',
         'coffee_brown', 'black', 'purple', 'dandelion_yellow',
         'moon_glow', 'orange', 'gray', 'highlighter',
         'yellow', 'magenta', 'sky_blue'}
@@ -126,6 +127,19 @@ def main() -> None:
     elif choice == '3':
         print(f"Available colours:\n{', '.join(valid_color)}")
         color = input(
+            "What colour do you want for the maze walls?\n"
+        ).strip().lower()
+        if color in valid_color:
+            update_config(config_file, 'wall_color', color)
+            main()
+        else:
+            print(f"Sorry this colour '{color}' is not available :(")
+            msg = (f"Choose one from the available colours:\n"
+                   f"{', '.join(valid_color)}")
+            print(msg)
+    elif choice == '4':
+        print(f"Available colours:\n{', '.join(valid_color)}")
+        color = input(
             "What colour do you want for the 42 egg?\n"
         ).strip().lower()
         if color in valid_color:
@@ -137,20 +151,21 @@ def main() -> None:
                    f"{', '.join(valid_color)}")
             print(msg)
             # or go back to menu?
-    elif choice == '4':
+    elif choice == '5':
         print(f"Available colours:\n{', '.join(valid_color)}")
         color = input(
-            "What colour do you want for the maze walls?\n"
+            "What colour do you want for the 42 egg?\n"
         ).strip().lower()
         if color in valid_color:
-            update_config(config_file, 'wall_color', color)
+            update_config(config_file, 'egg42', color)
             main()
         else:
             print(f"Sorry this colour '{color}' is not available :(")
             msg = (f"Choose one from the available colours:\n"
                    f"{', '.join(valid_color)}")
             print(msg)
-    elif choice == '5':
+            # or go back to menu?
+    elif choice == '6':
         print("Exiting...")
         sys.exit(0)
 

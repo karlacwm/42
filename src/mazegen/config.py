@@ -139,7 +139,12 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
     if width > 100 or height > 100:
         raise ConfigError(
             f"Maze dimensions too large: {width}x{height}. "
-            f"Maximum is over 1000x1000"
+            f"Maximum is over 100x100"
+        )
+    elif width < 7 or height < 7:
+        raise ConfigError(
+            f"Maze dimensions too small: {width}x{height}. "
+            f"Minimum is under 7x7"
         )
 
     # Validate algorithm if specified

@@ -2,8 +2,8 @@
 # Format: KEY=VALUE
 
 # Maze dimensions
-width=20
-height=15
+width=18
+height=16
 
 # Generation algorithm (prim, kruskal or iterative_backtracking)
 # algorithm=prim
@@ -40,7 +40,7 @@ exit_x = width - 1
 exit_y = height - 1
 exit_color = red
 
-wall_color = coffee_brown
+wall_color = orange
 maze_color = dandilion_yellow
-egg42 = pink
+egg42 = magenta
 path_color = highlighter

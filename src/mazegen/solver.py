@@ -1,16 +1,16 @@
 """Maze solver with shortest path detection using BFS."""
-from typing import List, Tuple, Set, Optional
+from typing import List, Tuple, Set, Optional, Any
 from collections import deque
 from .maze import Maze, Direction
 
 
 def find_shortest_path(
         maze: Maze,
-        start_x,
-        start_y,
-        end_x,
-        end_y
-) -> Optional[List[Tuple[int, int]]]:
+        start_x: int,
+        start_y: int,
+        end_x: int,
+        end_y: int
+) -> Optional[List[Tuple[int, int]]] | Any:
     """
     Find shortest path from start to end using BFS.
 

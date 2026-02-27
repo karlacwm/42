@@ -387,7 +387,7 @@ def render_unicode_with_path(
                 if curr_in_pat:
                     token = "███"
                 elif on_path:
-                    token = "···"
+                    token = "▓▓▓"
                 else:
                     token = "░░░"
 
@@ -406,7 +406,7 @@ def render_unicode_with_path(
                 colored = colorize_token(
                     token, exit_color
                 )
-            elif token == "···":
+            elif token == "▓▓▓":
                 colored = colorize_token(
                     token, path_color
                 )
@@ -425,4 +425,3 @@ def render_unicode_with_path(
         sys.stdout.write("\n")
 
     return "\n".join(lines)
-
