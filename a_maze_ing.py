@@ -8,7 +8,8 @@ from mazegen import (
     generate_maze,
     render_unicode,
     render_path_animation,
-    find_shortest_path
+    find_shortest_path,
+    write_output_file
 )
 
 # Add src to path for development
@@ -74,7 +75,13 @@ def main() -> None:
                 config['exit_x'],
                 config['exit_y']
             )
-
+        write_output_file(
+            CURRENT_MAZE,
+            (config['entry_x'], config['entry_y']),
+            (config['exit_x'], config['exit_y']),
+            CURRENT_PATH,
+            "maze.txt"
+        )
         speed = 0.001
         print(
             f"\nMaze ({CURRENT_MAZE.width} x "
@@ -106,7 +113,7 @@ def main() -> None:
     choice = input("Enter your choice: ")
     valid_color = {
         'blue', 'marroon', 'forest_green', 'dark_gray', 'pink',
-        'coffee_brown', 'black', 'purple', 'dandelion_yellow',
+        'coffee_brown', 'black', 'purple', 'dandilion_yellow',
         'moon_glow', 'orange', 'gray', 'highlighter',
         'yellow', 'magenta', 'sky_blue'}
 
@@ -140,17 +147,16 @@ def main() -> None:
     elif choice == '4':
         print(f"Available colours:\n{', '.join(valid_color)}")
         color = input(
-            "What colour do you want for the 42 egg?\n"
+            "What colour do you want for the maze background?\n"
         ).strip().lower()
         if color in valid_color:
-            update_config(config_file, 'egg42', color)
+            update_config(config_file, 'maze_color', color)
             main()
         else:
             print(f"Sorry this colour '{color}' is not available :(")
             msg = (f"Choose one from the available colours:\n"
                    f"{', '.join(valid_color)}")
             print(msg)
-            # or go back to menu?
     elif choice == '5':
         print(f"Available colours:\n{', '.join(valid_color)}")
         color = input(

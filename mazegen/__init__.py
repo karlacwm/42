@@ -31,6 +31,7 @@ from .render_color import (
     get_maze_color_from_config
 )
 from .config import parse_config, validate_maze_config, ConfigError
+from .output_file_gen import write_output_file
 
 __version__ = "0.1.0"
 __all__ = [
@@ -63,4 +64,6 @@ __all__ = [
     "parse_config",
     "validate_maze_config",
     "ConfigError",
+        # Output file
+    "write_output_file",
 ]
