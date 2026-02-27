@@ -82,12 +82,38 @@ def render_unicode(
         maze: Maze, delay: float = 0.01,
         config_path: str = "config.txt"
 ) -> str:
+    from .config import parse_config
+
     width, height = maze.width, maze.height
     # load and validate configuration; helper returns an RGB tuple
     maze_color = get_maze_color_from_config(config_path, "maze")
     egg_color = get_maze_color_from_config(config_path, "egg")
     wall_color = get_maze_color_from_config(config_path, "wall")
-    vertical, horizontal, render_w, render_h = _build_wall_grids(maze)
+    entry_color = get_maze_color_from_config(
+        config_path, "entry"
+    )
+    exit_color = get_maze_color_from_config(config_path, "exit")
+
+    # Get entry/exit coordinates from config
+    cfg = parse_config(config_path)
+    entry_x = cfg.get('entry_x', 0)
+    entry_y = cfg.get('entry_y', 0)
+    exit_x = cfg.get('exit_x', width - 1)
+    exit_y = cfg.get('exit_y', height - 1)
+
+    # Handle string expressions
+    if isinstance(exit_x, str):
+        exit_x = eval(
+            exit_x, {"width": width, "height": height}
+        )
+    if isinstance(exit_y, str):
+        exit_y = eval(
+            exit_y, {"width": width, "height": height}
+        )
+
+    vertical, horizontal, render_w, render_h = (
+        _build_wall_grids(maze)
+    )
     pattern = get_pattern_cells(width, height)
 
     # Standard intersection map
@@ -173,8 +199,16 @@ def render_unicode(
             else:
                 token = "███" if curr_in_pat else "░░░"
 
+            # Colorize based on content and position
+            is_entry = (cx == entry_x and cy == entry_y)
+            is_exit = (cx == exit_x and cy == exit_y)
+
             if token == "███":
                 colored = colorize_token(token, egg_color)
+            elif is_entry and (token == "░░░" or token == "░"):
+                colored = colorize_token(token, entry_color)
+            elif is_exit and (token == "░░░" or token == "░"):
+                colored = colorize_token(token, exit_color)
             elif token == "░░░" or token == "░":
                 colored = colorize_token(token, maze_color)
             else:
@@ -208,6 +242,8 @@ def render_unicode_with_path(
     Returns:
         Rendered maze as string with path highlighted
     """
+    from .config import parse_config
+
     width, height = maze.width, maze.height
     maze_color = get_maze_color_from_config(
         config_path, "maze"
@@ -219,6 +255,30 @@ def render_unicode_with_path(
     path_color = get_maze_color_from_config(
         config_path, "path"
     )
+    entry_color = get_maze_color_from_config(
+        config_path, "entry"
+    )
+    exit_color = get_maze_color_from_config(
+        config_path, "exit"
+    )
+
+    # Get entry/exit coordinates from config
+    cfg = parse_config(config_path)
+    entry_x = cfg.get('entry_x', 0)
+    entry_y = cfg.get('entry_y', 0)
+    exit_x = cfg.get('exit_x', width - 1)
+    exit_y = cfg.get('exit_y', height - 1)
+
+    # Handle string expressions
+    if isinstance(exit_x, str):
+        exit_x = eval(
+            exit_x, {"width": width, "height": height}
+        )
+    if isinstance(exit_y, str):
+        exit_y = eval(
+            exit_y, {"width": width, "height": height}
+        )
+
     vertical, horizontal, render_w, render_h = (
         _build_wall_grids(maze)
     )
@@ -331,9 +391,21 @@ def render_unicode_with_path(
                 else:
                     token = "░░░"
 
+            # Check if current position is entry or exit
+            is_entry = (cx == entry_x and cy == entry_y)
+            is_exit = (cx == exit_x and cy == exit_y)
+
             # Colorize based on content
             if token == "███":
                 colored = colorize_token(token, egg_color)
+            elif is_entry:
+                colored = colorize_token(
+                    token, entry_color
+                )
+            elif is_exit:
+                colored = colorize_token(
+                    token, exit_color
+                )
             elif token == "···":
                 colored = colorize_token(
                     token, path_color

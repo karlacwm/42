@@ -188,6 +188,22 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
                 f"Cannot place entry on the '42' pattern in the "
                 f"center of the maze")
 
+    if 'entry_color' in config:
+        valid_entry = ['white', 'blue_green', 'brown', 'light_gray',
+                       'blue', 'marroon', 'forest_green', 'dark_gray',
+                       'lime', 'navy_blue', 'tan', 'green', 'red',
+                       'pink', 'rust', 'coffee_brown',
+                       'black', 'purple', 'dandilion_yellow',
+                       'moon_glow', 'orange', 'gray', 'highlighter',
+                       'yellow', 'magenta', 'sky_blue']
+        color = str(config['entry_color']).lower()
+        if color not in valid_entry:
+            raise ConfigError(
+                f"Invalid entry_color: {config['entry_color']}. "
+                f"Must be one of: {', '.join(valid_entry)}"
+            )
+        config['entry_color'] = color
+
     if 'exit_x' in config:
         exit_x = config['exit_x']
         # Evaluate expression if it's a string
@@ -227,11 +243,27 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
                 f"Exit point ({exit_x}, {exit_y}) cannot be the same "
                 f"as entry point ({entry_x}, {entry_y})")
 
+    if 'exit_color' in config:
+        valid_exit = ['white', 'blue_green', 'brown', 'light_gray',
+                      'blue', 'marroon', 'forest_green', 'dark_gray',
+                      'lime', 'navy_blue', 'tan', 'green', 'red',
+                      'pink', 'rust', 'coffee_brown',
+                      'black', 'purple', 'dandilion_yellow',
+                      'moon_glow', 'orange', 'gray', 'highlighter',
+                      'yellow', 'magenta', 'sky_blue']
+        color = str(config['exit_color']).lower()
+        if color not in valid_exit:
+            raise ConfigError(
+                f"Invalid exit_color: {config['exit_color']}. "
+                f"Must be one of: {', '.join(valid_exit)}"
+            )
+        config['exit_color'] = color
+
     if 'wall_color' in config:
         valid_colors = ['white', 'blue_green', 'brown', 'light_gray',
                         'blue', 'marroon', 'forest_green', 'dark_gray',
-                        'green', 'lime', 'navy_blue', 'tan',
-                        'red', 'pink', 'rust', 'coffee_brown',
+                        'lime', 'navy_blue', 'tan', 'green', 'red',
+                        'pink', 'rust', 'coffee_brown',
                         'black', 'purple', 'dandilion_yellow', 'moon_glow',
                         'orange', 'gray', 'highlighter',
                         'yellow', 'magenta', 'sky_blue']
@@ -246,8 +278,8 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
     if 'maze_color' in config:
         valid_color = ['white', 'blue_green', 'brown', 'light_gray',
                        'blue', 'marroon', 'forest_green', 'dark_gray',
-                       'green', 'lime', 'navy_blue', 'tan',
-                       'red', 'pink', 'rust', 'coffee_brown',
+                       'lime', 'navy_blue', 'tan', 'green', 'red',
+                       'pink', 'rust', 'coffee_brown',
                        'black', 'purple', 'dandilion_yellow', 'moon_glow',
                        'orange', 'gray', 'highlighter',
                        'yellow', 'magenta', 'sky_blue']
@@ -278,8 +310,8 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
     if 'path_color' in config:
         valid_path = ['white', 'blue_green', 'brown',
                       'light_gray', 'blue', 'marroon',
-                      'forest_green', 'dark_gray', 'green',
-                      'lime', 'navy_blue', 'tan', 'red',
+                      'forest_green', 'dark_gray',
+                      'lime', 'navy_blue', 'tan', 'green', 'red',
                       'pink', 'rust', 'coffee_brown', 'black',
                       'purple', 'dandilion_yellow', 'moon_glow',
                       'orange', 'gray', 'highlighter', 'yellow',

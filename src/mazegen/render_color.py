@@ -100,6 +100,10 @@ def get_maze_color_from_config(
         name = cfg.get("wall_color", "white")
     elif what_to_color == "path":
         name = cfg.get("path_color", "highlighter")
+    elif what_to_color == "entry":
+        name = cfg.get("entry_color", "green")
+    elif what_to_color == "exit":
+        name = cfg.get("exit_color", "red")
     try:
         return get_color_by_name(name)
     except AttributeError:

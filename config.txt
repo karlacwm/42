@@ -16,18 +16,10 @@ perfect=true
 # Random seed for reproducibility (optional)
 # seed=42
 
-# ======================================================
-
-# entry coordinates (x, y)
-entry_x = 0
-entry_y = 0
-
-# exit coordinates (x, y)
-exit_x = width - 1
-exit_y = height - 1
-
 # output filename
 # output_file = maze.txt
+
+# ======================================================
 
 # colors to choose from :
 # white     |   blue_green  |   brown                |   light_gray
@@ -37,6 +29,16 @@ exit_y = height - 1
 # black     |   purple      |   dandilion_yellow     |   moon_glow
 # orange    |   gray        |   highlighter          |
 # yellow    |   magenta     |   sky_blue             |
+
+# entry coordinates (x, y)
+entry_x = 0
+entry_y = 0
+entry_color = green
+
+# exit coordinates (x, y)
+exit_x = width - 1
+exit_y = height - 1
+exit_color = red
 
 wall_color = coffee_brown
 maze_color = dandilion_yellow
