@@ -64,6 +64,6 @@ __all__ = [
     "parse_config",
     "validate_maze_config",
     "ConfigError",
-        # Output file
-    "write_output_file",
+    # Output file
+    "write_output_file"
 ]
