@@ -3,7 +3,7 @@
 
 import sys
 import os
-from src.mazegen import (
+from mazegen import (
     parse_config,
     generate_maze,
     render_unicode,
@@ -13,7 +13,7 @@ from src.mazegen import (
 
 # Add src to path for development
 sys.path.insert(0, os.path.join(
-    os.path.dirname(__file__), '..', 'src'
+    os.path.dirname(__file__), '..', 'mazegen'
 ))
 
 # Global state for maze and path
