@@ -158,6 +158,13 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
             )
         config['algorithm'] = algo
 
+    # if 'perfect' in config:
+    #     if not isinstance(config['perfect'], bool):
+    #         raise ConfigError(
+    #             f"Invalid perfect value: {config['perfect']}."
+    #             f"Must be a boolean (true/false)"
+    #         )
+
     if 'entry_x' in config:
         entry_x = config['entry_x']
         # Evaluate expression if it's a string
@@ -180,7 +187,7 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
         config['entry_y'] = entry_y
         if not isinstance(entry_x, int) or not isinstance(entry_y, int):
             raise ConfigError(
-                f"Invalid entry coordinates: ({entry_x}, {entry_y})")
+                f"Invalid integer coordinates: ({entry_x}, {entry_y})")
         # Basic bounds check
         if not (0 <= entry_x < width and 0 <= entry_y < height):
             raise ConfigError(
@@ -335,6 +342,9 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
     # config.setdefault('algorithm', 'iterative_backtracking')
     # config.setdefault('perfect', True)
     # config.setdefault('seed', None)
-    # config.setdefault('maze_color', 'pink')
-    # config.setdefault('egg42', 'yellow')
-    # config.setdefault('wall_color', 'white')
+    # config.setdefault('maze_color', 'yellow')
+    # config.setdefault('egg42', 'pink')
+    # config.setdefault('wall_color', 'orange')
+    # config.setdefault('entry_color', 'green')
+    # config.setdefault('exit_color', 'red')
+    # config.setdefault('path_color', 'blue')

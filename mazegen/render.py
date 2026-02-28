@@ -97,10 +97,10 @@ def render_unicode(
 
     # Get entry/exit coordinates from config
     cfg = parse_config(config_path)
-    entry_x = cfg.get('entry_x', 0)
-    entry_y = cfg.get('entry_y', 0)
-    exit_x = cfg.get('exit_x', width - 1)
-    exit_y = cfg.get('exit_y', height - 1)
+    entry_x = cfg.get('entry_x')
+    entry_y = cfg.get('entry_y')
+    exit_x = cfg.get('exit_x')
+    exit_y = cfg.get('exit_y')
 
     # Handle string expressions
     if isinstance(exit_x, str):
@@ -203,12 +203,13 @@ def render_unicode(
             # Colorize based on content and position
             is_entry = (cx == entry_x and cy == entry_y)
             is_exit = (cx == exit_x and cy == exit_y)
+            is_cell_interior = (ry % 2 == 1 and rx % 2 == 1)
 
             if token == "███":
                 colored = colorize_token(token, egg_color)
             elif is_entry and (token == "░░░" or token == "░"):
                 colored = colorize_token(token, entry_color)
-            elif is_exit and (token == "░░░" or token == "░"):
+            elif is_exit and token == "░░░" and is_cell_interior:
                 colored = colorize_token(token, exit_color)
             elif token == "░░░" or token == "░":
                 colored = colorize_token(token, maze_color)
@@ -424,17 +425,18 @@ def render_path_animation(
                 # Check position
                 is_entry = (cx == entry_x and cy == entry_y)
                 is_exit = (cx == exit_x and cy == exit_y)
+                is_cell_interior = (ry % 2 == 1 and rx % 2 == 1)
 
                 # Colorize
                 if token == "███":
                     colored = colorize_token(
                         token, egg_color
                     )
-                elif is_entry:
+                elif is_entry and token == "▓▓▓":
                     colored = colorize_token(
                         token, entry_color
                     )
-                elif is_exit:
+                elif is_exit and is_cell_interior:
                     colored = colorize_token(
                         token, exit_color
                     )
