@@ -148,9 +148,12 @@ def generate_kruskal(width: int, height: int,
 
 def generate_maze(width: int, height: int,
                   algorithm: str = 'prim',
-                  seed: Optional[int] = None) -> Maze:
+                  seed: Optional[int] = None,
+                  perfect: bool = True,
+                  forbidden: Optional[Set[Tuple[int, int]]] = None,
+                  loops: int = 0) -> Maze:
     """
-    Generate a perfect maze using the specified algorithm.
+    Generate a maze using the specified algorithm.
 
     Args:
         width: Width of the maze
@@ -160,6 +163,12 @@ def generate_maze(width: int, height: int,
         - 'kruskal',
         - 'iterative_backtracking')
         seed: Random seed for reproducibility
+        perfect: If True, generate perfect maze (no loops).
+                If False, add loops after generation.
+        forbidden: Set of (render_x, render_y) coords to never remove
+                  (e.g., "42" pattern cells)
+        loops: Number of walls to remove to create loops
+               (only used if perfect=False)
 
     Returns:
         Generated maze
@@ -170,10 +179,18 @@ def generate_maze(width: int, height: int,
     algorithm = algorithm.lower()
 
     if algorithm == 'prim':
-        return generate_prim(width, height, seed)
+        maze = generate_prim(width, height, seed)
     elif algorithm == 'kruskal':
-        return generate_kruskal(width, height, seed)
+        maze = generate_kruskal(width, height, seed)
     elif algorithm == 'iterative_backtracking':
-        return generate_iterative_backtracking(width, height, seed)
+        maze = generate_iterative_backtracking(width, height, seed)
     else:
         raise ValueError(f"Unsupported algorithm: {algorithm}")
+
+    # Add loops if not perfect
+    if not perfect and loops > 0:
+        if forbidden is None:
+            forbidden = set()
+        maze.add_loops(forbidden, loops)
+
+    return maze

@@ -198,7 +198,151 @@ class Maze:
             hex_grid.append(hex_row)
         return hex_grid
 
-    # def start(self)
+    def add_loops(
+            self,
+            forbidden: Tuple[int, int],
+            loops: int
+    ) -> None:
+        """
+        Add loops to a perfect maze by removing internal walls.
+
+        This creates cycles in the maze structure while respecting
+        constraints:
+        - Only removes internal walls (not outer borders)
+        - Never removes forbidden walls (e.g., "42" pattern)
+        - Prevents creation of 2x2 blocks of completely open cells
+        - Preserves structural integrity
+
+        Args:
+            forbidden: Set of (render_x, render_y) coordinates
+                      that must not be removed
+            loops: Maximum number of walls to remove
+        """
+        import random
+
+        valid_candidates = []
+
+        # Collect all internal walls that are safe to remove
+        for y in range(self.height):
+            for x in range(self.width):
+                cell = self.get_cell(x, y)
+
+                # Check south wall
+                if y < self.height - 1 and cell.has_wall(Wall.SOUTH):
+                    # Render coordinates of horizontal wall
+                    wall_x = 2 * x + 1
+                    wall_y = 2 * y + 2
+                    if (wall_x, wall_y) not in forbidden:
+                        if (self.is_valid(x, y + 1) and
+                            not self._would_create_2x2_block(
+                                x, y, Wall.SOUTH)):
+                            valid_candidates.append(
+                                (x, y, Wall.SOUTH, x, y + 1)
+                            )
+
+                # Check east wall
+                if x < self.width - 1 and cell.has_wall(Wall.EAST):
+                    # Render coordinates of vertical wall
+                    wall_x = 2 * x + 2
+                    wall_y = 2 * y + 1
+                    if (wall_x, wall_y) not in forbidden:
+                        if (self.is_valid(x + 1, y) and
+                            not self._would_create_2x2_block(
+                                x, y, Wall.EAST)):
+                            valid_candidates.append(
+                                (x, y, Wall.EAST, x + 1, y)
+                            )
+
+        # Shuffle and remove walls
+        random.shuffle(valid_candidates)
+        for i, (x1, y1, wall, x2, y2) in enumerate(
+            valid_candidates
+        ):
+            if i >= loops:
+                break
+            self.remove_wall_between(x1, y1, x2, y2)
+
+    def _would_create_2x2_block(
+            self, x: int, y: int, wall: Wall
+    ) -> bool:
+        """
+        Check if removing a wall would create a 2x2 block of
+        completely open cells.
+
+        A 2x2 block is when 4 cells have no internal walls between
+        them.
+
+        Args:
+            x, y: Cell coordinates
+            wall: Wall to check (SOUTH or EAST)
+
+        Returns:
+            True if removing wall would complete a 2x2 block
+        """
+        if wall == Wall.SOUTH:
+            # Wall is between (x, y) and (x, y+1)
+            # Check both possible 2x2 blocks
+            for bx in [x - 1, x]:
+                if 0 <= bx < self.width - 1:
+                    block = [
+                        (bx, y), (bx + 1, y),
+                        (bx, y + 1), (bx + 1, y + 1)
+                    ]
+                    if all(self.is_valid(*c) for c in block):
+                        if self._would_complete_2x2(block):
+                            return True
+
+        elif wall == Wall.EAST:
+            # Wall is between (x, y) and (x+1, y)
+            # Check both possible 2x2 blocks
+            for by in [y - 1, y]:
+                if 0 <= by < self.height - 1:
+                    block = [
+                        (x, by), (x + 1, by),
+                        (x, by + 1), (x + 1, by + 1)
+                    ]
+                    if all(self.is_valid(*c) for c in block):
+                        if self._would_complete_2x2(block):
+                            return True
+
+        return False
+
+    def _would_complete_2x2(
+            self, block: List[Tuple[int, int]]
+    ) -> bool:
+        """
+        Check if a 2x2 block already has 3 of 4 internal walls open.
+
+        This indicates that removing one more wall would create
+        a completely open 2x2 block.
+
+        Args:
+            block: List of 4 cell coordinates in 2x2 arrangement
+
+        Returns:
+            True if block would become completely open
+        """
+        block = sorted(block)  # Ensure consistent order
+        bx, by = block[0]
+
+        c00 = self.get_cell(bx, by)
+        c10 = self.get_cell(bx + 1, by)
+        c01 = self.get_cell(bx, by + 1)
+        # c11 = self.get_cell(bx + 1, by + 1)
+
+        # Count how many internal walls are already open
+        walls_open = 0
+        if not c00.has_wall(Wall.EAST):
+            walls_open += 1
+        if not c00.has_wall(Wall.SOUTH):
+            walls_open += 1
+        if not c10.has_wall(Wall.SOUTH):
+            walls_open += 1
+        if not c01.has_wall(Wall.EAST):
+            walls_open += 1
+
+        # If 3 are already open, removing the 4th would complete it
+        return walls_open >= 3
 
     def __repr__(self) -> str:
         """String representation of maze."""

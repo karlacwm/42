@@ -7,11 +7,12 @@ height=18
 
 # Generation algorithm (prim, kruskal or iterative_backtracking)
 # algorithm=prim
-# algorithm=kruskal
-algorithm=iterative_backtracking
+algorithm=kruskal
+# algorithm=iterative_backtracking
 
 # Generate perfect maze (no loops) : either true or false
-perfect=false
+# When false, loops will be added by removing internal walls
+perfect=true
 
 # Random seed for reproducibility (optional)
 # seed=42

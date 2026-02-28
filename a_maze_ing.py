@@ -11,6 +11,7 @@ from mazegen import (
     find_shortest_path,
     write_output_file
 )
+from mazegen.render import get_pattern_cells
 
 # Add src to path for development
 sys.path.insert(0, os.path.join(
@@ -61,11 +62,31 @@ def main() -> None:
 
         # Generate or reuse existing maze
         if CURRENT_MAZE is None:
+            # Get the forbidden cells (42 pattern)
+            forbidden = get_pattern_cells(
+                config['width'], config['height']
+            )
+
+            # Calculate loop count based on maze size if not perfect
+            perfect = config.get('perfect', True)
+            if isinstance(perfect, str):
+                perfect = perfect.lower() == 'true'
+
+            loop_count = 0
+            if not perfect:
+                # Default: 10% of cells as number of loops
+                loop_count = max(1, (
+                    config['width'] * config['height'] // 10
+                ))
+
             CURRENT_MAZE = generate_maze(
                 width=config['width'],
                 height=config['height'],
                 algorithm=config['algorithm'],
-                seed=config.get('seed')
+                seed=config.get('seed'),
+                perfect=perfect,
+                forbidden=forbidden,
+                loops=loop_count
             )
             # Calculate path for the new maze
             CURRENT_PATH = find_shortest_path(
