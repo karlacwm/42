@@ -109,7 +109,11 @@ Besides the maze generation and solver, we implemented these as addition feature
 1. **Roles**:
 
 ` lde-krui `: maze generation (Kruskal's algorithm and iterative backtracking), maze solver (BFS), render RGB colours, start and end of the maze, maze rendering, maze generation and solver animations, creating imperfect maze.
+
 ` wcheung `: maze generation (Prim's algorithm), Makefile and output file automation, implement 42 pattern in the maze, maze colour change, user-interactive menu, readme files.
+
+(ง •̀_•́)ง(ง •̀_•́)ง
+
 ::::::::(make package exportable)
 
 2. **Your anticipated planning and how it evolved until the end**
