@@ -138,7 +138,7 @@ def main() -> None:
         print()
 
     while True:
-        choice = display_menu()
+        choice = display_menu().strip()
         print("--------------------------------------")
 
         valid_color = {
@@ -150,12 +150,12 @@ def main() -> None:
             "Choose one from the available colours:\n"
             "black       |  marroon   |  sky_blue  |  light_gray\n"
             "moon_glow   |  gray      |  purple    |  dark_gray\n"
-            "yellow      |  orange    |  magent    |  dandilion_yellow\n"
+            "yellow      |  orange    |  magenta   |  dandilion_yellow\n"
             "highlighter |  pink      |  blue      |  coffee_brown\n"
             )
 
         if choice not in ('1', '2', '3', '4', '5', '6'):
-            print("\nThis is not one of the available options (╥﹏╥)."
+            print(f"\n'{choice}' is not one of the available options (╥﹏╥). "
                   "Please choose from 1 to 6.\n")
             continue
         if choice == '1':
