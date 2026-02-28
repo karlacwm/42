@@ -11,7 +11,7 @@ rendering formats with color support.
 
 from .maze import Maze, Cell, Wall, Direction
 from .generator import generate_maze
-from .maze_generator import MazeGenerator
+from .class_maze_generator import MazeGenerator
 from .algorithms import PrimGenerator, KruskalGenerator, BacktrackingGenerator
 from .render import (
     render_unicode, render_path_animation

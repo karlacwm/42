@@ -1,6 +1,7 @@
 """Configuration file parser for maze generation."""
 from typing import Dict, Any
 import re
+from .pattern42 import get_pattern_cells
 
 
 class ConfigError(Exception):
@@ -145,6 +146,7 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
         print(e)
 
     # Validate dimensions
+
     try:
         width = config['width']
         height = config['height']
@@ -162,31 +164,11 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
                 f"Maze dimensions too large: {width}x{height}. "
                 f"Maximum is over 100x100"
             )
+        pattern_42 = get_pattern_cells(width, height)
     except (DimensionError, KeyError) as e:
         print(e)
-        exit(1)
 
     # Calculate the "42" pattern cells (same logic as Maze.is_valid)
-    cx, cy = width // 2, height // 2
-    digit_4 = {
-        (0, 0), (0, 1), (0, 2),
-        (1, 2),
-        (2, 2), (2, 3), (2, 4)
-    }
-    digit_2 = {
-        (0, 0), (1, 0), (2, 0),
-        (2, 1),
-        (0, 2), (1, 2), (2, 2),
-        (0, 3),
-        (0, 4), (1, 4), (2, 4)
-    }
-    start_x = cx - 3
-    start_y = cy - 2
-    pattern_42 = set()
-    for dx, dy in digit_4:
-        pattern_42.add((start_x + dx, start_y + dy))
-    for dx, dy in digit_2:
-        pattern_42.add((start_x + 4 + dx, start_y + dy))
 
     # Validate algorithm if specified
     try:

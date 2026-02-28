@@ -5,38 +5,8 @@ import os
 from typing import List, Tuple, Set
 from .maze import Maze, Wall
 from .render_color import colorize_token, get_maze_color_from_config
+from .pattern42 import get_pattern_cells
 # from .config import parse_config  # still used for validation if needed
-
-
-def get_pattern_cells(width: int, height: int) -> Set[Tuple[int, int]]:
-    """Generates (x, y) coordinates for '42' in the center."""
-
-    cx, cy = width // 2, height // 2
-
-    digit_4 = {
-        (0, 0), (0, 1), (0, 2),
-        (1, 2),
-        (2, 2), (2, 3), (2, 4)
-    }
-    digit_2 = {
-        (0, 0), (1, 0), (2, 0),
-        (2, 1),
-        (0, 2), (1, 2), (2, 2),
-        (0, 3),
-        (0, 4), (1, 4), (2, 4)
-    }
-
-    start_x = cx - 3
-    start_y = cy - 2
-
-    pattern = set()
-
-    for dx, dy in digit_4:
-        pattern.add((start_x + dx, start_y + dy))
-    for dx, dy in digit_2:
-        pattern.add((start_x + 4 + dx, start_y + dy))
-
-    return pattern
 
 
 def _build_wall_grids(
