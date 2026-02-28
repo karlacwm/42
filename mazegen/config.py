@@ -164,8 +164,7 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
             )
     except (DimensionError, KeyError) as e:
         print(e)
-        height = config['height'] = 10
-        width = config['width'] = 20
+        exit(1)
 
     # Calculate the "42" pattern cells (same logic as Maze.is_valid)
     cx, cy = width // 2, height // 2

@@ -10,12 +10,9 @@ rendering formats with color support.
 """
 
 from .maze import Maze, Cell, Wall, Direction
-from .generator import (
-    generate_maze, generate_prim, generate_kruskal
-)
-from .iterative_backtracking import (
-    generate_recursive_backtracking
-)
+from .generator import generate_maze
+from .maze_generator import MazeGenerator
+from .algorithms import PrimGenerator, KruskalGenerator, BacktrackingGenerator
 from .render import (
     render_unicode, render_path_animation
 )
@@ -36,33 +33,22 @@ from .output_file_gen import write_output_file
 __version__ = "0.1.0"
 __all__ = [
     # Maze structures
-    "Maze",
-    "Cell",
-    "Wall",
+    "Maze", "Cell", "Wall",
     "Direction",
     # Generation
-    "generate_maze",
-    "generate_prim",
-    "generate_kruskal",
-    "generate_recursive_backtracking",
+    "generate_maze", "MazeGenerator", "PrimGenerator",
+    "KruskalGenerator", "BacktrackingGenerator",
     # Rendering
-    "render_unicode",
-    "render_unicode_with_path",
-    "render_path_animation",
+    "render_unicode", "render_path_animation",
     # Solver
     "find_shortest_path",
     # Color rendering
-    "CellColorizer",
-    "hsv_to_rgb",
-    "get_color_by_name",
-    "blend_colors",
-    "get_gradient_color",
-    "create_color_palette",
-    "colorize_token",
-    "get_maze_color_from_config",
+    "CellColorizer", "hsv_to_rgb",
+    "get_color_by_name", "blend_colors",
+    "get_gradient_color", "create_color_palette",
+    "colorize_token", "get_maze_color_from_config",
     # Config
-    "parse_config",
-    "validate_maze_config",
+    "parse_config", "validate_maze_config",
     "ConfigError",
     # Output file
     "write_output_file"
