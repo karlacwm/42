@@ -38,6 +38,8 @@ In our project, we decided on three algorithm on maze generation, which are the 
 | Iterative backtracking | This algorithm goes down one path as far as it can, then goes back and tries a new path. We chose it because it’s simple, fast, and easy to code. It creates long hallways with fewer branches. It also looks very different from the mazes made by Prim’s and Kruskal’s, which makes it a good comparison. |
 
 ### What part of your code is reusable, and how
+| Reusable part | How |
+| --- | --- |
 | Maze Core Data Structure | The grid and wall system (using N, E, S, W directions) work separately from the generation algorithms. This means we can add new algorithms without changing the maze structure. |
 | Generation Interface | All algorithms follow the same format: they take a maze and modify it. Because of this, we can easily plug in new algorithms later. |
 | Solver Module (BFS) | The Breadth-First Search solver does not depend on how the maze was created. It can solve any maze that uses our grid format. |
