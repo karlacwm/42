@@ -31,9 +31,9 @@ From each maze generation, there will be a user-interactive menu for the user to
 In our project, we decided on three algorithm on maze generation, which are the Prim's, the Kruskal's, and the iterative backtracking. These three generators generate mazes with different approaches and therefore create mazes with different characteristics. For the maze solver, we used Breadth First Search (BFS) to find the shortest path from the entry to the exit point.
 
 ### Maze generation algorithms, and why we chose them
-| Prim's algorithm | It starts from one cell and slowly grows the maze by adding nearby walls at random. We chose Prim’s because it creates dense, natural-looking mazes with lots of short dead ends, making the maze look interesting and adds challenge to the gameplay. |
-| Kruskal's algorithm | This method randomly removes walls while making sure no loops are created. It connects separate sections step by step until everything is linked. We chose Kruskal’s because it shows how the Union-Find data structure works. The mazes it makes feel balanced. |
-| Iterative backtracking | This algorithm goes down one path as far as it can, then goes back and tries a new path. We chose it because it’s simple, fast, and easy to code. It creates long hallways with fewer branches. It also looks very different from the mazes made by Prim’s and Kruskal’s, which makes it a good comparison. |
+| `Prim's algorithm` | It starts from one cell and slowly grows the maze by adding nearby walls at random. We chose Prim’s because it creates dense, natural-looking mazes with lots of short dead ends, making the maze look interesting and adds challenge to the gameplay. |
+| `Kruskal's algorithm` | This method randomly removes walls while making sure no loops are created. It connects separate sections step by step until everything is linked. We chose Kruskal’s because it shows how the Union-Find data structure works. The mazes it makes feel balanced. |
+| `Iterative backtracking` | This algorithm goes down one path as far as it can, then goes back and tries a new path. We chose it because it’s simple, fast, and easy to code. It creates long hallways with fewer branches. It also looks very different from the mazes made by Prim’s and Kruskal’s, which makes it a good comparison. |
 
 ### What part of your code is reusable, and how
 | Maze Core Data Structure | The grid and wall system (using N, E, S, W directions) work separately from the generation algorithms. This means we can add new algorithms without changing the maze structure. |
@@ -84,12 +84,12 @@ Besides the maze generation and solver, we implemented these as addition feature
 **Resources for maze generation algorithm**:
 * [YouTube video about maze generation algorithms](https://m.youtube.com/watch?v=U3meEXvYFsc)
 * [prim's algorithm](https://weblog.jamisbuck.org/2011/1/10/maze-generation-prim-s-algorithm)
-* discussion on Stack Overflow:[https://stackoverflow.com/questions/29739751/implementing-a-randomly-generated-maze-using-prims-algorithm]
-* (wikipedia)[https://en.wikipedia.org/wiki/Maze_generation_algorithm]
-* (exploring different algorithms)[https://professor-l.github.io/mazes/]
+* [discussion on Stack Overflow](https://stackoverflow.com/questions/29739751/implementing-a-randomly-generated-maze-using-prims-algorithm)
+* [wikipedia](https://en.wikipedia.org/wiki/Maze_generation_algorithm)
+* [exploring different algorithms](https://professor-l.github.io/mazes/)
 
 **Unicode**:
-* for drawing shapes and border of the maze[http://xahlee.info/comp/unicode_drawing_shapes.html]
+* [for drawing shapes and border of the maze](http://xahlee.info/comp/unicode_drawing_shapes.html)
 
 **AI Usage**:
 * Used to generate the project description and README structure.
