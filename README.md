@@ -1,4 +1,4 @@
-*This project has been created as part of the 42 curriculum by **``` lde-krui ```** and **``` wcheung ```**.*
+*This project has been created as part of the 42 curriculum by **```lde-krui```** and **```wcheung```**.*
 
 # A-Maze-ing  ٩(◕‿◕)۶٩(◕‿◕)۶٩(◕‿◕)۶٩(◕‿◕)۶٩(◕‿◕)۶
 
@@ -13,20 +13,20 @@ The goal is to build a robust system that generates random and customized mazes,
 
 | Key | Description | Example |
 | --- | --- | --- |
-| `width` | Maze width in number of cells | `width=20` |
-| `height` | Maze height in number of cells | `height=15` |
-| `algorithm` | Maze generation algorithm | `algorithm=prim` |
-| `perfect` | If 'True', creates exactly one path | `perfect=True` |
-| `seed` | If none, the generation is random every time | `seed=42` |
-| `entry_x` and `entry_y` | Entry coordinates (x,y) | `entry_x=0` and `entry_y=0` |
-| `entry_color` | Colour of the entry cell | `entry_color=green` |
-| `exit_x` and `exit_y` | Exit coordinates (x,y) | `exit_x=0` and `exit_y=0` |
-| `output_file` | Target filename for generated data | `output_file=output_maze.txt` |
-| `exit_color` | Colour of the exit cell | `exit_color=red` |
-| `wall_color` | Colour of the maze wall | `wall_color=orange` |
-| `maze_color` | Colour of the maze | `maze_color=dandilion_yellow` |
-| `egg42` | Colour of the 42 easter egg | `egg42=magenta` |
-| `path_color` | Colour of the maze solover path | `path_color=highlighter` |
+| `width`| Maze width in number of cells | `width=20`|
+| `height`| Maze height in number of cells | `height=15`|
+| `algorithm`| Maze generation algorithm | `algorithm=prim`|
+| `perfect`| If 'True', creates exactly one path | `perfect=True`|
+| `seed`| If none, the generation is random every time | `seed=42`|
+| `entry_x`and `entry_y`| Entry coordinates (x,y) | `entry_x=0`and `entry_y=0`|
+| `entry_color`| Colour of the entry cell | `entry_color=green`|
+| `exit_x`and `exit_y`| Exit coordinates (x,y) | `exit_x=0`and `exit_y=0`|
+| `output_file`| Target filename for generated data | `output_file=output_maze.txt`|
+| `exit_color`| Colour of the exit cell | `exit_color=red`|
+| `wall_color`| Colour of the maze wall | `wall_color=orange`|
+| `maze_color`| Colour of the maze | `maze_color=dandilion_yellow`|
+| `egg42`| Colour of the 42 easter egg | `egg42=magenta`|
+| `path_color`| Colour of the maze solover path | `path_color=highlighter`|
 
 From each maze generation, there will be a user-interactive menu for the user to choose either to regenerate a new maze, either to show or hide the solution path, or apply different colour settings of the maze. Alongside, an output file is also created for each generation and is overwritten every time after generation, showing the maze in a specific hexadecimal format, the entry and exit coordinates and operation directions of the maze solver.
 
@@ -54,7 +54,7 @@ In our project, we decided on three algorithm on maze generation, which are the 
 Besides the maze generation and solver, we implemented these as addition features:
 * multiple maze generation algorithms available as options
 * RGB colour
-* not only integers, config file takes `height` and `width` of the maze as input
+* not only integers, config file takes `height`and `width`of the maze as input
 * maze background colour setting and is changeable in user-interactive menu
 * animation for maze generation
 * animation for maze solver
@@ -65,11 +65,11 @@ Besides the maze generation and solver, we implemented these as addition feature
 
 **Setting up the virtual environment**
 
-1. `make install` : Installs necessary dependencies (pip).
-2. `make lint` or `make lint-strict` : Runs `flake8` and `mypy` to ensure code quality.
-3. `make run` : Execute the main program in venv.
-4. `make clean` : Cleans up everything.
-5. `make re` : Cleans up, reinstalls, and runs the main program.
+1. `make install`: Installs necessary dependencies (pip).
+2. `make lint`or `make lint-strict`: Runs `flake8`and `mypy`to ensure code quality.
+3. `make run`: Execute the main program in venv.
+4. `make clean`: Cleans up everything.
+5. `make re`: Cleans up, reinstalls, and runs the main program.
 
 **Visualizing the maze**
 
@@ -80,8 +80,8 @@ Besides the maze generation and solver, we implemented these as addition feature
 
 **Building the Reusable Module**
 
-* To build the `mazegen-*` package: `python3 -m build`
-* This produces a `.whl` or `.tar.gz` file at the root for later installation.
+* To build the `mazegen-*`package: `python3 -m build`
+* This produces a `.whl`or `.tar.gz`file at the root for later installation.
 
 ---
 
@@ -100,7 +100,7 @@ Besides the maze generation and solver, we implemented these as addition feature
 **AI Usage**:
 * Used to generate the project description and README structure.
 * Assisted in designing the hexagonal wall bitmask logic (Bits 0-3 for N, E, S, W).
-* Helped verify the `mypy` strict type-hinting configurations.
+* Helped verify the `mypy`strict type-hinting configurations.
 
 * **42 Community**: Special thanks to peers at 42 Heilbronn for logic walkthroughs and peer-reviews.
 
@@ -110,9 +110,9 @@ Besides the maze generation and solver, we implemented these as addition feature
 
 1. **Roles**:
 
-` lde-krui `: maze generation (Kruskal's algorithm and iterative backtracking), maze solver (BFS), render RGB colours, start and end of the maze, maze rendering, maze generation and solver animations, creating imperfect maze.
+`lde-krui`: maze generation (Kruskal's algorithm and iterative backtracking), maze solver (BFS), render RGB colours, start and end of the maze, maze rendering, maze generation and solver animations, creating imperfect maze.
 
-` wcheung `: maze generation (Prim's algorithm), Makefile and output file automation, implement 42 pattern in the maze, maze colour change, user-interactive menu, main and reusable module readme files.
+`wcheung`: maze generation (Prim's algorithm), Makefile and output file automation, implement 42 pattern in the maze, maze colour change, user-interactive menu, main and reusable module readme files.
 
 (ง •̀_•́)ง(ง •̀_•́)ง
 
@@ -135,11 +135,11 @@ We were fully invested into the project and had progress every day.
 
 4. **Have you used any specific tools? Which ones?**
 
-* ` flake8 ` for style checking
-* ` mypy ` (strict mode) for static type checking
-* ` pip ` and ` venv ` for dependency management
-* ` make ` for automation
-* ` build ` for packaging (python3 -m build)
+* `flake8`for style checking
+* `mypy`(strict mode) for static type checking
+* `pip`and `venv`for dependency management
+* `make`for automation
+* `build`for packaging (python3 -m build)
 * GitHub for version control
 * AI assistance for structuring documentation and validating logic
 
