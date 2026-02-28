@@ -5,12 +5,14 @@ import sys
 import os
 from mazegen import (
     parse_config,
+    validate_maze_config,
     generate_maze,
     render_unicode,
     render_path_animation,
     find_shortest_path,
     write_output_file
 )
+from mazegen.config import validate_maze_config
 from mazegen.render import get_pattern_cells
 
 # Add src to path for development
@@ -58,6 +60,7 @@ def main() -> None:
             "the 'config.txt' file..."
         )
         config = parse_config(config_file)
+        validate_maze_config(config)
         print(f"Request is parsed as follows:\n{config}")
 
         # Generate or reuse existing maze

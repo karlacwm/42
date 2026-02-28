@@ -81,26 +81,31 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
     Raises:
         ConfigError: If configuration is invalid
     """
-    if 'width' not in config:
-        raise ConfigError("Missing required parameter: width")
-    if 'height' not in config:
-        raise ConfigError("Missing required parameter: height")
-    if 'algorithm' not in config:
-        raise ConfigError("Missing required parameter: algorithm")
-    if 'entry_x' not in config:
-        raise ConfigError("Missing required parameter: entry_x")
-    if 'entry_y' not in config:
-        raise ConfigError("Missing required parameter: entry_y")
-    if 'exit_x' not in config:
-        raise ConfigError("Missing required parameter: exit_x")
-    if 'exit_y' not in config:
-        raise ConfigError("Missing required parameter: exit_y")
-    if 'wall_color' not in config:
-        raise ConfigError("Missing required parameter: wall_color")
-    if 'maze_color' not in config:
-        raise ConfigError("Missing required parameter: maze_color")
-    if 'egg42' not in config:
-        raise ConfigError("Missing required parameter: egg42")
+    try:
+        if 'width' not in config:
+            raise ConfigError("Missing required parameter: width")
+        if 'height' not in config:
+            raise ConfigError("Missing required parameter: height")
+        if 'algorithm' not in config:
+            raise ConfigError("Missing required parameter: algorithm")
+        if 'entry_x' not in config:
+            raise ConfigError("Missing required parameter: entry_x")
+        if 'entry_y' not in config:
+            raise ConfigError("Missing required parameter: entry_y")
+        if 'exit_x' not in config:
+            raise ConfigError("Missing required parameter: exit_x")
+        if 'exit_y' not in config:
+            raise ConfigError("Missing required parameter: exit_y")
+        if 'wall_color' not in config:
+            raise ConfigError("Missing required parameter: wall_color")
+        if 'maze_color' not in config:
+            raise ConfigError("Missing required parameter: maze_color")
+        if 'egg42' not in config:
+            raise ConfigError("Missing required parameter: egg42")
+    except ConfigError as e:
+        print(e)
+        exit(1)
+
 
     width = config['width']
     height = config['height']
@@ -339,12 +344,16 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
         config['path_color'] = color
 
     # Set defaults
-    # config.setdefault('algorithm', 'iterative_backtracking')
-    # config.setdefault('perfect', True)
-    # config.setdefault('seed', None)
-    # config.setdefault('maze_color', 'yellow')
-    # config.setdefault('egg42', 'pink')
-    # config.setdefault('wall_color', 'orange')
-    # config.setdefault('entry_color', 'green')
-    # config.setdefault('exit_color', 'red')
-    # config.setdefault('path_color', 'blue')
+    config.setdefault('algorithm', 'iterative_backtracking')
+    config.setdefault('entry_x', 0)
+    config.setdefault('entry_y', 0)
+    config.setdefault('exit_x', width - 1)
+    config.setdefault('exit_y', height - 1)
+    config.setdefault('perfect', True)
+    config.setdefault('seed', None)
+    config.setdefault('maze_color', 'yellow')
+    config.setdefault('egg42', 'pink')
+    config.setdefault('wall_color', 'orange')
+    config.setdefault('entry_color', 'green')
+    config.setdefault('exit_color', 'red')
+    config.setdefault('path_color', 'blue')
