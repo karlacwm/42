@@ -13,14 +13,16 @@ The goal is to build a robust system that generates random and customized mazes,
 
 | Key | Description | Example |
 | --- | --- | --- |
-| `width` | Maze width in number of cells | `WIDTH=20` |
-| `height` | Maze height in number of cells | `HEIGHT=15` |
+| `width` | Maze width in number of cells | `width=20` |
+| `height` | Maze height in number of cells | `height=15` |
 | `algorithm` | Maze generation algorithm | `algorithm=prim` |
-| `perfect` | If 'True', creates exactly one path | `PERFECT=True` |
+| `perfect` | If 'True', creates exactly one path | `perfect=True` |
 | `seed` | If none, the generation is random every time | `seed=42` |
-| `entry` | Entry coordinates (x,y) | `ENTRY=0,0` |
-| `exit` | Exit coordinates (x,y) | `EXIT=19,14` |
-| `output_file` | Target filename for generated data | `OUTPUT_FILE=output_maze.txt` |
+| `entry_x` and `entry_y` | Entry coordinates (x,y) | `entry_x=0` and `entry_y=0` |
+| `entry_color` | Colour of the entry cell | `entry_color=green` |
+| `exit_x` and `exit_y` | Exit coordinates (x,y) | `exit_x=0` and `exit_y=0` |
+| `output_file` | Target filename for generated data | `output_file=output_maze.txt` |
+| `exit_color` | Colour of the exit cell | `exit_color=red` |
 | `wall_color` | Colour of the maze wall | `wall_color=orange` |
 | `maze_color` | Colour of the maze | `maze_color=dandilion_yellow` |
 | `egg42` | Colour of the 42 easter egg | `egg42=magenta` |
@@ -52,7 +54,7 @@ In our project, we decided on three algorithm on maze generation, which are the 
 Besides the maze generation and solver, we implemented these as addition features:
 * multiple maze generation algorithms available as options
 * RGB colour
-* not only integers, config file takes ` height ` and ` width ` of the maze as input
+* not only integers, config file takes `height` and `width` of the maze as input
 * maze background colour setting and is changeable in user-interactive menu
 * animation for maze generation
 * animation for maze solver
@@ -72,9 +74,9 @@ Besides the maze generation and solver, we implemented these as addition feature
 **Visualizing the maze**
 
 * The visualizer includes an user-interactive menu, which allows the following actions:
-* **Re-generate**: Create a new maze instantly.
-* **Toggle Path**: Show or hide the shortest solution path.
-* **Color Change**: Change the colour of maze wall, maze background or the 42 egg.
+* `Re-generate`: Create a new maze instantly.
+* `Toggle Path`: Show or hide the shortest solution path.
+* `Color Change`: Change the colour of maze wall, maze background or the 42 egg.
 
 **Building the Reusable Module**
 
@@ -87,10 +89,10 @@ Besides the maze generation and solver, we implemented these as addition feature
 
 **Resources for maze generation algorithm**:
 * [YouTube video about maze generation algorithms](https://m.youtube.com/watch?v=U3meEXvYFsc)
-* [prim's algorithm](https://weblog.jamisbuck.org/2011/1/10/maze-generation-prim-s-algorithm)
 * [discussion on Stack Overflow](https://stackoverflow.com/questions/29739751/implementing-a-randomly-generated-maze-using-prims-algorithm)
-* [wikipedia](https://en.wikipedia.org/wiki/Maze_generation_algorithm)
-* [exploring different algorithms](https://professor-l.github.io/mazes/)
+* [Wikipedia](https://en.wikipedia.org/wiki/Maze_generation_algorithm)
+* [Exploring different algorithms](https://professor-l.github.io/mazes/)
+* [Prim's algorithm](https://weblog.jamisbuck.org/2011/1/10/maze-generation-prim-s-algorithm)
 
 **Unicode**:
 * [for drawing shapes and border of the maze](http://xahlee.info/comp/unicode_drawing_shapes.html)
@@ -133,11 +135,11 @@ We were fully invested into the project and had progress every day.
 
 4. **Have you used any specific tools? Which ones?**
 
-` flake8 ` for style checking
-` mypy ` (strict mode) for static type checking
-` pip ` and ` venv ` for dependency management
-` make ` for automation
-` build ` for packaging (python3 -m build)
+* ` flake8 ` for style checking
+* ` mypy ` (strict mode) for static type checking
+* ` pip ` and ` venv ` for dependency management
+* ` make ` for automation
+* ` build ` for packaging (python3 -m build)
 * GitHub for version control
 * AI assistance for structuring documentation and validating logic
 
