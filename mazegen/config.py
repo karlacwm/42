@@ -8,8 +8,38 @@ class ConfigError(Exception):
     pass
 
 
-class DimensionError(Exception):
+class DimensionError(ConfigError):
     """Exception raised for dimension errors."""
+    pass
+
+
+class AlgorithmError(ConfigError):
+    """Exception raised for invalid algorithm errors."""
+    pass
+
+
+class PerfectError(ConfigError):
+    """Exception raised for invalid perfect parameter errors."""
+    pass
+
+
+class SeedError(ConfigError):
+    """Exception raised for invalid seed parameter errors."""
+    pass
+
+
+class EntryExitError(ConfigError):
+    """Exception raised for invalid entry/exit point errors."""
+    pass
+
+
+class ColorError(ConfigError):
+    """Exception raised for invalid color errors for walls, maze, entry, exit, or "42" pattern."""
+    pass
+
+
+class FortyTwoError(ConfigError):
+    """Exception raised for invalid "42" pattern errors."""
     pass
 
 
@@ -97,8 +127,6 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
             raise ConfigError("Missing required parameter: algorithm")
         if 'perfect' not in config:
             raise ConfigError("Missing required parameter: perfect")
-        if 'seed' not in config:
-            raise ConfigError("Missing required parameter: seed")
         if 'entry_x' not in config:
             raise ConfigError("Missing required parameter: entry_x")
         if 'entry_y' not in config:
@@ -167,87 +195,96 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
             valid_algorithms = ['prim', 'kruskal', 'iterative_backtracking']
             algo = str(config['algorithm']).lower()
             if algo == '':
-                raise ConfigError("Algorithm cannot be empty,"
-                                  " using default 'iterative_backtracking'")
+                raise AlgorithmError("Algorithm cannot be empty,"
+                                     " using default 'iterative_backtracking'")
             if algo not in valid_algorithms:
-                raise ConfigError(
+                raise AlgorithmError(
                     f"Invalid algorithm: {config['algorithm']}. "
                     f"Must be one of: {', '.join(valid_algorithms)}"
                 )
             config['algorithm'] = algo
-    except ConfigError as e:
+    except AlgorithmError as e:
         print(e)
+        config['algorithm'] = 'iterative_backtracking'
 
     try:
         if 'perfect' in config:
             if not isinstance(config['perfect'], bool):
-                raise ConfigError(
+                raise PerfectError(
                     f"Invalid perfect value: {config['perfect']}."
                     f"Must be a boolean (true/false)"
                 )
             if config['perfect'] == '':
-                raise ConfigError("perfect cannot be empty,"
-                                  " using default True")
-    except ConfigError as e:
+                raise PerfectError("perfect cannot be empty,"
+                                   " using default True")
+    except PerfectError as e:
         print(e)
+        config['perfect'] = True
 
     try:
         if 'seed' in config:
             if not isinstance(config['seed'], int):
-                raise ConfigError(
+                raise SeedError(
                     f"Invalid seed value: {config['seed']}. "
                     f"Must be an integer"
                 )
             if config['seed'] == '':
-                raise ConfigError("seed cannot be empty, using default None")
-    except ConfigError as e:
+                raise SeedError("seed cannot be empty, using default None"
+                                "or just comment it out")
+    except SeedError as e:
         print(e)
+        config['seed'] = None
 
+    # Validate entry and exit points
     try:
         if 'entry_x' in config:
             entry_x = config['entry_x']
             if entry_x == '':
-                raise ConfigError("entry_x cannot be empty, using default 0")
+                raise EntryExitError("entry_x cannot be empty, using default 0")
 
             # Evaluate expression if it's a string
             if isinstance(entry_x, str):
                 try:
                     entry_x = eval(entry_x, {"width": width, "height": height})
                 except Exception:
-                    raise ConfigError(
+                    raise EntryExitError(
                         f"Invalid entry_x expression: {config['entry_x']}")
             config['entry_x'] = entry_x
         if 'entry_y' in config:
             entry_y = config['entry_y']
             if entry_y == '':
-                raise ConfigError("entry_y cannot be empty, using default 0")
+                raise EntryExitError("entry_y cannot be empty, using default 0")
 
             # Evaluate expression if it's a string
             if isinstance(entry_y, str):
                 try:
                     entry_y = eval(entry_y, {"width": width, "height": height})
                 except Exception:
-                    raise ConfigError(
+                    raise EntryExitError(
                         f"Invalid entry_y expression: {config['entry_y']}")
             config['entry_y'] = entry_y
             if not isinstance(entry_x, int) or not isinstance(entry_y, int):
-                raise ConfigError(
+                raise EntryExitError(
                     f"Invalid integer coordinates: ({entry_x}, {entry_y})")
 
             # Basic bounds check
             if not (0 <= entry_x < width and 0 <= entry_y < height):
-                raise ConfigError(
+                raise EntryExitError(
                     f"Invalid entry point: ({entry_x}, {entry_y}). "
                     f"Must be within maze bounds (0-{width-1}, 0-{height-1})")
 
             # Check if entry falls on the "42" pattern
             if (entry_x, entry_y) in pattern_42:
-                raise ConfigError(
+                raise EntryExitError(
                     f"Invalid entry point: ({entry_x}, {entry_y}). "
                     f"Cannot place entry on the '42' pattern in the "
                     f"center of the maze")
-    except ConfigError as e:
+        config['entry_x'] = entry_x
+        config['entry_y'] = entry_y
+    except EntryExitError as e:
         print(e)
+        entry_x = config['entry_x'] = 0
+        entry_y = config['entry_y'] = 0
 
     try:
         if 'entry_color' in config:
@@ -260,35 +297,36 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
                            'yellow', 'magenta', 'sky_blue']
             color = str(config['entry_color']).lower()
             if color == '':
-                raise ConfigError("entry_color cannot be empty,"
-                                  " using default 'green'")
+                raise ColorError("entry_color cannot be empty,"
+                                 " using default 'green'")
             if color not in valid_entry:
-                raise ConfigError(
+                raise ColorError(
                     f"Invalid entry_color: {config['entry_color']}. "
                     f"Must be one of: {', '.join(valid_entry)}"
                 )
             config['entry_color'] = color
-    except ConfigError as e:
+    except ColorError as e:
         print(e)
+        config['entry_color'] = 'green'
 
     try:
         if 'exit_x' in config:
             exit_x = config['exit_x']
             if exit_x == '':
-                raise ConfigError(
+                raise EntryExitError(
                     "exit_x cannot be empty, using default width - 1")
             # Evaluate expression if it's a string
             if isinstance(exit_x, str):
                 try:
                     exit_x = eval(exit_x, {"width": width, "height": height})
                 except Exception:
-                    raise ConfigError(
+                    raise EntryExitError(
                         f"Invalid exit_x expression: {config['exit_x']}")
             config['exit_x'] = exit_x
         if 'exit_y' in config:
             exit_y = config['exit_y']
             if exit_y == '':
-                raise ConfigError(
+                raise EntryExitError(
                     "exit_y cannot be empty, using default height - 1")
 
             # Evaluate expression if it's a string
@@ -296,31 +334,33 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
                 try:
                     exit_y = eval(exit_y, {"width": width, "height": height})
                 except Exception:
-                    raise ConfigError(
+                    raise EntryExitError(
                         f"Invalid exit_y expression: {config['exit_y']}")
             config['exit_y'] = exit_y
             if not isinstance(exit_x, int) or not isinstance(exit_y, int):
-                raise ConfigError(
+                raise EntryExitError(
                     f"Invalid exit coordinates: ({exit_x}, {exit_y})")
 
             # Basic bounds check
             if not (0 <= exit_x < width and 0 <= exit_y < height):
-                raise ConfigError(
+                raise EntryExitError(
                     f"Invalid exit point: ({exit_x}, {exit_y}). "
                     f"Must be within maze bounds (0-{width-1}, 0-{height-1})")
 
             # Check if exit falls on the "42" pattern
             if (exit_x, exit_y) in pattern_42:
-                raise ConfigError(
+                raise EntryExitError(
                     f"Invalid exit point: ({exit_x}, {exit_y}). "
                     f"Cannot place exit on the '42' pattern in the "
                     f"center of the maze")
             if exit_x == entry_x and exit_y == entry_y:
-                raise ConfigError(
+                raise EntryExitError(
                     f"Exit point ({exit_x}, {exit_y}) cannot be the same "
                     f"as entry point ({entry_x}, {entry_y})")
-    except ConfigError as e:
+    except EntryExitError as e:
         print(e)
+        exit_x = config['exit_x'] = width - 1
+        exit_y = config['exit_y'] = height - 1
 
     try:
         if 'exit_color' in config:
@@ -333,16 +373,17 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
                           'yellow', 'magenta', 'sky_blue']
             color = str(config['exit_color']).lower()
             if color == '':
-                raise ConfigError("exit_color cannot be empty,"
-                                  " using default 'red'")
+                raise ColorError("exit_color cannot be empty,"
+                                 " using default 'red'")
             if color not in valid_exit:
-                raise ConfigError(
+                raise ColorError(
                     f"Invalid exit_color: {config['exit_color']}. "
                     f"Must be one of: {', '.join(valid_exit)}"
                 )
             config['exit_color'] = color
-    except ConfigError as e:
+    except ColorError as e:
         print(e)
+        config['exit_color'] = 'red'
 
     try:
         if 'wall_color' in config:
@@ -355,16 +396,17 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
                             'yellow', 'magenta', 'sky_blue']
             color = str(config['wall_color']).lower()
             if color == '':
-                raise ConfigError("wall_color cannot be empty,"
-                                  " using default 'black'")
+                raise ColorError("wall_color cannot be empty,"
+                                 " using default 'black'")
             if color not in valid_colors:
-                raise ConfigError(
+                raise ColorError(
                     f"Invalid wall_color: {config['wall_color']}. "
                     f"Must be one of: {', '.join(valid_colors)}"
                 )
             config['wall_color'] = color
-    except ConfigError as e:
+    except ColorError as e:
         print(e)
+        config['wall_color'] = 'orange'
 
     try:
         if 'maze_color' in config:
@@ -377,16 +419,17 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
                            'yellow', 'magenta', 'sky_blue']
             color = str(config['maze_color']).lower()
             if color == '':
-                raise ConfigError("maze_color cannot be empty,"
-                                  " using default 'yellow'")
+                raise ColorError("maze_color cannot be empty,"
+                                 " using default 'yellow'")
             if color not in valid_color:
-                raise ConfigError(
+                raise ColorError(
                     f"Invalid maze_color: {config['maze_color']}. "
                     f"Must be one of: {', '.join(valid_color)}"
                 )
             config['maze_color'] = color
-    except ConfigError as e:
+    except ColorError as e:
         print(e)
+        config['maze_color'] = 'yellow'
 
     try:
         if 'egg42' in config:
@@ -399,16 +442,17 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
                         'yellow', 'magenta', 'sky_blue']
             color = str(config['egg42']).lower()
             if color == '':
-                raise ConfigError("egg42 cannot be empty,"
-                                  " using default 'pink'")
+                raise ColorError("egg42 cannot be empty,"
+                                 " using default 'pink'")
             if color not in valid_42:
-                raise ConfigError(
+                raise ColorError(
                     f"Invalid egg42: {config['egg42']}. "
                     f"Must be one of: {', '.join(valid_42)}"
                 )
             config['egg42'] = color
-    except ConfigError as e:
+    except ColorError as e:
         print(e)
+        config['egg42'] = 'pink'
 
     try:
         if 'path_color' in config:
@@ -422,31 +466,16 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
                           'magenta', 'sky_blue']
             color = str(config['path_color']).lower()
             if color == '':
-                raise ConfigError("path_color cannot be empty,"
-                                  " using default 'blue'")
+                raise ColorError("path_color cannot be empty,"
+                                 " using default 'blue'")
             if color not in valid_path:
-                raise ConfigError(
+                raise ColorError(
                     f"Invalid path_color: "
                     f"{config['path_color']}. "
                     f"Must be one of: "
                     f"{', '.join(valid_path)}"
                 )
             config['path_color'] = color
-    except ConfigError as e:
+    except ColorError as e:
         print(e)
-        config['path_color'] = 'blue'
-
-    # Set defaults
-    config.setdefault('width', 20)
-    config.setdefault('algorithm', 'iterative_backtracking')
-    config.setdefault('entry_x', 0)
-    config.setdefault('entry_y', 0)
-    config.setdefault('exit_x', width - 1)
-    config.setdefault('exit_y', height - 1)
-    config.setdefault('perfect', True)
-    config.setdefault('seed', None)
-    config.setdefault('maze_color', 'yellow')
-    config.setdefault('egg42', 'pink')
-    config.setdefault('wall_color', 'orange')
-    config.setdefault('entry_color', 'green')
-    config.setdefault('exit_color', 'red')
+        config['path_color'] = 'highlighter'

@@ -3,11 +3,13 @@
 # A-Maze-ing  ٩(◕‿◕)۶٩(◕‿◕)۶٩(◕‿◕)۶٩(◕‿◕)۶٩(◕‿◕)۶
 
 
+
 ## 📌 Description
 
 **A-Maze-ing** is a Python-based algorithmic project about **maze generation** and **maze solving**.
 
 The goal is to build a robust system that generates random and customized mazes, in which the user is able to decide the size and colour of the maze, the algorithm to be used or the maze and if the maze is perfect (there is only one path to solve it) through the file 'config.txt'.
+
 
 ### Complete structure and format of our config file (config.txt):
 
@@ -32,12 +34,14 @@ From each maze generation, there will be a user-interactive menu for the user to
 
 In our project, we decided on three algorithm on maze generation, which are the Prim's, the Kruskal's, and the iterative backtracking. These three generators generate mazes with different approaches and therefore create mazes with different characteristics. For the maze solver, we used Breadth First Search (BFS) to find the shortest path from the entry to the exit point.
 
+
 ### Maze generation algorithms, and why we chose them
 | Algorithm | Reason |
 | --- | --- |
 | Prim's algorithm | It starts from one cell and slowly grows the maze by adding nearby walls at random. We chose Prim’s because it creates dense, natural-looking mazes with lots of short dead ends, making the maze look interesting and adds challenge to the gameplay. |
 | Kruskal's algorithm | This method randomly removes walls while making sure no loops are created. It connects separate sections step by step until everything is linked. We chose Kruskal’s because it shows how the Union-Find data structure works. The mazes it makes feel balanced. |
 | Iterative backtracking | This algorithm goes down one path as far as it can, then goes back and tries a new path. We chose it because it’s simple, fast, and easy to code. It creates long hallways with fewer branches. It also looks very different from the mazes made by Prim’s and Kruskal’s, which makes it a good comparison. |
+
 
 ### What part of your code is reusable, and how
 | Reusable part | How |
@@ -61,6 +65,8 @@ Besides the maze generation and solver, we implemented these as addition feature
 
 ---
 
+
+
 ## 📋 Instructions
 
 **Setting up the virtual environment**
@@ -83,7 +89,16 @@ Besides the maze generation and solver, we implemented these as addition feature
 * To build the `mazegen-*`package: `python3 -m build`
 * This produces a `.whl`or `.tar.gz`file at the root for later installation.
 
+**Checking output_maze.txt with output_validator.py**
+
+* first download and add the output_validator.py from INTRA into the cloned repository
+* `make run` to generate a new output_maze.txt
+* write in terminal `python3 output_validator.py output_maze.txt`
+* if nothing is returned, it means no errors were caught
+
 ---
+
+
 
 ## ▶️ Resources
 

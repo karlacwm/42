@@ -12,10 +12,10 @@ algorithm=kruskal
 
 # Generate perfect maze (no loops) : either true or false
 # When false, loops will be added by removing internal walls
-perfect=false
+perfect=true
 
 # Random seed for reproducibility (optional)
-seed= 42
+# seed= 42
 
 # output filename
 # output_file = output_maze.txt
@@ -32,8 +32,8 @@ seed= 42
 # yellow    |   magenta     |   sky_blue             |
 
 # entry coordinates (x, y)
-entry_x = 0
-entry_y = 0
+entry_x=0
+entry_y=0
 entry_color = green
 
 # exit coordinates (x, y)
@@ -41,7 +41,7 @@ exit_x = width -1
 exit_y = height -1
 exit_color = red
 
-wall_color = orange
+wall_color = marroon
 maze_color = dandilion_yellow
 egg42 = magenta
 path_color = highlighter
