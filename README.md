@@ -112,7 +112,7 @@ Besides the maze generation and solver, we implemented these as addition feature
 
 ` lde-krui `: maze generation (Kruskal's algorithm and iterative backtracking), maze solver (BFS), render RGB colours, start and end of the maze, maze rendering, maze generation and solver animations, creating imperfect maze.
 
-` wcheung `: maze generation (Prim's algorithm), Makefile and output file automation, implement 42 pattern in the maze, maze colour change, user-interactive menu, readme files.
+` wcheung `: maze generation (Prim's algorithm), Makefile and output file automation, implement 42 pattern in the maze, maze colour change, user-interactive menu, main and reusable module readme files.
 
 (ง •̀_•́)ง(ง •̀_•́)ง
 
