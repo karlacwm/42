@@ -99,7 +99,7 @@ def get_maze_color_from_config(
     elif what_to_color == "wall":
         name = cfg.get("wall_color", "white")
     elif what_to_color == "path":
-        name = cfg.get("path_color", "highlighter")
+        name = cfg.get("path_color", "blue")
     elif what_to_color == "entry":
         name = cfg.get("entry_color", "green")
     elif what_to_color == "exit":

@@ -3,7 +3,7 @@
 
 # Maze dimensions
 width=18
-height=18
+height=15
 
 # Generation algorithm (prim, kruskal or iterative_backtracking)
 # algorithm=prim
@@ -12,10 +12,10 @@ algorithm=kruskal
 
 # Generate perfect maze (no loops) : either true or false
 # When false, loops will be added by removing internal walls
-perfect=true
+perfect=false
 
 # Random seed for reproducibility (optional)
-# seed=42
+seed= 42
 
 # output filename
 # output_file = output_maze.txt
