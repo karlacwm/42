@@ -1,7 +1,7 @@
 import random
 from typing import Tuple, Set
 from .maze import Maze
-from .maze_generator import MazeGenerator
+from .class_maze_generator import MazeGenerator
 
 
 # --- PRIM'S ALGORITHM ---
@@ -10,7 +10,7 @@ class PrimGenerator(MazeGenerator):
         maze = Maze(self.width, self.height)
 
         # Get the '42' protection from the parent class
-        protected = self._get_protected_cells()
+        protected = self.get_protected_cells()
 
         # Start at random point (avoiding protected cells)
         start_x, start_y = random.randint(0, self.width - 1), random.randint(0, self.height - 1)
@@ -64,7 +64,7 @@ class KruskalGenerator(MazeGenerator):
 
     def generate(self) -> Maze:
         maze = Maze(self.width, self.height)
-        protected = self._get_protected_cells()
+        protected = self.get_protected_cells()
         edges = []
 
         # Collect all valid edges (skipping protected ones)

@@ -115,36 +115,7 @@ class Maze:
 
     def is_valid(self, x: int, y: int) -> bool:
         """Check if coordinates are valid."""
-
-        cx, cy = self.width // 2, self.height // 2
-
-        digit_4 = {
-            (0, 0), (0, 1), (0, 2),
-            (1, 2),
-            (2, 2), (2, 3), (2, 4)
-        }
-        digit_2 = {
-            (0, 0), (1, 0), (2, 0),
-            (2, 1),
-            (0, 2), (1, 2), (2, 2),
-            (0, 3),
-            (0, 4), (1, 4), (2, 4)
-        }
-
-        start_x = cx - 3
-        start_y = cy - 2
-
-        pattern = set()
-
-        for dx, dy in digit_4:
-            pattern.add((start_x + dx, start_y + dy))
-        for dx, dy in digit_2:
-            pattern.add((start_x + 4 + dx, start_y + dy))
-        if (0 <= x < self.width and 0 <= y < self.height and
-                (x, y) not in pattern):
-            return True
-        else:
-            return False
+        return 0 <= x < self.width and 0 <= y < self.height
 
     def get_neighbors(
             self, x: int, y: int
