@@ -475,4 +475,4 @@ def render_path_animation(
         render_frame(path_set, passages_subset)
         time.sleep(wall_delay)
 
-    print("\nPath animation complete!\n")
+    print("\nMaze solved! Easy piecey (*≧∇≦)ﾉ＜※*・:*:｀♪:*:。*・☆*\n")
