@@ -106,26 +106,28 @@ Besides the maze generation and solver, we implemented these as addition feature
 
 ## 👥 Team & Project Management
 
-* **Roles**:
+1. **Roles**:
 
 ` lde-krui `: maze generation (Kruskal's algorithm and iterative backtracking), maze solver (BFS), render RGB colours, start and end of the maze, maze rendering, maze generation and solver animations, creating imperfect maze.
 ` wcheung `: maze generation (Prim's algorithm), Makefile and output file automation, implement 42 pattern in the maze, maze colour change, user-interactive menu, readme files.
 ::::::::(make package exportable)
 
-* **Your anticipated planning and how it evolved until the end**
+2. **Your anticipated planning and how it evolved until the end**
 
 Our plan was to work intensively and finish everything within one week.
 
 At first, we wanted to implement recursive backtracking for maze generation. But because of Python’s recursion limits (especially with larger mazes), we changed it to an iterative version instead. This avoided recursion depth errors and made the program more stable.
 
-* **What worked well and what could be improved**
+We were fully invested into the project and had progress every day.
 
-The core parts of the project worked very well:
-* The maze logic was solid and flexible
-* The solver worked correctly and handled different maze types
-* The rendering system displayed the maze clearly and smoothly
+3. **What worked well and what could be improved**
 
-* **Have you used any specific tools? Which ones?**
+* ✔✔✔ The maze logic was solid and flexible
+* ✔✔✔ The solver worked correctly and handled different maze types
+* ✔✔✔ The rendering system displayed the maze clearly and smoothly
+* ✔ To have a more OOP mindset when working with Python
+
+4. **Have you used any specific tools? Which ones?**
 
 ` flake8 ` for style checking
 ` mypy ` (strict mode) for static type checking
