@@ -32,22 +32,15 @@ In our project, we decided on three algorithm on maze generation, which are the 
 
 ### Maze generation algorithms, and why we chose them
 | Prim's algorithm | It starts from one cell and slowly grows the maze by adding nearby walls at random. We chose Prim’s because it creates dense, natural-looking mazes with lots of short dead ends, making the maze look interesting and adds challenge to the gameplay. |
-
 | Kruskal's algorithm | This method randomly removes walls while making sure no loops are created. It connects separate sections step by step until everything is linked. We chose Kruskal’s because it shows how the Union-Find data structure works. The mazes it makes feel balanced. |
-
 | Iterative backtracking | This algorithm goes down one path as far as it can, then goes back and tries a new path. We chose it because it’s simple, fast, and easy to code. It creates long hallways with fewer branches. It also looks very different from the mazes made by Prim’s and Kruskal’s, which makes it a good comparison. |
 
 ### What part of your code is reusable, and how
 | Maze Core Data Structure | The grid and wall system (using N, E, S, W directions) work separately from the generation algorithms. This means we can add new algorithms without changing the maze structure. |
-
 | Generation Interface | All algorithms follow the same format: they take a maze and modify it. Because of this, we can easily plug in new algorithms later. |
-
 | Solver Module (BFS) | The Breadth-First Search solver does not depend on how the maze was created. It can solve any maze that uses our grid format. |
-
 | Configuration Parser | The config.txt reader can be reused in any grid-based project that needs settings from a file. |
-
 | Rendering & Animation Engine | The drawing and color system can also be reused for other projects that show grids or visual simulations. |
-
 | Package Export (mazegen-*) | The project can be packaged and installed. Other Python projects, for example Pac-Man, can then import it and use the maze generator as its own module. |
 
 
@@ -89,11 +82,11 @@ Besides the maze generation and solver, we implemented these as addition feature
 ## ▶️ Resources
 
 **Resources for maze generation algorithm**:
-* YouTube video about maze generation algorithms:[https://m.youtube.com/watch?v=U3meEXvYFsc]
-* prim's algorithm:[https://weblog.jamisbuck.org/2011/1/10/maze-generation-prim-s-algorithm]
+* [YouTube video about maze generation algorithms](https://m.youtube.com/watch?v=U3meEXvYFsc)
+* [prim's algorithm](https://weblog.jamisbuck.org/2011/1/10/maze-generation-prim-s-algorithm)
 * discussion on Stack Overflow:[https://stackoverflow.com/questions/29739751/implementing-a-randomly-generated-maze-using-prims-algorithm]
-* wikipedia:[https://en.wikipedia.org/wiki/Maze_generation_algorithm]
-* exploring different algorithms:[https://professor-l.github.io/mazes/]
+* (wikipedia)[https://en.wikipedia.org/wiki/Maze_generation_algorithm]
+* (exploring different algorithms)[https://professor-l.github.io/mazes/]
 
 **Unicode**:
 * for drawing shapes and border of the maze[http://xahlee.info/comp/unicode_drawing_shapes.html]
@@ -116,17 +109,14 @@ Besides the maze generation and solver, we implemented these as addition feature
 
 **Your anticipated planning and how it evolved until the end**
 Our plan was to work intensively and finish everything within one week.
+
 At first, we wanted to implement recursive backtracking for maze generation. But because of Python’s recursion limits (especially with larger mazes), we changed it to an iterative version instead. This avoided recursion depth errors and made the program more stable.
 
 **What worked well and what could be improved**
-Because of Python’s recursion limits (especially with larger mazes), we changed it to an iterative version instead. This avoided recursion depth errors and made the program more stable.
-
 The core parts of the project worked very well:
-
-The maze logic was solid and flexible
-
-The solver worked correctly and handled different maze types
-The rendering system displayed the maze clearly and smoothly
+* The maze logic was solid and flexible
+* The solver worked correctly and handled different maze types
+* The rendering system displayed the maze clearly and smoothly
 
 **Have you used any specific tools? Which ones?**
 ` flake8 ` for style checking
