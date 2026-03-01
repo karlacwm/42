@@ -2,7 +2,7 @@
 import sys
 import time
 import os
-from typing import List, Tuple, Set
+from typing import Any, Dict, List, Tuple, Set
 from .maze import Maze, Wall
 from .render_colour import colourize_token, get_maze_colour_from_config
 from .pattern42 import get_pattern_cells
@@ -22,6 +22,20 @@ wall_unicode = {
     (False, False, True, True): "╗",
     (False, True, True, False): "╔",
 }
+
+
+def _resolve_render_config(
+        config_source: Dict[str, Any] | str | None
+) -> Dict[str, Any]:
+    """Resolve render configuration from dict/path/None.
+
+    Preferred input is an already validated config dictionary from main.
+    """
+    if isinstance(config_source, dict):
+        return config_source
+    if isinstance(config_source, str):
+        return parse_config(config_source)
+    return {}
 
 
 def _build_wall_grids(
@@ -65,8 +79,9 @@ def _build_wall_grids(
 
 
 def render_unicode(
-        maze: Maze, delay: float = 0.01,
-        config_path: str = "config.txt"
+    maze: Maze,
+    delay: float = 0.01,
+    config_path: Dict[str, Any] | str | None = None
 ) -> str:
     """
     Render the maze using Unicode block characters.
@@ -80,12 +95,12 @@ def render_unicode(
     entry_colour = get_maze_colour_from_config(config_path, "entry")
     exit_colour = get_maze_colour_from_config(config_path, "exit")
 
-    # Get entry and exit coord from config
-    cfg = parse_config(config_path)
-    entry_x = cfg.get('entry_x')
-    entry_y = cfg.get('entry_y')
-    exit_x = cfg.get('exit_x')
-    exit_y = cfg.get('exit_y')
+    # Get entry and exit coordinates from config
+    cfg = _resolve_render_config(config_path)
+    entry_x = cfg.get('entry_x', 0)
+    entry_y = cfg.get('entry_y', 0)
+    exit_x = cfg.get('exit_x', width - 1)
+    exit_y = cfg.get('exit_y', height - 1)
     if isinstance(exit_x, str):
         exit_x = eval(exit_x, {"width": width, "height": height})
     if isinstance(exit_y, str):
@@ -182,11 +197,11 @@ def render_unicode(
 
 
 def render_path_animation(
-        maze: Maze,
-        path: List[Tuple[int, int]],
-        config_path: str = "config.txt",
-        cell_delay: float = 0.05,
-        wall_delay: float = 0.03
+    maze: Maze,
+    path: List[Tuple[int, int]],
+    config_path: Dict[str, Any] | str | None = None,
+    cell_delay: float = 0.05,
+    wall_delay: float = 0.03
 ) -> None:
     """
     Animate path discovery cell by cell, then show passages.
@@ -200,7 +215,7 @@ def render_path_animation(
     exit_colour = get_maze_colour_from_config(config_path, "exit")
 
     # Get entry/exit coordinates from config
-    cfg = parse_config(config_path)
+    cfg = _resolve_render_config(config_path)
     entry_x = cfg.get('entry_x', 0)
     entry_y = cfg.get('entry_y', 0)
     exit_x = cfg.get('exit_x', width - 1)

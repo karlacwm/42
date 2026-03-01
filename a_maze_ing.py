@@ -112,6 +112,7 @@ def main() -> None:
     current_maze = None
     current_path = None
     show_path = False
+    config = None
     config_file = os.path.join(os.path.dirname(__file__), 'config.txt')
 
     # FLAG: Only render when something changes
@@ -126,7 +127,7 @@ def main() -> None:
             print("Generating maze from 'config.txt'...")
             try:
                 config = parse_config(config_file)
-                validate_maze_config(config)
+                config = validate_maze_config(config)
             except Exception as e:
                 print(f"Critical error caught when parsing config file.\n{e}")
                 sys.exit(1)
@@ -190,10 +191,10 @@ def main() -> None:
         if maze_regen_flag:
             try:
                 if show_path and current_path:
-                    render_path_animation(current_maze, current_path)
+                    render_path_animation(current_maze, current_path, config)
                 else:
                     speed = 0.001
-                    render_unicode(current_maze, speed, config_file)
+                    render_unicode(current_maze, speed, config)
                 print()
                 maze_regen_flag = False
             except Exception as e:
@@ -207,6 +208,7 @@ def main() -> None:
             current_maze = None
             current_path = None
             show_path = False
+
         elif choice == '2':
             # Toggle path visibility
             show_path = not show_path
@@ -223,6 +225,8 @@ def main() -> None:
             ).strip().lower()
             if colour in valid_colour:
                 update_config(config_file, 'wall_colour', colour)
+                if config is not None:
+                    config['wall_colour'] = colour
                 maze_regen_flag = True
             else:
                 print("--------------------------------------")
@@ -230,6 +234,8 @@ def main() -> None:
                 colour = input(f"{msg}\nChoose again: ").strip().lower()
                 if colour in valid_colour:
                     update_config(config_file, 'wall_colour', colour)
+                    if config is not None:
+                        config['wall_colour'] = colour
                     maze_regen_flag = True
                 if colour not in valid_colour:
                     print(f"\nSorry this colour '{colour}' is not available (¯―¯٥)\n"
@@ -240,6 +246,8 @@ def main() -> None:
                 f"{msg}\nColour: ").strip().lower()
             if colour in valid_colour:
                 update_config(config_file, 'maze_colour', colour)
+                if config is not None:
+                    config['maze_colour'] = colour
                 maze_regen_flag = True
             else:
                 print("------------------------------------------------------")
@@ -247,6 +255,8 @@ def main() -> None:
                 colour = input(f"{msg}\nChoose again: ").strip().lower()
                 if colour in valid_colour:
                     update_config(config_file, 'maze_colour', colour)
+                    if config is not None:
+                        config['maze_colour'] = colour
                     maze_regen_flag = True
                 if colour not in valid_colour:
                     print(f"\nSorry this colour '{colour}' is not available (¯―¯٥)\n"
@@ -258,6 +268,8 @@ def main() -> None:
                 f"{msg}\nColour: ").strip().lower()
             if colour in valid_colour:
                 update_config(config_file, 'egg42', colour)
+                if config is not None:
+                    config['egg42'] = colour
                 maze_regen_flag = True
             else:
                 print("------------------------------------------------------")
@@ -265,6 +277,8 @@ def main() -> None:
                 colour = input(f"{msg}\nChoose again: ").strip().lower()
                 if colour in valid_colour:
                     update_config(config_file, 'egg42', colour)
+                    if config is not None:
+                        config['egg42'] = colour
                     maze_regen_flag = True
                 if colour not in valid_colour:
                     print(f"\nSorry this colour '{colour}' is not available (¯―¯٥)\n"

@@ -77,32 +77,41 @@ def colourize_token(token: str, colour: ColourTuple) -> str:
 
 
 def get_maze_colour_from_config(
-        config_path: str = "config.txt",
+        config_path: Dict[str, Any] | str | None,
         what_to_colour: str = ""
 ) -> ColourTuple:
-    """Load configuration file and return the RGB tuple for ``maze_colour``.
+    """Return the RGB tuple for a configured maze colour.
 
-    The helper wraps :func:`parse_config`/``validate_maze_config`` and
-    :func:`get_colour_by_name` so callers (like ``render_unicode``) don't
-    need to repeat the lookup logic.
+    Args:
+        config_path: Either an already validated config ``dict`` (preferred),
+            a config file path, or ``None``.
+        what_to_colour: One of ``maze``, ``egg``, ``wall``, ``path``,
+            ``entry``, ``exit``.
     """
-    from .config import parse_config, validate_maze_config
+    config: Dict[str, Any]
+    if isinstance(config_path, dict):
+        config = config_path
+    elif isinstance(config_path, str):
+        # Backward compatibility path; do not re-validate here to avoid
+        # repeated validation side effects during rendering.
+        from .config import parse_config
+        config = parse_config(config_path)
+    else:
+        config = {}
 
-    cfg = parse_config(config_path)
-    config = validate_maze_config(cfg)
     name: str = ""
     if what_to_colour == "maze":
-        name = str(config.get("maze_colour"))
+        name = str(config.get("maze_colour", "yellow"))
     elif what_to_colour == "egg":
-        name = str(config.get("egg42"))
+        name = str(config.get("egg42", "magenta"))
     elif what_to_colour == "wall":
-        name = str(config.get("wall_colour"))
+        name = str(config.get("wall_colour", "marroon"))
     elif what_to_colour == "path":
-        name = str(config.get("path_colour"))
+        name = str(config.get("path_colour", "highlighter"))
     elif what_to_colour == "entry":
-        name = str(config.get("entry_colour"))
+        name = str(config.get("entry_colour", "green"))
     elif what_to_colour == "exit":
-        name = str(config.get("exit_colour"))
+        name = str(config.get("exit_colour", "red"))
     try:
         return get_colour_by_name(name)
     except AttributeError:

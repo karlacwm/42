@@ -142,8 +142,9 @@ def validate_maze_config(config: Dict[str, Any]) -> Dict[str, Any]:
             raise ColourError("Missing required parameter: maze_colour")
         if 'egg42' not in config:
             raise ColourError("Missing required parameter: egg42")
-    except ColourError as e:
+    except ConfigError as e:
         print(e)
+        pass
 
     # Validate dimensions
 
@@ -164,9 +165,11 @@ def validate_maze_config(config: Dict[str, Any]) -> Dict[str, Any]:
                 f"Maze dimensions too large: {width}x{height}. "
                 f"Maximum is over 100x100"
             )
-        pattern_42 = get_pattern_cells(width, height)
     except (DimensionError, KeyError) as e:
         print(e)
+        width = config['width'] = 10
+        height = config['height'] = 10
+    pattern_42 = get_pattern_cells(width, height)
 
     # Calculate the "42" pattern cells (same logic as Maze.is_valid)
 
