@@ -9,7 +9,7 @@ def get_pattern_cells(width: int, height: int) -> Set[Tuple[int, int]]:
     if width < 12 or height < 10:
         return set()
 
-    coords = set()
+    coords: set[Tuple[int, int]] = set()
     cx, cy = width // 2, height // 2
 
     digit_4 = {
