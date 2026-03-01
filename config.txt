@@ -27,7 +27,7 @@ perfect=true
 # blue      |   marroon     |   forest_green         |   dark_gray
 # green     |   lime        |   navy_blue            |   tan
 # red       |   pink        |   rust                 |   coffee_brown
-# black     |   purple      |   dandilion_yellow     |   moon_glow
+# black     |   purple      |   dandelion_yellow     |   moon_glow
 # orange    |   gray        |   highlighter          |
 # yellow    |   magenta     |   sky_blue             |
 
@@ -42,6 +42,6 @@ exit_y = height -1
 exit_color = red
 
 wall_color = marroon
-maze_color = dandilion_yellow
+maze_color = dandelion_yellow
 egg42 = magenta
 path_color = highlighter

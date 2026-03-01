@@ -34,8 +34,8 @@ class EntryExitError(ConfigError):
     pass
 
 
-class ColorError(ConfigError):
-    """Exception raised for invalid color errors for walls, maze, entry, exit, or "42" pattern."""
+class ColourError(ConfigError):
+    """Exception raised for invalid colour errors for walls, maze, entry, exit, or "42" pattern."""
     pass
 
 
@@ -136,10 +136,10 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
             raise ConfigError("Missing required parameter: exit_x")
         if 'exit_y' not in config:
             raise ConfigError("Missing required parameter: exit_y")
-        if 'wall_color' not in config:
-            raise ConfigError("Missing required parameter: wall_color")
-        if 'maze_color' not in config:
-            raise ConfigError("Missing required parameter: maze_color")
+        if 'wall_colour' not in config:
+            raise ConfigError("Missing required parameter: wall_colour")
+        if 'maze_colour' not in config:
+            raise ConfigError("Missing required parameter: maze_colour")
         if 'egg42' not in config:
             raise ConfigError("Missing required parameter: egg42")
     except ConfigError as e:
@@ -195,9 +195,6 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
                     f"Invalid perfect value: {config['perfect']}."
                     f"Must be a boolean (true/false)"
                 )
-            if config['perfect'] == '':
-                raise PerfectError("perfect cannot be empty,"
-                                   " using default True")
     except PerfectError as e:
         print(e)
         config['perfect'] = True
@@ -209,9 +206,6 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
                     f"Invalid seed value: {config['seed']}. "
                     f"Must be an integer"
                 )
-            if config['seed'] == '':
-                raise SeedError("seed cannot be empty, using default None"
-                                "or just comment it out")
     except SeedError as e:
         print(e)
         config['seed'] = None
@@ -268,27 +262,27 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
         entry_y = config['entry_y'] = 0
 
     try:
-        if 'entry_color' in config:
+        if 'entry_colour' in config:
             valid_entry = ['white', 'blue_green', 'brown', 'light_gray',
                            'blue', 'marroon', 'forest_green', 'dark_gray',
                            'lime', 'navy_blue', 'tan', 'green', 'red',
                            'pink', 'rust', 'coffee_brown',
-                           'black', 'purple', 'dandilion_yellow',
+                           'black', 'purple', 'dandelion_yellow',
                            'moon_glow', 'orange', 'gray', 'highlighter',
                            'yellow', 'magenta', 'sky_blue']
-            color = str(config['entry_color']).lower()
-            if color == '':
-                raise ColorError("entry_color cannot be empty,"
-                                 " using default 'green'")
-            if color not in valid_entry:
-                raise ColorError(
-                    f"Invalid entry_color: {config['entry_color']}. "
+            colour = str(config['entry_colour']).lower()
+            if colour == '':
+                raise ColourError("entry_colour cannot be empty,"
+                                  " using default 'green'")
+            if colour not in valid_entry:
+                raise ColourError(
+                    f"Invalid entry_colour: {config['entry_colour']}. "
                     f"Must be one of: {', '.join(valid_entry)}"
                 )
-            config['entry_color'] = color
-    except ColorError as e:
+            config['entry_colour'] = colour
+    except ColourError as e:
         print(e)
-        config['entry_color'] = 'green'
+        config['entry_colour'] = 'green'
 
     try:
         if 'exit_x' in config:
@@ -344,73 +338,73 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
         exit_y = config['exit_y'] = height - 1
 
     try:
-        if 'exit_color' in config:
+        if 'exit_colour' in config:
             valid_exit = ['white', 'blue_green', 'brown', 'light_gray',
                           'blue', 'marroon', 'forest_green', 'dark_gray',
                           'lime', 'navy_blue', 'tan', 'green', 'red',
                           'pink', 'rust', 'coffee_brown',
-                          'black', 'purple', 'dandilion_yellow',
+                          'black', 'purple', 'dandelion_yellow',
                           'moon_glow', 'orange', 'gray', 'highlighter',
                           'yellow', 'magenta', 'sky_blue']
-            color = str(config['exit_color']).lower()
-            if color == '':
-                raise ColorError("exit_color cannot be empty,"
-                                 " using default 'red'")
-            if color not in valid_exit:
-                raise ColorError(
-                    f"Invalid exit_color: {config['exit_color']}. "
+            colour = str(config['exit_colour']).lower()
+            if colour == '':
+                raise ColourError("exit_colour cannot be empty,"
+                                  " using default 'red'")
+            if colour not in valid_exit:
+                raise ColourError(
+                    f"Invalid exit_colour: {config['exit_colour']}. "
                     f"Must be one of: {', '.join(valid_exit)}"
                 )
-            config['exit_color'] = color
-    except ColorError as e:
+            config['exit_colour'] = colour
+    except ColourError as e:
         print(e)
-        config['exit_color'] = 'red'
+        config['exit_colour'] = 'red'
 
     try:
-        if 'wall_color' in config:
-            valid_colors = ['white', 'blue_green', 'brown', 'light_gray',
+        if 'wall_colour' in config:
+            valid_colours = ['white', 'blue_green', 'brown', 'light_gray',
+                             'blue', 'marroon', 'forest_green', 'dark_gray',
+                             'lime', 'navy_blue', 'tan', 'green', 'red',
+                             'pink', 'rust', 'coffee_brown',
+                             'black', 'purple', 'dandelion_yellow', 'moon_glow',
+                             'orange', 'gray', 'highlighter',
+                             'yellow', 'magenta', 'sky_blue']
+            colour = str(config['wall_colour']).lower()
+            if colour == '':
+                raise ColourError("wall_colour cannot be empty,"
+                                  " using default 'black'")
+            if colour not in valid_colours:
+                raise ColourError(
+                    f"Invalid wall_colour: {config['wall_colour']}. "
+                    f"Must be one of: {', '.join(valid_colours)}"
+                )
+            config['wall_colour'] = colour
+    except ColourError as e:
+        print(e)
+        config['wall_colour'] = 'orange'
+
+    try:
+        if 'maze_colour' in config:
+            valid_colour = ['white', 'blue_green', 'brown', 'light_gray',
                             'blue', 'marroon', 'forest_green', 'dark_gray',
                             'lime', 'navy_blue', 'tan', 'green', 'red',
                             'pink', 'rust', 'coffee_brown',
-                            'black', 'purple', 'dandilion_yellow', 'moon_glow',
+                            'black', 'purple', 'dandelion_yellow', 'moon_glow',
                             'orange', 'gray', 'highlighter',
                             'yellow', 'magenta', 'sky_blue']
-            color = str(config['wall_color']).lower()
-            if color == '':
-                raise ColorError("wall_color cannot be empty,"
-                                 " using default 'black'")
-            if color not in valid_colors:
-                raise ColorError(
-                    f"Invalid wall_color: {config['wall_color']}. "
-                    f"Must be one of: {', '.join(valid_colors)}"
+            colour = str(config['maze_colour']).lower()
+            if colour == '':
+                raise ColourError("maze_colour cannot be empty,"
+                                  " using default 'yellow'")
+            if colour not in valid_colour:
+                raise ColourError(
+                    f"Invalid maze_colour: {config['maze_colour']}. "
+                    f"Must be one of: {', '.join(valid_colour)}"
                 )
-            config['wall_color'] = color
-    except ColorError as e:
+            config['maze_colour'] = colour
+    except ColourError as e:
         print(e)
-        config['wall_color'] = 'orange'
-
-    try:
-        if 'maze_color' in config:
-            valid_color = ['white', 'blue_green', 'brown', 'light_gray',
-                           'blue', 'marroon', 'forest_green', 'dark_gray',
-                           'lime', 'navy_blue', 'tan', 'green', 'red',
-                           'pink', 'rust', 'coffee_brown',
-                           'black', 'purple', 'dandilion_yellow', 'moon_glow',
-                           'orange', 'gray', 'highlighter',
-                           'yellow', 'magenta', 'sky_blue']
-            color = str(config['maze_color']).lower()
-            if color == '':
-                raise ColorError("maze_color cannot be empty,"
-                                 " using default 'yellow'")
-            if color not in valid_color:
-                raise ColorError(
-                    f"Invalid maze_color: {config['maze_color']}. "
-                    f"Must be one of: {', '.join(valid_color)}"
-                )
-            config['maze_color'] = color
-    except ColorError as e:
-        print(e)
-        config['maze_color'] = 'yellow'
+        config['maze_colour'] = 'yellow'
 
     try:
         if 'egg42' in config:
@@ -418,45 +412,45 @@ def validate_maze_config(config: Dict[str, Any]) -> None:
                         'blue', 'marroon', 'forest_green', 'dark_gray',
                         'green', 'lime', 'navy_blue', 'tan',
                         'red', 'pink', 'rust', 'coffee_brown',
-                        'black', 'purple', 'dandilion_yellow',
+                        'black', 'purple', 'dandelion_yellow',
                         'moon_glow', 'orange', 'gray', 'highlighter',
                         'yellow', 'magenta', 'sky_blue']
-            color = str(config['egg42']).lower()
-            if color == '':
-                raise ColorError("egg42 cannot be empty,"
-                                 " using default 'pink'")
-            if color not in valid_42:
-                raise ColorError(
+            colour = str(config['egg42']).lower()
+            if colour == '':
+                raise ColourError("egg42 cannot be empty,"
+                                  " using default 'pink'")
+            if colour not in valid_42:
+                raise ColourError(
                     f"Invalid egg42: {config['egg42']}. "
                     f"Must be one of: {', '.join(valid_42)}"
                 )
-            config['egg42'] = color
-    except ColorError as e:
+            config['egg42'] = colour
+    except ColourError as e:
         print(e)
         config['egg42'] = 'pink'
 
     try:
-        if 'path_color' in config:
+        if 'path_colour' in config:
             valid_path = ['white', 'blue_green', 'brown',
                           'light_gray', 'blue', 'marroon',
                           'forest_green', 'dark_gray',
                           'lime', 'navy_blue', 'tan', 'green', 'red',
                           'pink', 'rust', 'coffee_brown', 'black',
-                          'purple', 'dandilion_yellow', 'moon_glow',
+                          'purple', 'dandelion_yellow', 'moon_glow',
                           'orange', 'gray', 'highlighter', 'yellow',
                           'magenta', 'sky_blue']
-            color = str(config['path_color']).lower()
-            if color == '':
-                raise ColorError("path_color cannot be empty,"
-                                 " using default 'blue'")
-            if color not in valid_path:
-                raise ColorError(
-                    f"Invalid path_color: "
-                    f"{config['path_color']}. "
+            colour = str(config['path_colour']).lower()
+            if colour == '':
+                raise ColourError("path_colour cannot be empty,"
+                                  " using default 'blue'")
+            if colour not in valid_path:
+                raise ColourError(
+                    f"Invalid path_colour: "
+                    f"{config['path_colour']}. "
                     f"Must be one of: "
                     f"{', '.join(valid_path)}"
                 )
-            config['path_color'] = color
-    except ColorError as e:
+            config['path_colour'] = colour
+    except ColourError as e:
         print(e)
-        config['path_color'] = 'highlighter'
+        config['path_colour'] = 'highlighter'
