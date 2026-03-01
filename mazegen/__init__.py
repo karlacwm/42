@@ -13,9 +13,7 @@ from .maze import Maze, Cell, Wall, Direction
 from .generator import generate_maze
 from .class_maze_generator import MazeGenerator
 from .algorithms import PrimGenerator, KruskalGenerator, BacktrackingGenerator
-from .render import (
-    render_unicode, render_path_animation
-)
+from .render import (render_unicode, render_path_animation, get_pattern_cells)
 from .solver import find_shortest_path
 from .render_color import (
     CellColorizer,
@@ -37,7 +35,7 @@ __all__ = [
     "Direction",
     # Generation
     "generate_maze", "MazeGenerator", "PrimGenerator",
-    "KruskalGenerator", "BacktrackingGenerator",
+    "KruskalGenerator", "BacktrackingGenerator", "get_pattern_cells",
     # Rendering
     "render_unicode", "render_path_animation",
     # Solver
