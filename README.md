@@ -97,7 +97,72 @@ Besides the maze generation and solver, we implemented these as addition feature
 * if nothing is returned, it means no errors were caught
 
 ---
+# Documentation for the `mazegen` Module
 
+**mazegen** is a Python package that generates, solves, and renders mazes.
+
+It is designed to be **reused** in other projects (like games, data visualizations, or pathfinding simulations).
+
+## 📘 How to use the module
+
+The main way to create a maze is the `generate_maze()` function.
+Use the factory function `generate_maze()` to create a new maze instance.
+It returns a `Maze` object containing the grid and walls.
+
+## 🧱 Access the generated structure: the Maze Object
+
+When you generate a maze, you get a `Maze` object.
+
+Attributes:
+* `maze.width`: Integer width of the grid.
+* `maze.height`: Integer height of the grid.
+* `maze.cells`: A 2D list (list of lists) containing Cell objects.
+
+Each Cell uses a Bitmask (IntFlag) to store wall data. This allows for efficient memory usage and fast bitwise operations.
+| Wall | Binary | Bit value |
+| --- | --- | --- |
+| Wall.NORTH | 0001  | 1
+| Wall.EAST | 0010 | 2 |
+| Wall.SOUTH | 0100 | 4 |
+| Wall.WEST | 1000 | 8 |
+| Wall.ALL | 1111 | 15 |
+
+## 🛠️ Access the generated structure: the MazeGenerator Class
+
+If you want to add your own algorithm (e.g., Wilson's Algorithm), you should inherit from the `MazeGenerator` base class, just like how multiple algorithms are handled in `mazegen/algorithms.py`.
+This ensures your new algorithm is compatible with the rest of the project.
+
+Class: `MazeGenerator`
+
+This is an "Abstract Base Class" (blueprint). You must not use it directly; instead, create a child class that uses it.
+
+## 💡 Usage example
+```Python
+import random
+from mazegen import MazeGenerator, Maze
+
+class ExampleGenerator(MazeGenerator):
+    """
+    A simple generator that randomly removes East or South walls.
+    """
+    def generate(self) -> Maze:
+        # Initialize an empty grid with all walls
+        maze = Maze(self.width, self.height)
+
+        # Get the protected "42" pattern coordinates
+        protected = self.get_protected_cells()
+
+        return maze
+
+# Usage
+custom_gen = ExampleGenerator(width=20, height=10, seed=123)
+my_maze = custom_gen.generate()
+
+# Rendering
+from mazegen import render_unicode
+print(render_unicode(my_maze))
+```
+---
 
 
 ## ▶️ Resources
