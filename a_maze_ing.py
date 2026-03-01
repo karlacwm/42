@@ -7,6 +7,7 @@ and its user-interactive menu.
 
 import sys
 import os
+from typing import Dict, Any
 from mazegen import (
     parse_config,
     validate_maze_config,
@@ -28,7 +29,7 @@ valid_colour = {
     'orange', 'gray', 'highlighter',
     'yellow', 'magenta', 'sky_blue'}
 
-msg = (
+colour_menu = (
     "Choose one from the available colours:\n"
     "|  pink  |    marroon   |       purple     |    magenta  |\n"
     "| yellow |    orange    | dandelion_yellow | highlighter |\n"
@@ -84,22 +85,35 @@ def display_menu() -> str:
     return input("Enter your choice: ").strip()
 
 
-def change_config_color(config_file: str, key: str, prompt: str) -> None:
+def change_config_color(
+        config_file: str, config: Dict[str, Any] | str | None, key: str, prompt: str
+        ) -> bool:
     """
     Handle user input for changing a color setting.
     """
-    print(f"\n{prompt}\n\n{msg}")
-
-    # range(2) to allow two attempts
-    for _ in range(2):
-        colour = input("Colour: ").strip().lower()
+    print(f"\n{prompt}\n\n{colour_menu}")
+    colour = input("Colour: ").strip().lower()
+    if colour in valid_colour:
+        update_config(config_file, key, colour)
+        if config is not None:
+            config[key] = colour
+        print(f"Updated {key} to {colour}!")
+        return True
+    else:
+        print("--------------------------------------")
+        print(f"\nSorry this colour '{colour}' is not available (¯―¯٥)\n")
+        colour = input(f"{colour_menu}\nChoose again: ").strip().lower()
         if colour in valid_colour:
-            update_config(config_file, key, colour)
+            update_config(config_file, 'wall_colour', colour)
+            if config is not None:
+                config[key] = colour
             print(f"Updated {key} to {colour}!")
-            return
-        print(f"\nSorry, '{colour}' is not available (¯―¯٥)")
-
-    print("Redirecting you to the menu...\n")
+            return True
+        else:
+            print(
+                f"\nSorry this colour '{colour}' is also not available (¯―¯٥)"
+                "\nRedirecting you to the menu...\n")
+        return False
 
 
 def main() -> None:
@@ -219,70 +233,17 @@ def main() -> None:
                 print("Hiding path solution... ٩(ˊᗜˋ )و\n")
 
         elif choice == '3':
-            colour = input(
-                "\nWhat colour do you want for the maze walls? (´﹃｀)\n\n"
-                f"{msg}\nColour: "
-            ).strip().lower()
-            if colour in valid_colour:
-                update_config(config_file, 'wall_colour', colour)
-                if config is not None:
-                    config['wall_colour'] = colour
-                maze_regen_flag = True
-            else:
-                print("--------------------------------------")
-                print(f"\nSorry this colour '{colour}' is not available (¯―¯٥)\n")
-                colour = input(f"{msg}\nChoose again: ").strip().lower()
-                if colour in valid_colour:
-                    update_config(config_file, 'wall_colour', colour)
-                    if config is not None:
-                        config['wall_colour'] = colour
-                    maze_regen_flag = True
-                if colour not in valid_colour:
-                    print(f"\nSorry this colour '{colour}' is not available (¯―¯٥)\n"
-                          "Redirecting you to the menu...\n")
+            maze_regen_flag = change_config_color(
+                config_file, config, 'wall_colour',
+                "What colour do you want for the maze walls? (´﹃｀)")
         elif choice == '4':
-            colour = input(
-                "\nWhat colour do you want for the maze background? (˶˃ ᵕ ˂˶)\n\n"
-                f"{msg}\nColour: ").strip().lower()
-            if colour in valid_colour:
-                update_config(config_file, 'maze_colour', colour)
-                if config is not None:
-                    config['maze_colour'] = colour
-                maze_regen_flag = True
-            else:
-                print("------------------------------------------------------")
-                print(f"\nSorry this colour '{colour}' is not available (¯―¯٥)\n")
-                colour = input(f"{msg}\nChoose again: ").strip().lower()
-                if colour in valid_colour:
-                    update_config(config_file, 'maze_colour', colour)
-                    if config is not None:
-                        config['maze_colour'] = colour
-                    maze_regen_flag = True
-                if colour not in valid_colour:
-                    print(f"\nSorry this colour '{colour}' is not available (¯―¯٥)\n"
-                          "Redirecting you to the menu...\n")
+            maze_regen_flag = change_config_color(
+                config_file, config, 'maze_colour',
+                "What colour do you want for the maze background? (˶>⩊<˶)")
         elif choice == '5':
-            print(f"Available colours:\n{', '.join(valid_colour)}")
-            colour = input(
-                "\nWhat colour do you want for the 42 egg? ᐠ( ᐛ )ᐟ\n\n"
-                f"{msg}\nColour: ").strip().lower()
-            if colour in valid_colour:
-                update_config(config_file, 'egg42', colour)
-                if config is not None:
-                    config['egg42'] = colour
-                maze_regen_flag = True
-            else:
-                print("------------------------------------------------------")
-                print(f"\nSorry this colour '{colour}' is not available (¯―¯٥)\n")
-                colour = input(f"{msg}\nChoose again: ").strip().lower()
-                if colour in valid_colour:
-                    update_config(config_file, 'egg42', colour)
-                    if config is not None:
-                        config['egg42'] = colour
-                    maze_regen_flag = True
-                if colour not in valid_colour:
-                    print(f"\nSorry this colour '{colour}' is not available (¯―¯٥)\n"
-                          "Redirecting you to the menu...\n")
+            maze_regen_flag = change_config_color(
+                config_file, config, 'egg42',
+                "What colour do you want for the 42 egg? (°ㅁ°„)")
         elif choice == '6':
             print("Climbing the maze wall to exit...")
             print()
