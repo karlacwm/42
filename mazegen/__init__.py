@@ -17,12 +17,7 @@ from .maze import Maze, Cell, Wall, Direction
 from .output_file_gen import write_output_file
 from .pattern42 import get_pattern_cells
 from .render_colour import (
-    CellColourizer,
-    hsv_to_rgb,
     get_colour_by_name,
-    blend_colours,
-    get_gradient_colour,
-    create_colour_palette,
     colourize_token,
     get_maze_colour_from_config
 )
@@ -42,9 +37,7 @@ __all__ = [
     # Solver
     "find_shortest_path",
     # Colour rendering
-    "CellColourizer", "hsv_to_rgb", "get_colour_by_name", "blend_colours",
-    "get_gradient_colour", "create_colour_palette",
-    "colourize_token", "get_maze_colour_from_config",
+    "get_colour_by_name", "colourize_token", "get_maze_colour_from_config",
     # Config
     "parse_config", "validate_maze_config", "ConfigError",
     # Output file
