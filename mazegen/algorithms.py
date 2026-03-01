@@ -1,15 +1,12 @@
 import random
-from typing import Tuple, Set
+from typing import Tuple, Set, List
 from .maze import Maze
 from .class_maze_generator import MazeGenerator
 
 
-# --- PRIM'S ALGORITHM ---
 class PrimGenerator(MazeGenerator):
     def generate(self) -> Maze:
         maze = Maze(self.width, self.height)
-
-        # Get the '42' protection from the parent class
         protected = self.get_protected_cells()
 
         # Start at random point (avoiding protected cells)
@@ -21,7 +18,7 @@ class PrimGenerator(MazeGenerator):
         walls = []
 
         # Add initial walls
-        for nx, ny, direction in maze.get_neighbors(start_x, start_y):
+        for nx, ny, _ in maze.get_neighbors(start_x, start_y):
             walls.append((start_x, start_y, nx, ny))
 
         while walls:
@@ -37,7 +34,6 @@ class PrimGenerator(MazeGenerator):
         return maze
 
 
-# --- KRUSKAL'S ALGORITHM ---
 class KruskalGenerator(MazeGenerator):
     class UnionFind:
         def __init__(self, size: int) -> None:
@@ -67,54 +63,69 @@ class KruskalGenerator(MazeGenerator):
         protected = self.get_protected_cells()
         edges = []
 
-        # Collect all valid edges (skipping protected ones)
         for y in range(self.height):
             for x in range(self.width):
+                # East wall
                 if x < self.width - 1:
                     if (x, y) not in protected and (x+1, y) not in protected:
-                        edges.append((x, y, x+1, y))
+                        edges.append((x, y, x + 1, y))
+                # South wall
                 if y < self.height - 1:
                     if (x, y) not in protected and (x, y+1) not in protected:
-                        edges.append((x, y, x, y+1))
+                        edges.append((x, y, x, y + 1))
 
         random.shuffle(edges)
         uf = self.UnionFind(self.width * self.height)
 
         for x1, y1, x2, y2 in edges:
-            idx1, idx2 = y1 * self.width + x1, y2 * self.width + x2
+            idx1 = y1 * self.width + x1
+            idx2 = y2 * self.width + x2
             if uf.union(idx1, idx2):
                 maze.remove_wall_between(x1, y1, x2, y2)
-
         return maze
 
 
-# --- BACKTRACKING ALGORITHM ---
 class BacktrackingGenerator(MazeGenerator):
     def generate(self) -> Maze:
         maze = Maze(self.width, self.height)
-        # Note: Backtracking usually ignores 'protected' or needs complex logic to support it.
-        # For now, we run standard backtracking.
+        protected = self.get_protected_cells()
 
-        stack = []
-        visited = set()
+        visited: Set[Tuple[int, int]] = protected.copy()
+        stack: List[Tuple[int, int]] = []
 
-        start_x, start_y = random.randint(0, self.width-1), random.randint(0, self.height-1)
+        # Start with a random cell
+        start_x = random.randint(0, self.width - 1)
+        start_y = random.randint(0, self.height - 1)
+
+        while (start_x, start_y) in protected:
+            start_x = random.randint(0, self.width - 1)
+            start_y = random.randint(0, self.height - 1)
+
         stack.append((start_x, start_y))
         visited.add((start_x, start_y))
 
+        # Main loop: process cells from the stack
         while stack:
-            cx, cy = stack[-1]
-            neighbors = []
-            for nx, ny, _ in maze.get_neighbors(cx, cy):
-                if (nx, ny) not in visited:
-                    neighbors.append((nx, ny))
+            current_x, current_y = stack[-1]
 
-            if neighbors:
-                nx, ny = random.choice(neighbors)
-                maze.remove_wall_between(cx, cy, nx, ny)
-                visited.add((nx, ny))
-                stack.append((nx, ny))
-            else:
+            # Get all unvisited neighbors
+            unvisited_neighbors = [
+                (nx, ny, direction)
+                for nx, ny, direction in maze.get_neighbors(current_x, current_y)
+                if (nx, ny) not in visited
+            ]
+
+            if not unvisited_neighbors:
+                # No unvisited neighbors, backtrack
                 stack.pop()
+            else:
+                # Choose a random unvisited neighbor
+                next_x, next_y, direction = random.choice(unvisited_neighbors)
 
+                # Remove wall between current and next cell
+                maze.remove_wall_between(current_x, current_y, next_x, next_y)
+
+                # Mark next cell as visited and push to stack
+                visited.add((next_x, next_y))
+                stack.append((next_x, next_y))
         return maze
