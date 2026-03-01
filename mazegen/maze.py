@@ -1,38 +1,26 @@
 """Maze data structures and wall encoding."""
-from typing import List, Tuple
+from typing import List, Tuple, Set
 from enum import IntFlag
 
 
 class Wall(IntFlag):
     """
     Wall encoding using bits 0-3 for N, E, S, W directions.
-
-    Bit 0 (0x1): North wall
-    Bit 1 (0x2): East wall
-    Bit 2 (0x4): South wall
-    Bit 3 (0x8): West wall
     """
-    NORTH = 0x1  # Bit 0
-    EAST = 0x2   # Bit 1
-    SOUTH = 0x4  # Bit 2
-    WEST = 0x8   # Bit 3
-    ALL = 0xF    # All walls
+    NORTH = 0x1
+    EAST = 0x2
+    SOUTH = 0x4
+    WEST = 0x8
+    ALL = 0xF
 
 
 class Direction:
-    """Direction constants for maze navigation."""
+    """Direction constants (dx, dy) for maze navigation."""
     NORTH = (0, -1)
     EAST = (1, 0)
     SOUTH = (0, 1)
     WEST = (-1, 0)
-
-    @staticmethod
-    def all() -> List[Tuple[int, int]]:
-        """Return all directions."""
-        return [
-            Direction.NORTH, Direction.EAST,
-            Direction.SOUTH, Direction.WEST
-        ]
+    ALL = [NORTH, EAST, SOUTH, WEST]
 
     @staticmethod
     def to_wall(direction: Tuple[int, int]) -> Wall:
@@ -45,8 +33,7 @@ class Direction:
             return Wall.SOUTH
         elif direction == Direction.WEST:
             return Wall.WEST
-        else:
-            raise ValueError(f"Invalid direction: {direction}")
+        raise ValueError(f"Invalid direction: {direction}")
 
     @staticmethod
     def opposite(direction: Tuple[int, int]) -> Tuple[int, int]:
@@ -60,15 +47,11 @@ class Cell:
 
     def __init__(self, x: int, y: int) -> None:
         """
-        Initialize a cell.
-
-        Args:
-            x: X coordinate
-            y: Y coordinate
+        Initializes a cell, starts with all walls.
         """
         self.x = x
         self.y = y
-        self.walls = Wall.ALL  # Start with all walls
+        self.walls = Wall.ALL
 
     def remove_wall(self, wall: Wall) -> None:
         """Remove a wall from this cell."""
@@ -84,7 +67,7 @@ class Cell:
 
     def __repr__(self) -> str:
         """String representation of cell."""
-        return f"Cell({self.x}, {self.y}, walls=0x{self.walls:X})"
+        return f"Cell({self.x}, {self.y}, walls={self.to_hex()})"
 
 
 class Maze:
@@ -93,16 +76,11 @@ class Maze:
     def __init__(self, width: int, height: int) -> None:
         """
         Initialize a maze.
-
-        Args:
-            width: Width of the maze
-            height: Height of the maze
         """
         self.width = width
         self.height = height
         self.cells: List[List[Cell]] = []
 
-        # Initialize grid
         for y in range(height):
             row: List[Cell] = []
             for x in range(width):
@@ -121,13 +99,10 @@ class Maze:
             self, x: int, y: int
     ) -> List[Tuple[int, int, Tuple[int, int]]]:
         """
-        Get valid neighbors of a cell.
-
-        Returns:
-            List of tuples (nx, ny, direction) for each valid neighbor
+        Gets list of tuples (nx, ny, direction) for each valid neighbor
         """
         neighbors = []
-        for direction in Direction.all():
+        for direction in Direction.ALL:
             dx, dy = direction
             nx, ny = x + dx, y + dy
             if self.is_valid(nx, ny):
@@ -136,58 +111,33 @@ class Maze:
 
     def remove_wall_between(self, x1: int, y1: int, x2: int, y2: int) -> None:
         """
-        Remove wall between two adjacent cells.
-
-        Args:
-            x1, y1: Coordinates of first cell
-            x2, y2: Coordinates of second cell
+        Remove the shared wall between two adjacent cells,
+        remove_wall() called on both cells but opposite direction.
         """
-        # Calculate direction from cell1 to cell2
         dx = x2 - x1
         dy = y2 - y1
         direction = (dx, dy)
 
-        # Remove wall from first cell
-        wall1 = Direction.to_wall(direction)
-        self.cells[y1][x1].remove_wall(wall1)
-
-        # Remove opposite wall from second cell
-        opposite_dir = Direction.opposite(direction)
-        wall2 = Direction.to_wall(opposite_dir)
-        self.cells[y2][x2].remove_wall(wall2)
+        self.cells[y1][x1].remove_wall(Direction.to_wall(direction))
+        self.cells[y2][x2].remove_wall(Direction.to_wall((-dx, -dy)))
 
     def to_hex_grid(self) -> List[List[str]]:
         """
         Convert maze to hexadecimal grid representation.
-
-        Returns:
-            2D list of hex strings representing wall states
         """
-        hex_grid = []
-        for row in self.cells:
-            hex_row = [cell.to_hex() for cell in row]
-            hex_grid.append(hex_row)
-        return hex_grid
+        return [[cell.to_hex() for cell in row] for row in self.cells]
 
     def add_loops(
             self,
-            forbidden: Tuple[int, int],
+            forbidden: Set[Tuple[int, int]],
             loops: int
     ) -> None:
         """
-        Add loops to a perfect maze by removing internal walls.
-
-        This creates cycles in the maze structure while respecting
-        constraints:
-        - Only removes internal walls (not outer borders)
-        - Never removes forbidden walls (e.g., "42" pattern)
-        - Prevents creation of 2x2 blocks of completely open cells
-        - Preserves structural integrity
-
-        Args:
-            forbidden: Set of (render_x, render_y) coordinates
-                      that must not be removed
-            loops: Maximum number of walls to remove
+        Creates imperfect maze by removing internal walls, but
+        never removes walls of 42 pattern or outer borders and
+        prevents creation of 2x2 blocks of completely open cells.
+        [forbidden]: Set of coordinates that must not be removed
+        [loops]: Maximum number of walls to remove
         """
         import random
 
@@ -234,87 +184,38 @@ class Maze:
             self.remove_wall_between(x1, y1, x2, y2)
 
     def _would_create_2x2_block(
-            self, x: int, y: int, wall: Wall
+            self, x: int, y: int, wall_removed: Wall
     ) -> bool:
         """
         Check if removing a wall would create a 2x2 block of
         completely open cells.
-
-        A 2x2 block is when 4 cells have no internal walls between
-        them.
-
-        Args:
-            x, y: Cell coordinates
-            wall: Wall to check (SOUTH or EAST)
-
-        Returns:
-            True if removing wall would complete a 2x2 block
         """
-        if wall == Wall.SOUTH:
-            # Wall is between (x, y) and (x, y+1)
-            # Check both possible 2x2 blocks
-            for bx in [x - 1, x]:
-                if 0 <= bx < self.width - 1:
-                    block = [
-                        (bx, y), (bx + 1, y),
-                        (bx, y + 1), (bx + 1, y + 1)
-                    ]
-                    if all(self.is_valid(*c) for c in block):
-                        if self._would_complete_2x2(block):
-                            return True
+        check_offsets = []
+        if wall_removed == Wall.SOUTH:
+            check_offsets = [(0, 0), (-1, 0)]
+        elif wall_removed == Wall.EAST:
+            check_offsets = [(0, 0), (0, -1)]
 
-        elif wall == Wall.EAST:
-            # Wall is between (x, y) and (x+1, y)
-            # Check both possible 2x2 blocks
-            for by in [y - 1, y]:
-                if 0 <= by < self.height - 1:
-                    block = [
-                        (x, by), (x + 1, by),
-                        (x, by + 1), (x + 1, by + 1)
-                    ]
-                    if all(self.is_valid(*c) for c in block):
-                        if self._would_complete_2x2(block):
-                            return True
+        for ox, oy in check_offsets:
+            # Base x,y for a 2x2 block (top-left corner)
+            bx, by = x + ox, y + oy
+            if 0 <= bx < self.width - 1 and 0 <= by < self.height - 1:
+                # Count open internal walls in this 2x2 block
+                open_walls = 0
+                # Check internal walls of the 2x2 block:
+                if not self.cells[by][bx].has_wall(Wall.EAST):
+                    open_walls += 1
+                if not self.cells[by][bx].has_wall(Wall.SOUTH):
+                    open_walls += 1
+                if not self.cells[by][bx + 1].has_wall(Wall.SOUTH):
+                    open_walls += 1
+                if not self.cells[by + 1][bx].has_wall(Wall.EAST):
+                    open_walls += 1
 
+                if open_walls >= 3:
+                    return True
         return False
-
-    def _would_complete_2x2(
-            self, block: List[Tuple[int, int]]
-    ) -> bool:
-        """
-        Check if a 2x2 block already has 3 of 4 internal walls open.
-
-        This indicates that removing one more wall would create
-        a completely open 2x2 block.
-
-        Args:
-            block: List of 4 cell coordinates in 2x2 arrangement
-
-        Returns:
-            True if block would become completely open
-        """
-        block = sorted(block)  # Ensure consistent order
-        bx, by = block[0]
-
-        c00 = self.get_cell(bx, by)
-        c10 = self.get_cell(bx + 1, by)
-        c01 = self.get_cell(bx, by + 1)
-        # c11 = self.get_cell(bx + 1, by + 1)
-
-        # Count how many internal walls are already open
-        walls_open = 0
-        if not c00.has_wall(Wall.EAST):
-            walls_open += 1
-        if not c00.has_wall(Wall.SOUTH):
-            walls_open += 1
-        if not c10.has_wall(Wall.SOUTH):
-            walls_open += 1
-        if not c01.has_wall(Wall.EAST):
-            walls_open += 1
-
-        # If 3 are already open, removing the 4th would complete it
-        return walls_open >= 3
 
     def __repr__(self) -> str:
         """String representation of maze."""
-        return f"Maze({self.width}x{self.height})"
+        return f"Maze({self.width} x {self.height})"
