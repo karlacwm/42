@@ -20,17 +20,22 @@ from mazegen import (
 
 
 valid_colour = {
-    'blue', 'marroon', 'forest_green', 'dark_gray', 'pink',
-            'coffee_brown', 'black', 'purple', 'dandelion_yellow',
-            'moon_glow', 'orange', 'gray', 'highlighter',
-            'yellow', 'magenta', 'sky_blue'}
+    'white', 'blue_green', 'brown', 'light_gray',
+    'blue', 'marroon', 'forest_green', 'dark_gray',
+    'lime', 'navy_blue', 'tan', 'green', 'red',
+    'pink', 'rust', 'coffee_brown',
+    'black', 'purple', 'dandelion_yellow', 'moon_glow',
+    'orange', 'gray', 'highlighter',
+    'yellow', 'magenta', 'sky_blue'}
 
 msg = (
     "Choose one from the available colours:\n"
-    "black       |  marroon   |  sky_blue  |  light_gray\n"
-    "moon_glow   |  gray      |  purple    |  dark_gray\n"
-    "yellow      |  orange    |  magenta   |  dandelion_yellow\n"
-    "highlighter |  pink      |  blue      |  coffee_brown\n"
+    "|  pink  |    marroon   |       purple     |    magenta  |\n"
+    "| yellow |    orange    | dandelion_yellow | highlighter |\n"
+    "|  lime  | forest_green |   coffee_brown   |    brown    |\n"
+    "|  blue  |  blue_green  |     sky_blue     |  navy_blue  |\n"
+    "|  white |     black    |     moon_glow    |     tan     |\n"
+    "|  gray  |   dark_gray  |    light_gray    |     rust    |\n"
 )
 
 # Add src to path for development
