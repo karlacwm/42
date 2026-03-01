@@ -1,4 +1,6 @@
-"""Factory for creating maze generators."""
+"""
+Factory for creating maze generators.
+"""
 from typing import Optional, Set, Tuple
 from .maze import Maze
 from .class_maze_generator import MazeGenerator

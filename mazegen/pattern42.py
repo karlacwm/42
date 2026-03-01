@@ -1,4 +1,6 @@
-"""Gets the pattern 42 location with the cell coordinates."""
+"""
+Gets the pattern 42 location with the cell coordinates.
+"""
 from typing import Set, Tuple
 
 

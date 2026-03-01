@@ -45,7 +45,9 @@ sys.path.insert(0, os.path.join(
 
 
 def update_config(config_file: str, key: str, value: str) -> None:
-    """Update a configuration value in the config file."""
+    """
+    Update a configuration value in the config file.
+    """
     try:
         with open(config_file, 'r') as file:
             lines = file.readlines()
@@ -101,7 +103,11 @@ def change_config_color(config_file: str, key: str, prompt: str) -> None:
 
 
 def main() -> None:
-    """Main function."""
+    """
+    Main function to execute maze generation through parsing config file,
+    calling rendering, solver and animation functions, as well as displaying
+    user-interactive menu and allowing options for users to navigate it.
+    """
     print("=== A_Maze_Ing is amazing ===\n")
     current_maze = None
     current_path = None
