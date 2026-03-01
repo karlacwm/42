@@ -90,19 +90,19 @@ def get_maze_colour_from_config(
 
     cfg = parse_config(config_path)
     config = validate_maze_config(cfg)
-    name = ""
+    name: str = ""
     if what_to_colour == "maze":
-        name = config.get("maze_colour")
+        name = str(config.get("maze_colour"))
     elif what_to_colour == "egg":
-        name = config.get("egg42")
+        name = str(config.get("egg42"))
     elif what_to_colour == "wall":
-        name = config.get("wall_colour")
+        name = str(config.get("wall_colour"))
     elif what_to_colour == "path":
-        name = config.get("path_colour")
+        name = str(config.get("path_colour"))
     elif what_to_colour == "entry":
-        name = config.get("entry_colour")
+        name = str(config.get("entry_colour"))
     elif what_to_colour == "exit":
-        name = config.get("exit_colour")
+        name = str(config.get("exit_colour"))
     try:
         return get_colour_by_name(name)
     except AttributeError:
