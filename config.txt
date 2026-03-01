@@ -22,7 +22,7 @@ perfect=true
 
 # ======================================================
 
-# colors to choose from :
+# colours to choose from :
 # white     |   blue_green  |   brown                |   light_gray
 # blue      |   marroon     |   forest_green         |   dark_gray
 # green     |   lime        |   navy_blue            |   tan
@@ -34,14 +34,14 @@ perfect=true
 # entry coordinates (x, y)
 entry_x=0
 entry_y=0
-entry_color = green
+entry_colour = green
 
 # exit coordinates (x, y)
 exit_x = width -1
 exit_y = height -1
-exit_color = red
+exit_colour = red
 
-wall_color = marroon
-maze_color = dandelion_yellow
+wall_colour = marroon
+maze_colour = yellow
 egg42 = magenta
-path_color = highlighter
+path_colour = highlighter

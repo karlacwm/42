@@ -1,7 +1,6 @@
 """Colour rendering utilities for maze visualization."""
 from typing import Tuple, Dict, Any
 from .maze import Maze, Cell
-# import the colour module for namespace access
 from . import colour as colours
 import colorsys
 
@@ -90,20 +89,20 @@ def get_maze_colour_from_config(
     from .config import parse_config, validate_maze_config
 
     cfg = parse_config(config_path)
-    validate_maze_config(cfg)
+    config = validate_maze_config(cfg)
     name = ""
     if what_to_colour == "maze":
-        name = cfg.get("maze_colour", "white")
+        name = config.get("maze_colour")
     elif what_to_colour == "egg":
-        name = cfg.get("egg42", "white")
+        name = config.get("egg42")
     elif what_to_colour == "wall":
-        name = cfg.get("wall_colour", "white")
+        name = config.get("wall_colour")
     elif what_to_colour == "path":
-        name = cfg.get("path_colour", "blue")
+        name = config.get("path_colour")
     elif what_to_colour == "entry":
-        name = cfg.get("entry_colour", "green")
+        name = config.get("entry_colour")
     elif what_to_colour == "exit":
-        name = cfg.get("exit_colour", "red")
+        name = config.get("exit_colour")
     try:
         return get_colour_by_name(name)
     except AttributeError:
