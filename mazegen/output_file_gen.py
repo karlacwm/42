@@ -1,9 +1,11 @@
+"""Output file generation."""
 from typing import Tuple, List, Optional
 from .maze import Maze
 from .solver import find_shortest_path
 
-def path_in_letters(path: Optional[List[Tuple[int, int]]]) -> str:
 
+def path_in_letters(path: Optional[List[Tuple[int, int]]]) -> str:
+    """Convert a coordinate path to a string of directions (N, E, S, W)."""
     if not path or len(path) < 2:
         return ""
     moves: dict[tuple[int, int], str] = {
@@ -13,17 +15,19 @@ def path_in_letters(path: Optional[List[Tuple[int, int]]]) -> str:
         (-1, 0): "W",
     }
     path_output = []
-    x1,y1 = path[0]
-    for i in range(1, len(path)):
-        x2, y2 = path[i]
+    for i in range(len(path) - 1):
+        x1, y1 = path[i]
+        x2, y2 = path[i+1]
         step = (x2 - x1, y2 - y1)
-        path_output.append(moves[step])
-        x1, y1 = x2, y2
+        path_output.append(moves.get(step, ""))
     return "".join(path_output)
 
 
-def maze_in_hex(maze: Maze)-> str:
-    lines= []
+def maze_in_hex(maze: Maze) -> str:
+    """
+    Convert the entire maze grid to a hex string representation.
+    """
+    lines = []
     for y in range(maze.height):
         row = "".join(maze.get_cell(x, y).to_hex()
                       for x in range(maze.width))
@@ -34,6 +38,9 @@ def maze_in_hex(maze: Maze)-> str:
 def write_output_file(maze: Maze, entry_coord: Tuple[int, int],
                       exit_coord: Tuple[int, int], path: Optional[List[Tuple[int, int]]],
                       filename: str = "maze.txt") -> None:
+    """
+    Generate the final solution text file.
+    """
     entry_x, entry_y = entry_coord
     exit_x, exit_y = exit_coord
     entry_exit = [entry_x, entry_y, exit_x, exit_y]
@@ -48,7 +55,6 @@ def write_output_file(maze: Maze, entry_coord: Tuple[int, int],
                     "height": maze.height
                 }))
     entry_x, entry_y, exit_x, exit_y = entry_exit
-
 
     if path is None:
         path = find_shortest_path(maze, entry_x, entry_y,

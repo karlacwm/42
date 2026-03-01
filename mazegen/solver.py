@@ -13,17 +13,6 @@ def find_shortest_path(
 ) -> Optional[List[Tuple[int, int]]] | Any:
     """
     Find shortest path from start to end using BFS.
-
-    Args:
-        maze: The maze to solve
-        start_x: Starting x coordinate
-        start_y: Starting y coordinate
-        end_x: Ending x coordinate (can be expression)
-        end_y: Ending y coordinate (can be expression)
-
-    Returns:
-        List of (x, y) coordinates representing the path,
-        or None if no path exists
     """
     # Convert to int, handling expression strings
     start_x = int(start_x)
@@ -66,7 +55,7 @@ def find_shortest_path(
         # Explore neighbors
         cell = maze.get_cell(x, y)
 
-        for direction in Direction.all():
+        for direction in Direction.ALL:
             dx, dy = direction
             nx, ny = x + dx, y + dy
 

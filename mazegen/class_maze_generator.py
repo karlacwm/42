@@ -1,3 +1,4 @@
+"""Base class for maze generators."""
 from abc import ABC, abstractmethod
 from typing import Optional, Set, Tuple
 import random

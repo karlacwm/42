@@ -1,3 +1,4 @@
+"""Concrete maze generation algorithms."""
 import random
 from typing import Tuple, Set, List
 from .maze import Maze
@@ -5,6 +6,8 @@ from .class_maze_generator import MazeGenerator
 
 
 class PrimGenerator(MazeGenerator):
+    """Generates a perfect maze using Prim's algorithm."""
+
     def generate(self) -> Maze:
         maze = Maze(self.width, self.height)
         protected = self.get_protected_cells()
@@ -35,7 +38,12 @@ class PrimGenerator(MazeGenerator):
 
 
 class KruskalGenerator(MazeGenerator):
+    """Generates a perfect maze using Kruskal's algorithm."""
     class UnionFind:
+        """
+        Union-Find with Path Compression and Union by Rank.
+        """
+
         def __init__(self, size: int) -> None:
             self.parent = list(range(size))
             self.rank = [0] * size
@@ -86,6 +94,8 @@ class KruskalGenerator(MazeGenerator):
 
 
 class BacktrackingGenerator(MazeGenerator):
+    """Generates a perfect maze using Iterative Backtracking."""
+
     def generate(self) -> Maze:
         maze = Maze(self.width, self.height)
         protected = self.get_protected_cells()
