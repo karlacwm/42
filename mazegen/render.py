@@ -1,30 +1,45 @@
-"""Rendering utilities for mazes."""
+"""Rendering functions for mazes."""
 import sys
 import time
 import os
 from typing import List, Tuple, Set
 from .maze import Maze, Wall
-from .render_color import colorize_token, get_maze_color_from_config
+from .render_colour import colourize_token, get_maze_colour_from_config
 from .pattern42 import get_pattern_cells
-# from .config import parse_config  # still used for validation if needed
+from .config import parse_config
+
+
+wall_unicode = {
+    (True, True, True, True): "╬",
+    (True, False, True, True): "╣",
+    (True, True, True, False): "╠",
+    (True, True, False, True): "╩",
+    (False, True, True, True): "╦",
+    (True, False, True, False): "║",
+    (False, True, False, True): "═",
+    (True, False, False, True): "╝",
+    (True, True, False, False): "╚",
+    (False, False, True, True): "╗",
+    (False, True, True, False): "╔",
+}
 
 
 def _build_wall_grids(
         maze: Maze
 ) -> Tuple[List[List[bool]], List[List[bool]], int, int]:
-    width = maze.width
-    height = maze.height
-
-    render_w = width * 2 + 1
-    render_h = height * 2 + 1
+    """
+    Helper to create boolean grids for vertical and horizontal walls.
+    """
+    render_w = maze.width * 2 + 1
+    render_h = maze.height * 2 + 1
 
     # Precompute wall grid
     vertical = [[False] * render_w for _ in range(render_h)]
     horizontal = [[False] * render_w for _ in range(render_h)]
 
     # Fill walls from maze cells
-    for y in range(height):
-        for x in range(width):
+    for y in range(maze.height):
+        for x in range(maze.width):
             cell = maze.get_cell(x, y)
 
             rx = x * 2 + 1
@@ -53,76 +68,48 @@ def render_unicode(
         maze: Maze, delay: float = 0.01,
         config_path: str = "config.txt"
 ) -> str:
-    from .config import parse_config
-
+    """
+    Render the maze using Unicode block characters.
+    """
     width, height = maze.width, maze.height
-    # load and validate configuration; helper returns an RGB tuple
-    maze_color = get_maze_color_from_config(config_path, "maze")
-    egg_color = get_maze_color_from_config(config_path, "egg")
-    wall_color = get_maze_color_from_config(config_path, "wall")
-    entry_color = get_maze_color_from_config(
-        config_path, "entry"
-    )
-    exit_color = get_maze_color_from_config(config_path, "exit")
 
-    # Get entry/exit coordinates from config
+    # Load colours
+    maze_colour = get_maze_colour_from_config(config_path, "maze")
+    egg_colour = get_maze_colour_from_config(config_path, "egg")
+    wall_colour = get_maze_colour_from_config(config_path, "wall")
+    entry_colour = get_maze_colour_from_config(config_path, "entry")
+    exit_colour = get_maze_colour_from_config(config_path, "exit")
+
+    # Get entry and exit coord from config
     cfg = parse_config(config_path)
     entry_x = cfg.get('entry_x')
     entry_y = cfg.get('entry_y')
     exit_x = cfg.get('exit_x')
     exit_y = cfg.get('exit_y')
-
-    # Handle string expressions
     if isinstance(exit_x, str):
-        exit_x = eval(
-            exit_x, {"width": width, "height": height}
-        )
+        exit_x = eval(exit_x, {"width": width, "height": height})
     if isinstance(exit_y, str):
-        exit_y = eval(
-            exit_y, {"width": width, "height": height}
-        )
+        exit_y = eval(exit_y, {"width": width, "height": height})
 
-    vertical, horizontal, render_w, render_h = (
-        _build_wall_grids(maze)
-    )
+    vertical, horizontal, render_w, render_h = (_build_wall_grids(maze))
     pattern = get_pattern_cells(width, height)
-
-    # Standard intersection map
-    wall_unicode = {
-        (True, True, True, True): "╬",
-        (True, False, True, True): "╣",
-        (True, True, True, False): "╠",
-        (True, True, False, True): "╩",
-        (False, True, True, True): "╦",
-        (True, False, True, False): "║",
-        (False, True, False, True): "═",
-        (True, False, False, True): "╝",
-        (True, True, False, False): "╚",
-        (False, False, True, True): "╗",
-        (False, True, True, False): "╔",
-    }
 
     lines = []
     for ry in range(render_h):
         line = ""
         for rx in range(render_w):
-            # Map render coordinates to the logical cell (cx, cy)
-            # We use distinct logic for "on the line" vs "inside the cell"
             cx = rx // 2
             cy = ry // 2
 
-            # Check if current/adjacent cells are in the pattern
             curr_in_pat = (cx, cy) in pattern
             left_in_pat = (cx - 1, cy) in pattern if rx > 0 else False
             up_in_pat = (cx, cy - 1) in pattern if ry > 0 else False
             diag_in_pat = (
-                (cx - 1, cy - 1) in pattern
-                if (rx > 0 and ry > 0) else False
+                (cx - 1, cy - 1) in pattern if (rx > 0 and ry > 0) else False
             )
 
             token = ""
-
-            # --- A: Intersections (Corners) ---
+            # Intersections (Corners)
             if ry % 2 == 0 and rx % 2 == 0:
                 # If any of the 4 surrounding cells is a pattern cell,
                 # we recalculate the intersection to ensure a "box" look.
@@ -136,12 +123,10 @@ def render_unicode(
                 left = rx > 0 and horizontal[ry][rx - 1]
                 right = rx < render_w - 1 and horizontal[ry][rx + 1]
 
-                # Override: If it's a pattern corner,
-                # force the connections
+                # Override: If it's a pattern corner, force the connections
                 if is_pat_corner:
-                    # Logic: If I'm the Top-Left of a pattern cell,
-                    # I need Right and Down.
-                    # This builds the box connections.
+                    # Logic: If i'm the top-left of a pattern cell,
+                    # i need right and down. This builds the box connections.
                     u = up or (up_in_pat or diag_in_pat)
                     d = down or (curr_in_pat or left_in_pat)
                     ll = left or (left_in_pat or diag_in_pat)
@@ -150,15 +135,15 @@ def render_unicode(
                 else:
                     token = wall_unicode.get((up, right, down, left), "░")
 
-            # --- B: Horizontal segments ---
+            # Horizontal segments
             elif ry % 2 == 0 and rx % 2 == 1:
                 # Force wall if cell above or below is a pattern cell
                 if curr_in_pat or up_in_pat:
-                    token = "═══"  # Adjust to 3 wide to fit the ╔═══╗ request
+                    token = "═══"
                 else:
                     token = "═══" if horizontal[ry][rx] else "░░░"
 
-            # --- C: Vertical segments ---
+            # Vertical segments
             elif ry % 2 == 1 and rx % 2 == 0:
                 # Force wall if cell left or right is a pattern cell
                 if curr_in_pat or left_in_pat:
@@ -166,27 +151,27 @@ def render_unicode(
                 else:
                     token = "║" if vertical[ry][rx] else "░"
 
-            # --- D: Cell Interior ---
+            # Cell Interior
             else:
                 token = "███" if curr_in_pat else "░░░"
 
-            # Colorize based on content and position
+            # Colourize based on content and position
             is_entry = (cx == entry_x and cy == entry_y)
             is_exit = (cx == exit_x and cy == exit_y)
             is_cell_interior = (ry % 2 == 1 and rx % 2 == 1)
 
             if token == "███":
-                colored = colorize_token(token, egg_color)
+                coloured = colourize_token(token, egg_colour)
             elif is_entry and (token == "░░░" or token == "░"):
-                colored = colorize_token(token, entry_color)
+                coloured = colourize_token(token, entry_colour)
             elif is_exit and token == "░░░" and is_cell_interior:
-                colored = colorize_token(token, exit_color)
+                coloured = colourize_token(token, exit_colour)
             elif token == "░░░" or token == "░":
-                colored = colorize_token(token, maze_color)
+                coloured = colourize_token(token, maze_colour)
             else:
-                colored = colorize_token(token, wall_color)
-            line += colored
-            sys.stdout.write(colored)
+                coloured = colourize_token(token, wall_colour)
+            line += coloured
+            sys.stdout.write(coloured)
             sys.stdout.flush()
             time.sleep(delay)
 
@@ -205,35 +190,14 @@ def render_path_animation(
 ) -> None:
     """
     Animate path discovery cell by cell, then show passages.
-
-    Args:
-        maze: The maze to render
-        path: List of (x, y) coordinates representing path
-        config_path: Path to configuration file
-        cell_delay: Delay between revealing each path cell
-        wall_delay: Delay between revealing each passage
     """
-    from .config import parse_config
-
     width, height = maze.width, maze.height
-    maze_color = get_maze_color_from_config(
-        config_path, "maze"
-    )
-    egg_color = get_maze_color_from_config(
-        config_path, "egg"
-    )
-    wall_color = get_maze_color_from_config(
-        config_path, "wall"
-    )
-    path_color = get_maze_color_from_config(
-        config_path, "path"
-    )
-    entry_color = get_maze_color_from_config(
-        config_path, "entry"
-    )
-    exit_color = get_maze_color_from_config(
-        config_path, "exit"
-    )
+    maze_colour = get_maze_colour_from_config(config_path, "maze")
+    egg_colour = get_maze_colour_from_config(config_path, "egg")
+    wall_colour = get_maze_colour_from_config(config_path, "wall")
+    path_colour = get_maze_colour_from_config(config_path, "path")
+    entry_colour = get_maze_colour_from_config(config_path, "entry")
+    exit_colour = get_maze_colour_from_config(config_path, "exit")
 
     # Get entry/exit coordinates from config
     cfg = parse_config(config_path)
@@ -275,20 +239,6 @@ def render_path_animation(
             wall_ry = ry1
 
         path_walls_list.append((wall_rx, wall_ry))
-
-    wall_unicode = {
-        (True, True, True, True): "╬",
-        (True, False, True, True): "╣",
-        (True, True, True, False): "╠",
-        (True, True, False, True): "╩",
-        (False, True, True, True): "╦",
-        (True, False, True, False): "║",
-        (False, True, False, True): "═",
-        (True, False, False, True): "╝",
-        (True, True, False, False): "╚",
-        (False, False, True, True): "╗",
-        (False, True, True, False): "╔",
-    }
 
     def render_frame(
             path_cells: Set[Tuple[int, int]],
@@ -397,33 +347,33 @@ def render_path_animation(
                 is_exit = (cx == exit_x and cy == exit_y)
                 is_cell_interior = (ry % 2 == 1 and rx % 2 == 1)
 
-                # Colorize
+                # Colourize
                 if token == "███":
-                    colored = colorize_token(
-                        token, egg_color
+                    coloured = colourize_token(
+                        token, egg_colour
                     )
                 elif is_entry and token == "▓▓▓":
-                    colored = colorize_token(
-                        token, entry_color
+                    coloured = colourize_token(
+                        token, entry_colour
                     )
                 elif is_exit and is_cell_interior:
-                    colored = colorize_token(
-                        token, exit_color
+                    coloured = colourize_token(
+                        token, exit_colour
                     )
                 elif token == "▓▓▓" or token == "▓":
-                    colored = colorize_token(
-                        token, path_color
+                    coloured = colourize_token(
+                        token, path_colour
                     )
                 elif token == "░░░" or token == "░":
-                    colored = colorize_token(
-                        token, maze_color
+                    coloured = colourize_token(
+                        token, maze_colour
                     )
                 else:
-                    colored = colorize_token(
-                        token, wall_color
+                    coloured = colourize_token(
+                        token, wall_colour
                     )
 
-                sys.stdout.write(colored)
+                sys.stdout.write(coloured)
             sys.stdout.write("\n")
         sys.stdout.flush()
 
@@ -445,4 +395,4 @@ def render_path_animation(
         render_frame(path_set, passages_subset)
         time.sleep(wall_delay)
 
-    print("\nMaze solved! Easy piecey (*≧∇≦)ﾉ＜※*・:*:｀♪:*:。*・☆*\n")
+    print("\nMaze solved! (*≧∇≦)ﾉ＜※*・:*:｀♪:*:。*・☆*\n")

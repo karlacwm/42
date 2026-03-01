@@ -6,7 +6,7 @@ This package provides maze generation algorithms:
 - Kruskal's, and
 - Iterative Backtracking)
 with support for perfect mazes, hexadecimal wall encoding, and various
-rendering formats with color support.
+rendering formats with colour support.
 """
 
 from .maze import Maze, Cell, Wall, Direction
@@ -15,15 +15,15 @@ from .class_maze_generator import MazeGenerator
 from .algorithms import PrimGenerator, KruskalGenerator, BacktrackingGenerator
 from .render import (render_unicode, render_path_animation, get_pattern_cells)
 from .solver import find_shortest_path
-from .render_color import (
-    CellColorizer,
+from .render_colour import (
+    CellColourizer,
     hsv_to_rgb,
-    get_color_by_name,
-    blend_colors,
-    get_gradient_color,
-    create_color_palette,
-    colorize_token,
-    get_maze_color_from_config
+    get_colour_by_name,
+    blend_colours,
+    get_gradient_colour,
+    create_colour_palette,
+    colourize_token,
+    get_maze_colour_from_config
 )
 from .config import parse_config, validate_maze_config, ConfigError
 from .output_file_gen import write_output_file
@@ -40,11 +40,11 @@ __all__ = [
     "render_unicode", "render_path_animation",
     # Solver
     "find_shortest_path",
-    # Color rendering
-    "CellColorizer", "hsv_to_rgb",
-    "get_color_by_name", "blend_colors",
-    "get_gradient_color", "create_color_palette",
-    "colorize_token", "get_maze_color_from_config",
+    # Colour rendering
+    "CellColourizer", "hsv_to_rgb",
+    "get_colour_by_name", "blend_colours",
+    "get_gradient_colour", "create_colour_palette",
+    "colourize_token", "get_maze_colour_from_config",
     # Config
     "parse_config", "validate_maze_config",
     "ConfigError",

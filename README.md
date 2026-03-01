@@ -21,14 +21,14 @@ The goal is to build a robust system that generates random and customized mazes,
 | `perfect`| If 'True', creates exactly one path | `perfect=True`|
 | `seed`| If none, the generation is random every time | `seed=42`|
 | `entry_x`and `entry_y`| Entry coordinates (x,y) | `entry_x=0`and `entry_y=0`|
-| `entry_color`| Colour of the entry cell | `entry_color=green`|
+| `entry_colour`| Colour of the entry cell | `entry_colour=green`|
 | `exit_x`and `exit_y`| Exit coordinates (x,y) | `exit_x=0`and `exit_y=0`|
 | `output_file`| Target filename for generated data | `output_file=output_maze.txt`|
-| `exit_color`| Colour of the exit cell | `exit_color=red`|
-| `wall_color`| Colour of the maze wall | `wall_color=orange`|
-| `maze_color`| Colour of the maze | `maze_color=dandilion_yellow`|
+| `exit_colour`| Colour of the exit cell | `exit_colour=red`|
+| `wall_colour`| Colour of the maze wall | `wall_colour=orange`|
+| `maze_colour`| Colour of the maze | `maze_colour=dandelion_yellow`|
 | `egg42`| Colour of the 42 easter egg | `egg42=magenta`|
-| `path_color`| Colour of the maze solover path | `path_color=highlighter`|
+| `path_colour`| Colour of the maze solover path | `path_colour=highlighter`|
 
 From each maze generation, there will be a user-interactive menu for the user to choose either to regenerate a new maze, either to show or hide the solution path, or apply different colour settings of the maze. Alongside, an output file is also created for each generation and is overwritten every time after generation, showing the maze in a specific hexadecimal format, the entry and exit coordinates and operation directions of the maze solver.
 
@@ -50,7 +50,7 @@ In our project, we decided on three algorithm on maze generation, which are the 
 | Generation Interface | All algorithms follow the same format: they take a maze and modify it. Because of this, we can easily plug in new algorithms later. |
 | Solver Module (BFS) | The Breadth-First Search solver does not depend on how the maze was created. It can solve any maze that uses our grid format. |
 | Configuration Parser | The config.txt reader can be reused in any grid-based project that needs settings from a file. |
-| Rendering & Animation Engine | The drawing and color system can also be reused for other projects that show grids or visual simulations. |
+| Rendering & Animation Engine | The drawing and colour system can also be reused for other projects that show grids or visual simulations. |
 | Package Export (mazegen-*) | The project can be packaged and installed. Other Python projects, for example Pac-Man, can then import it and use the maze generator as its own module. |
 
 
@@ -82,7 +82,7 @@ Besides the maze generation and solver, we implemented these as addition feature
 * The visualizer includes an user-interactive menu, which allows the following actions:
 * `Re-generate`: Create a new maze instantly.
 * `Toggle Path`: Show or hide the shortest solution path.
-* `Color Change`: Change the colour of maze wall, maze background or the 42 egg.
+* `Colour Change`: Change the colour of maze wall, maze background or the 42 egg.
 
 **Building the Reusable Module**
 
@@ -125,13 +125,11 @@ Besides the maze generation and solver, we implemented these as addition feature
 
 1. **Roles**:
 
-`lde-krui`: maze generation (Kruskal's algorithm and iterative backtracking), maze solver (BFS), render RGB colours, start and end of the maze, maze rendering, maze generation and solver animations, creating imperfect maze.
+`lde-krui`: maze generation (Kruskal's algorithm and iterative backtracking), maze solver (BFS), render RGB colours, start and end of the maze, maze rendering, maze generation and solver animations, creating imperfect maze, try/except error handling.
 
-`wcheung`: maze generation (Prim's algorithm), Makefile and output file automation, implement 42 pattern in the maze, maze colour change, user-interactive menu, main and reusable module readme files.
+`wcheung`: maze generation (Prim's algorithm), Makefile and output file automation, implement 42 pattern in the maze, maze colour change, user-interactive menu, main and reusable module readme files, class MazeGenerator.
 
 (ง •̀_•́)ง(ง •̀_•́)ง
-
-::::::::(make package exportable)
 
 2. **Your anticipated planning and how it evolved until the end**
 
