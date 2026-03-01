@@ -86,7 +86,7 @@ def display_menu() -> str:
 
 
 def change_config_color(
-        config_file: str, config: Dict[str, Any] | str | None, key: str, prompt: str
+        config_file: str, config: Dict[str, Any] | None, key: str, prompt: str
         ) -> bool:
     """
     Handle user input for changing a color setting.
