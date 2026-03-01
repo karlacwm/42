@@ -1,4 +1,6 @@
-"""Maze data structures and wall encoding."""
+"""
+Maze data structures and wall encoding.
+"""
 from typing import List, Tuple, Set
 from enum import IntFlag
 
@@ -15,7 +17,9 @@ class Wall(IntFlag):
 
 
 class Direction:
-    """Direction constants (dx, dy) for maze navigation."""
+    """
+    Direction constants (dx, dy) for maze navigation.
+    """
     NORTH = (0, -1)
     EAST = (1, 0)
     SOUTH = (0, 1)
@@ -43,7 +47,9 @@ class Direction:
 
 
 class Cell:
-    """Represents a single cell in the maze."""
+    """
+    Represents a single cell in the maze.
+    """
 
     def __init__(self, x: int, y: int) -> None:
         """
@@ -71,7 +77,9 @@ class Cell:
 
 
 class Maze:
-    """Represents a maze grid."""
+    """
+    Represents a maze grid.
+    """
 
     def __init__(self, width: int, height: int) -> None:
         """
@@ -127,15 +135,12 @@ class Maze:
         """
         return [[cell.to_hex() for cell in row] for row in self.cells]
 
-    def add_loops(
-            self,
-            forbidden: Set[Tuple[int, int]],
-            loops: int
-    ) -> None:
+    def add_loops(self, forbidden: Set[Tuple[int, int]], loops: int) -> None:
         """
         Creates imperfect maze by removing internal walls, but
         never removes walls of 42 pattern or outer borders and
         prevents creation of 2x2 blocks of completely open cells.
+
         [forbidden]: Set of coordinates that must not be removed
         [loops]: Maximum number of walls to remove
         """
@@ -217,5 +222,7 @@ class Maze:
         return False
 
     def __repr__(self) -> str:
-        """String representation of maze."""
+        """
+        String representation of maze.
+        """
         return f"Maze({self.width} x {self.height})"

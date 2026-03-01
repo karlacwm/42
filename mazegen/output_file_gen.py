@@ -1,11 +1,15 @@
-"""Output file generation."""
+"""
+Output file generation.
+"""
 from typing import Tuple, List, Optional
 from .maze import Maze
 from .solver import find_shortest_path
 
 
 def path_in_letters(path: Optional[List[Tuple[int, int]]]) -> str:
-    """Convert a coordinate path to a string of directions (N, E, S, W)."""
+    """
+    Convert a coordinate path to a string of directions (N, E, S, W).
+    """
     if not path or len(path) < 2:
         return ""
     moves: dict[tuple[int, int], str] = {
