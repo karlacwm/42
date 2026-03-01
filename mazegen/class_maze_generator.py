@@ -8,7 +8,7 @@ from .pattern42 import get_pattern_cells
 class MazeGenerator(ABC):
     """
     Base class for all maze generators.
-    Handles shared logic like seeding and the '42' pattern.
+    Handles shared logic like storing dimension and seed and the '42' pattern.
     """
 
     def __init__(self, width: int, height: int, seed: Optional[int] = None) -> None:

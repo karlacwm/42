@@ -62,3 +62,37 @@ c	|Continue	|Run normally until the program crashes or hits a "breakpoint".
 l	|List	      |Show the code around the current line so you know where you are.
 p	|Print	   |p variable_name prints the value of a variable (e.g., p width).
 q	|Quit	      |Stop the debugger and exit.
+
+-----------------------------
+pattern42.py
+set.add() vs set.update()
+add - one element, arg type: single object, str input: adds whole str
+update - multiple elements, arg type: iterable, str input: adds each char
+
+cx, cy = width // 2, height // 2
+finds center of the grid
+
+start_x = cx - 3
+moves 3 cells to the left from the center
+start_y = cy - 2
+moves 2 cells up from the center
+
+-----------------------------
+maze.py
+self.walls &= ~wall
+& is bitwise AND, it keeps a bit only if both bits are 1
+
+bool(self.walls & wall)
+bitwise AND
+bool(...) returns True when non-zero, False when zero
+If the wall is present → result is non-zero.
+
+self.walls:X
+:X formats the number in uppercase hexadecimal.
+
+checking south and east walls or 2x2 blocks
+The SOUTH wall of (x, y) is the same as the NORTH wall of (x, y+1)
+The EAST wall of (x, y) is the same as the WEST wall of (x+1, y)
+
+----------------------------------
+class_maze_generator.py
