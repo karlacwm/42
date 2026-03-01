@@ -16,6 +16,8 @@ $(VENV_BIN)/$(PYTHON):
 install: $(VENV_BIN)/$(PYTHON)
 	$(VENV_PIP) install -e .[dev]
 	$(VENV_PIP) install --upgrade pip
+	$(VENV_PIP) install flake8
+	$(VENV_PIP) install mypy
 
 run: $(VENV_BIN)/$(PYTHON)
 	$(VENV_PYTHON) $(MAIN) $(CONFIG)
