@@ -29,8 +29,11 @@ dev = [
 ]
 
 [tool.setuptools.packages.find]
-where = ["mazegen"]
+where = ["."]
 include = ["mazegen*"]
+
+[tool.setuptools_scm]
+write_to = "_version.py"
 
 [tool.mypy]
 python_version = "3.10"

@@ -12,6 +12,8 @@ __pycache__/
 
 # Ignore distribution/build files
 *.egg-info/
+dist/
+build/
 
 # Ignore system files
 .DS_Store
@@ -19,6 +21,13 @@ __pycache__/
 # Ignore your IDE settings (optional but good)
 .vscode/
 
-# Ignore the output maze files (so you don't commit 1000 txt files)
+# Ignore the output maze files
 *.txt
-!config.txt  # But DO keep the config.txt!
+!config.txt
+
+# Generated version files
+mazegen/_version.py
+
+# Type checking
+.mypy_cache/
+.pytest_cache/
