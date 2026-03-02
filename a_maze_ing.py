@@ -23,8 +23,7 @@ from mazegen import (
 valid_colour = {
     'white', 'blue_green', 'brown', 'light_gray',
     'blue', 'marroon', 'forest_green', 'dark_gray',
-    'lime', 'navy_blue', 'tan', 'green', 'red',
-    'pink', 'rust', 'coffee_brown',
+    'lime', 'navy_blue', 'tan', 'pink', 'rust', 'coffee_brown',
     'black', 'purple', 'dandelion_yellow', 'moon_glow',
     'orange', 'gray', 'highlighter',
     'yellow', 'magenta', 'sky_blue'}

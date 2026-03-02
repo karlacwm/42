@@ -192,7 +192,7 @@ print(render_unicode(my_maze))
 
 `lde-krui`: maze generation (Kruskal's algorithm and iterative backtracking), maze solver (BFS), render RGB colours, start and end of the maze, maze rendering, maze generation and solver animations, creating imperfect maze, try/except error handling.
 
-`wcheung`: maze generation (Prim's algorithm), Makefile and output file automation, implement 42 pattern in the maze, maze colour change, user-interactive menu, main and reusable module readme files, class MazeGenerator.
+`wcheung`: maze generation (Prim's and Kruskal's algorithm), Makefile and output file automation, implement 42 pattern in the maze, maze colour change, user-interactive menu, main and reusable module readme files, class MazeGenerator.
 
 (ง •̀_•́)ง(ง •̀_•́)ง
 

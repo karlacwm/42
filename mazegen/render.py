@@ -177,7 +177,7 @@ def render_unicode(
 
             if token == "███":
                 coloured = colourize_token(token, egg_colour)
-            elif is_entry and (token == "░░░" or token == "░"):
+            elif is_entry and (token == "░░░" and is_cell_interior):
                 coloured = colourize_token(token, entry_colour)
             elif is_exit and token == "░░░" and is_cell_interior:
                 coloured = colourize_token(token, exit_colour)
@@ -367,7 +367,7 @@ def render_path_animation(
                     coloured = colourize_token(
                         token, egg_colour
                     )
-                elif is_entry and token == "▓▓▓":
+                elif is_entry and is_cell_interior:
                     coloured = colourize_token(
                         token, entry_colour
                     )
