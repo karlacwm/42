@@ -41,7 +41,7 @@ def maze_in_hex(maze: Maze) -> str:
 
 def write_output_file(maze: Maze, entry_coord: Tuple[int, int],
                       exit_coord: Tuple[int, int], path: Optional[List[Tuple[int, int]]],
-                      filename: str = "maze.txt") -> None:
+                      filename: str = "output_maze.txt") -> None:
     """
     Generate the final solution text file.
     """
