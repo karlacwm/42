@@ -2,23 +2,29 @@
 # Format: KEY=VALUE
 
 # Maze dimensions
-width=18
-height=15
+width=15
+height=12
 
 # Generation algorithm (prim, kruskal or iterative_backtracking)
 # algorithm=prim
 algorithm=kruskal
 # algorithm=iterative_backtracking
 
+# entry coordinates (x, y)
+entry=
+
+# exit coordinates (x, y)
+exit=width-6, height-1
+
 # Generate perfect maze (no loops) : either true or false
 # When false, loops will be added by removing internal walls
 perfect=true
 
 # Random seed for reproducibility (optional)
-# seed= 42
+seed= 42
 
 # output filename
-# output_file = output_maze.txt
+output_file = output_maze.txt
 
 # ======================================================
 
@@ -31,17 +37,10 @@ perfect=true
 # orange    |   gray        |   highlighter          |
 # yellow    |   magenta     |   sky_blue             |
 
-# entry coordinates (x, y)
-entry_x=0
-entry_y=0
 entry_colour = green
-
-# exit coordinates (x, y)
-exit_x = width -1
-exit_y = height -1
 exit_colour = red
 
-wall_colour = marroon
-maze_colour = yellow
-egg42 = magenta
-path_colour = highlighter
+wall_colour = gray
+maze_colour = forest_green
+egg42 = sky_blue
+path_colour = tan
