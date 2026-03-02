@@ -18,11 +18,11 @@ The goal is to build a robust system that generates random and customized mazes,
 | `width`| Maze width in number of cells | `width=20`|
 | `height`| Maze height in number of cells | `height=15`|
 | `algorithm`| Maze generation algorithm | `algorithm=prim`|
+| `entry`| Entry coordinates (x,y) | `entry=0,0`|
+| `exit`| Exit coordinates (x,y) | `exit=8,8`|
 | `perfect`| If 'True', creates exactly one path | `perfect=True`|
 | `seed`| If none, the generation is random every time | `seed=42`|
-| `entry_x`and `entry_y`| Entry coordinates (x,y) | `entry_x=0`and `entry_y=0`|
 | `entry_colour`| Colour of the entry cell | `entry_colour=green`|
-| `exit_x`and `exit_y`| Exit coordinates (x,y) | `exit_x=0`and `exit_y=0`|
 | `output_file`| Target filename for generated data | `output_file=output_maze.txt`|
 | `exit_colour`| Colour of the exit cell | `exit_colour=red`|
 | `wall_colour`| Colour of the maze wall | `wall_colour=orange`|
