@@ -18,3 +18,7 @@ def record_spell(spell_name: str, ingredients: str) -> str:
 #         return f"Spell rejected: {spell_name} ({validation})"
 #     else:
 #         return f"Spell recorded: {spell_name} ({validation})"
+
+
+# shared module, import at the top of the file
+# from .validator import validate_ingredients
