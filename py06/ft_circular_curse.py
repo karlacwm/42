@@ -29,7 +29,7 @@ def late_imports() -> None:
 
 # pass validate_ingredients as a function parameter in spellbook.py
 # def dependency_injection() -> None:
-#     print("Testing late import technique:")
+#     print("Testing dependency_injection technique:")
 #     print("record_spell(\"Lightning\", \"air\"): "
 #           f"{record_spell('Lightning', 'air', validate_ingredients)}")
 #     print()
