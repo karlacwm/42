@@ -1,10 +1,10 @@
-# method 1
-import alchemy.elements
-# method 2
+# method 1 full module import
+import alchemy
+# method 2 specific function import
 from alchemy.elements import create_water
-# method 3
+# method 3 aliased import
 from alchemy.potions import healing_potion as heal
-# method 4
+# method 4 multiple imports
 from alchemy.elements import create_fire, create_earth
 from alchemy.potions import strength_potion
 
