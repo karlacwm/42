@@ -1,4 +1,4 @@
-from typing import Any, List, Dict, Text, Union, Optional
+from typing import Any
 from abc import ABC, abstractmethod
 
 
@@ -13,7 +13,7 @@ class DataProcessor(ABC):
     @abstractmethod
     def validate(self, data: Any) -> bool:
         pass
-    
+      
     @abstractmethod
     def status(self, data: Any) -> str:
         pass
