@@ -13,7 +13,7 @@ class DataProcessor(ABC):
     @abstractmethod
     def validate(self, data: Any) -> bool:
         pass
-      
+
     @abstractmethod
     def status(self, data: Any) -> str:
         pass
@@ -28,15 +28,20 @@ class NumericProcessor(DataProcessor):
         self.name = "Numeric Processor"
 
     def process(self, data: Any) -> str:
-        if not self.validate(data):
-            return "Invalid numeric data."
-        data_count = len(data)
-        total = sum(data)
-        avg = total
-        if data_count:
-            avg = total / data_count
-        return (f"Processed {data_count} numeric values, "
-                f"sum={total}, avg={avg}")
+        try:
+            if not self.validate(data):
+                return "Invalid numeric data."
+            data_count = len(data)
+            total = sum(data)
+            avg = total
+            if data_count:
+                avg = total / data_count
+            return (f"Processed {data_count} numeric values, "
+                    f"sum={total}, avg={avg}")
+        except TypeError as e:
+            return f"Error: Failed to process numbers - {e}"
+        except Exception as e:
+            return f"Unexpected error: {e}"
 
     def validate(self, data: Any) -> bool:
         if isinstance(data, list):
@@ -60,11 +65,16 @@ class TextProcessor(DataProcessor):
         self.name = "Text Processor"
 
     def process(self, data: Any) -> str:
-        if not self.validate(data):
-            return "Invalid text data."
-        char_count = len(data)
-        word_count = len(data.split())
-        return (f"{char_count} characters, {word_count} words")
+        try:
+            if not self.validate(data):
+                return "Invalid text data."
+            char_count = len(data)
+            word_count = len(data.split())
+            return (f"{char_count} characters, {word_count} words")
+        except AttributeError as e:
+            return f"Error: Failed to process text - {e}"
+        except Exception as e:
+            return f"Unexpected error: {e}"
 
     def validate(self, data: Any) -> bool:
         if isinstance(data, str):
@@ -86,12 +96,17 @@ class LogProcessor(DataProcessor):
         self.name = "Log Processor"
 
     def process(self, data: Any) -> str:
-        if not self.validate(data):
-            return "Invalid log data."
-        level, message = data.split(":", 1)
-        level = level.strip()
-        message = message.strip()
-        return f"{level} level detected: {message}"
+        try:
+            if not self.validate(data):
+                return "Invalid log data."
+            level, message = data.split(":", 1)
+            level = level.strip()
+            message = message.strip()
+            return f"{level} level detected: {message}"
+        except ValueError as e:
+            return f"Error: Failed to process log - {e}"
+        except Exception as e:
+            return f"Unexpected error: {e}"
 
     def validate(self, data: Any) -> bool:
         if isinstance(data, str) and ":" in data:
@@ -105,8 +120,8 @@ class LogProcessor(DataProcessor):
 
     def format_output(self, result: str) -> str:
         if "error" in result.lower():
-            return f"[ALERT]: {result}"
-        return f"[INFO]: {result}"
+            return f"[ALERT] {result}"
+        return f"[INFO] {result}"
 
 
 def case_num() -> None:
@@ -163,7 +178,7 @@ def stream_processor() -> None:
         output = processor.process(data)
         print(f"Result {test_count}: {processor.format_output(output)}")
         test_count += 1
-
+    print()
     print("Foundation systems online. Nexus ready for advanced streams.")
 
 
