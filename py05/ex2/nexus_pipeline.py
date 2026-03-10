@@ -1,5 +1,3 @@
-from calendar import c
-from os import error
 from typing import Any,  List, Dict, Protocol, Union
 from abc import ABC, abstractmethod
 
@@ -30,7 +28,8 @@ class TransformStage():
                 "sensor": data.get("sensor", "unknown"),
                 "value": data.get("value", 0),
                 "unit": data.get("unit", ""),
-                "range": "Normal range" if 20 < data.get("value", 0) < 30 else "Out of range"
+                "range": "Normal range" if (
+                    20 < data.get("value", 0) < 30) else "Out of range"
             }
 
         elif isinstance(data, str):
@@ -60,7 +59,8 @@ class TransformStage():
                 if isinstance(item, dict) and "value" in item:
                     numeric_values.append(float(item["value"]))
 
-            avg_value = sum(numeric_values) / len(numeric_values) if numeric_values else 0.0
+            avg_value = sum(numeric_values) / len(numeric_values) if (
+                numeric_values) else 0.0
             print("Transform: Aggregated and filtered")
             return {
                 "format": "stream",
@@ -84,15 +84,15 @@ class OutputStage:
 
         if format_type == "json" and data.get("validated"):
             return ("Output: Processed temperature reading: "
-                    f"{data['value']}°{data['unit']} ({data['range']})")
+                    f'{data["value"]}°{data["unit"]} ({data["range"]})')
 
         elif format_type == "csv":
             return ("Output: User activity logged: "
-                    f"{data['action_count']} actions processed")
+                    f'{data["action_count"]} actions processed')
 
         elif format_type == "stream":
-            return (f"Output: Stream summary: {data['count']} readings, "
-                    f"avg: {data['avg']}°C")
+            return (f'Output: Stream summary: {data["count"]} readings, '
+                    f'avg: {data["avg"]}°C')
 
         return f"Output: Error processing data - {data}"
 
@@ -100,7 +100,7 @@ class OutputStage:
 class ProcessingPipeline(ABC):
     def __init__(self, pipeline_id: str) -> None:
         self.pipeline_id = pipeline_id
-        self.stages : List[ProcessingStage] = []
+        self.stages: List[ProcessingStage] = []
 
     def add_stage(self, stage: ProcessingStage) -> None:
         self.stages.append(stage)
@@ -150,11 +150,31 @@ class NexusManager():
     def add_pipeline(self, pipeline: ProcessingPipeline) -> None:
         self.pipelines.append(pipeline)
 
+    def run_pipelines(self, data_sets: List[Any]) -> None:
+        for pipeline, data in zip(self.pipelines, data_sets):
+            result = pipeline.process(data)
+            print(result)
+            print()
+
+    def performance_stats(self) -> dict[str, Any]:
+        processing_time = 0
+        chain_records = 100
+        processing_time += 0.1
+        error_rate = 0.05
+        processing_time += 0.1
+        efficiency = chain_records * (1 - error_rate)
+        return {
+            "chain_records": chain_records,
+            "efficiency": efficiency,
+            "processing_time": processing_time
+            }
+
 
 def nexus_pipeline() -> None:
     print("=== CODE NEXUS ENTERPRISE PIPELINE SYSTEM ===")
     print()
     print("Initializing Nexus Manager...")
+    manager = NexusManager()
     print("Pipeline capacity: 1000 streams/second")
     print()
     print("Creating Data Processing Pipeline...")
@@ -182,15 +202,11 @@ def nexus_pipeline() -> None:
     stream_pipe.add_stage(stage_2)
     stream_pipe.add_stage(stage_3)
 
-    print("Multi-Format Data Processing")
-    print()
+    manager.add_pipeline(json_pipe)
+    manager.add_pipeline(csv_pipe)
+    manager.add_pipeline(stream_pipe)
 
-    res_json = json_pipe.process({"sensor": "temp", "value": 23.5, "unit": "C"})
-    print(res_json)
-    print()
-
-    res_csv = csv_pipe.process("user,action,timestamp")
-    print(res_csv)
+    print("=== Multi-Format Data Processing ===")
     print()
 
     sensor_stream_data = [
@@ -200,21 +216,23 @@ def nexus_pipeline() -> None:
         {"sensor": "temp", "value": 24.0, "unit": "C"},
         {"sensor": "temp", "value": 21.3, "unit": "C"}
     ]
-    res_stream = stream_pipe.process(sensor_stream_data)
-    print(res_stream)
-    print()
+    data_sets = [
+        {"sensor": "temp", "value": 23.5, "unit": "C"},
+        "user,action,timestamp",
+        sensor_stream_data]
+
+    manager.run_pipelines(data_sets)
 
     print("=== Pipeline Chaining Demo ===")
     print("Pipeline A -> Pipeline B -> Pipeline C")
     print("Data flow: Raw -> Processed -> Analyzed -> Stored")
     print()
-    
-    chain_records = 100
-    error_rate = 0.05
-    efficiency = chain_records * (1 - error_rate)
-    processing_time = 0.2
-    print(f"Chain result: {chain_records} records processed through 3-stage pipeline")
-    print(f"Performance: {efficiency}% efficiency, {processing_time}s total processing time")
+
+    stats_demo = manager.performance_stats()
+    print(f'Chain result: {stats_demo["chain_records"]} records processed '
+          "through 3-stage pipeline")
+    print(f'Performance: {stats_demo["efficiency"]}% efficiency, '
+          f'{stats_demo["processing_time"]}s ""total processing time')
     print()
 
     print("=== Error Recovery Test ===")
