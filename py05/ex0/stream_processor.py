@@ -167,7 +167,7 @@ def stream_processor() -> None:
     print("Processing multiple data types through same interface...")
     test_cases = [
         ([1, 2, 3], NumericProcessor()),
-        ("Hello world", TextProcessor()),
+        ("Hello stream", TextProcessor()),
         ("INFO: System ready", LogProcessor())
     ]
     test_count = 1
