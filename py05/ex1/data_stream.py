@@ -23,6 +23,10 @@ class DataStream(ABC):
     def get_stats(self) -> Dict[str, Union[str, int, float]]:
         return {"stream_id": self.stream_id, "type": self.type}
 
+    @abstractmethod
+    def get_summary(self) -> str:
+        pass
+
 
 class SensorStream(DataStream):
     def __init__(self, stream_id: str) -> None:
@@ -30,7 +34,7 @@ class SensorStream(DataStream):
         self.name = "Sensor Stream"
         self.type = "Environmental Data"
         self.sensor_alert = 0
-
+        
     def process_batch(self, data_batch: List[Any]) -> str:
         self.count = len(data_batch)
         try:
@@ -47,6 +51,8 @@ class SensorStream(DataStream):
         except Exception as e:
             return f"Error processing sensor batch: {e}"
 
+    def get_summary(self) -> str:
+        return f"Sensor data: {self.count} readings processed"
 
 class TransactionStream(DataStream):
     def __init__(self, stream_id: str) -> None:
@@ -75,6 +81,8 @@ class TransactionStream(DataStream):
         except Exception as e:
             return f"Error processing transaction batch: {e}"
 
+    def get_summary(self) -> str:
+        return f"Transaction data: {self.count} operations processed"
 
 class EventStream(DataStream):
     def __init__(self, stream_id: str) -> None:
@@ -91,6 +99,8 @@ class EventStream(DataStream):
         except Exception as e:
             return f"Error processing event batch: {e}"
 
+    def get_summary(self) -> str:
+        return f"Event data: {self.count} events processed"
 
 class StreamProcessor:
 
@@ -106,15 +116,7 @@ class StreamProcessor:
                 data = batch_map.get(stream.stream_id)
                 if data:
                     stream.process_batch(data)
-
-                if isinstance(stream, SensorStream):
-                    print(f"- Sensor data: {stream.count} "
-                          "readings processed")
-                elif isinstance(stream, TransactionStream):
-                    print(f"- Transaction data: {stream.count} "
-                          "operations processed")
-                elif isinstance(stream, EventStream):
-                    print(f"- Event data: {stream.count} events processed")
+                print(stream.get_summary())
         except Exception as e:
             print(f"Error processing streams: {e}")
 
