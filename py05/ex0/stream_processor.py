@@ -31,6 +31,8 @@ class NumericProcessor(DataProcessor):
         try:
             if not self.validate(data):
                 return "Invalid numeric data."
+            if isinstance(data, int):
+                data = [data]
             data_count = len(data)
             total = sum(data)
             avg = total
