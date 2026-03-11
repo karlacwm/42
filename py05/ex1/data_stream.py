@@ -7,6 +7,7 @@ class DataStream(ABC):
         super().__init__()
         self.stream_id = stream_id
         self.type = "Generic Data"
+        self.count = 0
 
     @abstractmethod
     def process_batch(self, data_batch: List[Any]) -> str:
@@ -191,3 +192,4 @@ def data_stream() -> None:
 
 if __name__ == "__main__":
     data_stream()
+
