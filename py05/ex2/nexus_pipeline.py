@@ -1,6 +1,5 @@
 from typing import Any,  List, Dict, Protocol, Union
 from abc import ABC, abstractmethod
-import time
 
 
 class ProcessingStage(Protocol):
@@ -28,7 +27,7 @@ class TransformStage():
                 "validated": True,
                 "sensor": data.get("sensor", "unknown"),
                 "value": data.get("value", 0),
-                "unit": data.get("unit", ""),
+                "unit": data.get("unit"),
                 "range": "Normal range" if (
                     20 < data.get("value", 0) < 30) else "Out of range"
             }
@@ -167,51 +166,6 @@ class NexusManager():
             "error_rate": 0.05,
         }
 
-# class NexusManager():
-#     def __init__(self) -> None:
-#         self.pipelines: List[ProcessingPipeline] = []
-#         self.records_count = 0
-#         self.error_count = 0
-#         self.processing_time = 0.0
-
-#     def add_pipeline(self, pipeline: ProcessingPipeline) -> None:
-#         self.pipelines.append(pipeline)
-
-#     def run_pipelines(self, data_sets: List[Any]) -> None:
-#         start_time = time.time()
-        
-#         for pipeline, data in zip(self.pipelines, data_sets):
-#             if isinstance(data, list):
-#                 self.records_count += len(data)
-#             else:
-#                 self.records_count += 1
-#             try:
-#                 result = pipeline.process(data)
-#                 if isinstance(result, dict) and result.get("validated") is False:
-#                     self.error_count += 1
-#                 elif isinstance(result, str) and "Error" in result:
-#                      self.error_count += 1
-                
-#                 print(result)
-#                 print()
-#             except Exception:
-#                 self.error_count += 1
-#         time.sleep(0.2)
-#         self.processing_time = time.time() - start_time
-
-#     def performance_stats(self) -> dict[str, Any]:
-#         if self.records_count == 0:
-#             efficiency = 100.0
-#         else:
-#             error_rate = self.error_count / self.records_count
-#             efficiency = (1 - error_rate) * 100
-        
-#         return {
-#             "chain_records": self.records_count,
-#             "processing_time": self.processing_time,
-#             "efficiency": efficiency
-#         }
-
 
 def nexus_pipeline() -> None:
     print("=== CODE NEXUS ENTERPRISE PIPELINE SYSTEM ===")
@@ -270,12 +224,12 @@ def nexus_pipeline() -> None:
     print("Pipeline A -> Pipeline B -> Pipeline C")
     print("Data flow: Raw -> Processed -> Analyzed -> Stored")
     print()
-    
+
     stats_demo = manager.performance_stats()
     stats_demo["chain_records"] += 100
     stats_demo["processing_time"] += 0.2
     efficiency = int((1 - stats_demo["error_rate"]) * 100)
-    
+
     print(f'Chain result: {stats_demo["chain_records"]} records processed '
           "through 3-stage pipeline")
     print(f'Performance: {efficiency}% efficiency, '
@@ -297,4 +251,3 @@ def nexus_pipeline() -> None:
 
 if __name__ == "__main__":
     nexus_pipeline()
-
