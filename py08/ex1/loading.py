@@ -2,6 +2,17 @@ import sys
 
 
 def loading() -> None:
+    if sys.prefix != sys.base_prefix:
+        in_venv = True
+    else:
+        in_venv = False
+    if not in_venv:
+        print("ERROR: You're not in a virtual environment!")
+        print("Please create one or activate it before you try again.")
+        print("To create one: 'python3 -m venv matrix_env'")
+        print("To activate it: 'source matrix_env/bin/activate'")
+        sys.exit(1)
+
     print("LOADING STATUS: Loading programs...")
     print()
 
@@ -22,14 +33,15 @@ def loading() -> None:
         run_analysis(pd, np, plt)
 
     except ImportError as e:
-        print(f"\n[ERROR] Missing dependency: {e.name}")
+        print(f"[ERROR] Missing dependency: {e.name}")
+        print()
         print("To install the required packages, run:")
         # run in venv
-        print("Option 1 with pip:")
+        print("- Option 1 with pip:")
         print("source matrix_env/bin/activate")
         print("pip install -r requirements.txt")
         # pip install poetry in global if command not found
-        print("Option 2 with Poetry:")
+        print("- Option 2 with Poetry:")
         print("poetry install")
         print("poetry run python3 loading.py")
         sys.exit(1)
@@ -51,9 +63,9 @@ def run_analysis(pd, np, plt) -> None:
         "Value": y
     })
 
-    # matplotlib: plot the table and save it
     print("Generating visualization...")
     print()
+    # matplotlib: plot the table and save it
     plt.plot(df["Time"], df["Value"])
     plt.savefig("matrix_analysis.png")
 

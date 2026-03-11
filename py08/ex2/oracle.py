@@ -2,15 +2,26 @@
 import os
 import sys
 
-try:
-    from dotenv import load_dotenv
-except ImportError:
-    print("Error: python-dotenv not installed. "
-          "Run 'pip install python-dotenv'")
-    sys.exit(1)
 
+def main() -> None:
+    if sys.prefix != sys.base_prefix:
+        in_venv = True
+    else:
+        in_venv = False
+    if not in_venv:
+        print("ERROR: You're not in a virtual environment!")
+        print("Please create one or activate it before you try again.")
+        print("To create one: 'python3 -m venv matrix_env'")
+        print("To activate it: 'source matrix_env/bin/activate'")
+        sys.exit(1)
 
-def main():
+    try:
+        from dotenv import load_dotenv
+    except ImportError:
+        print("Error: python-dotenv not installed. "
+              "Run 'pip install python-dotenv'")
+        sys.exit(1)
+
     print("ORACLE STATUS: Reading the Matrix...")
     print()
 
@@ -23,7 +34,7 @@ def main():
     mode = os.getenv("MATRIX_MODE")
     db_url = os.getenv("DATABASE_URL")
     api_key = os.getenv("API_KEY")
-    log_level = os.getenv("LOG_LEVEL", "INFO")  # INFO is our fallback
+    log_level = os.getenv("LOG_LEVEL")
     zion = os.getenv("ZION_ENDPOINT")
 
     # The PDF requires showing a warning if configuration is missing
