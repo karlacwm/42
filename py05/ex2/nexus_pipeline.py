@@ -7,7 +7,7 @@ class ProcessingStage(Protocol):
         ...
 
 
-class InputStage():
+class InputStage:
     def process(self, data: Any) -> Any:
         if data and isinstance(data, list):
             print("Input: Real-time sensor stream")
@@ -18,7 +18,7 @@ class InputStage():
         return data
 
 
-class TransformStage():
+class TransformStage:
     def process(self, data: Any) -> Dict[str, Any]:
         if isinstance(data, dict):
             print("Transform: Enriched with metadata and validation")
@@ -143,7 +143,7 @@ class StreamAdapter(ProcessingPipeline):
         return self.run_pipeline(data)
 
 
-class NexusManager():
+class NexusManager:
     def __init__(self) -> None:
         self.pipelines: List[ProcessingPipeline] = []
 
