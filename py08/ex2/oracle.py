@@ -1,9 +1,8 @@
-# File: ex02/oracle.py
 import os
 import sys
 
 
-def main() -> None:
+def oracle() -> None:
     if sys.prefix != sys.base_prefix:
         in_venv = True
     else:
@@ -26,24 +25,30 @@ def main() -> None:
     print()
 
     # load_dotenv() automatically looks for a .env file
-    # and loads it into the OS environment!
-    # It returns True if it found the file, False if it didn't.
+    # and loads it into the dictionary of os env var
+    # returns true if it found the file, false if it didn't
     has_env = load_dotenv()
 
-    # os.getenv("VARIABLE_NAME", "Fallback_Value")
+    # os.getenv("VARIABLE_NAME")
     mode = os.getenv("MATRIX_MODE")
     db_url = os.getenv("DATABASE_URL")
     api_key = os.getenv("API_KEY")
     log_level = os.getenv("LOG_LEVEL")
     zion = os.getenv("ZION_ENDPOINT")
 
-    # The PDF requires showing a warning if configuration is missing
-    if not mode or not api_key:
-        print("[WARNING] Default/missing configuration detected!")
-        print("Please copy .env.example to .env and fill in your variables.")
+    config_checklist = [mode, db_url, api_key, log_level, zion]
+    for item in config_checklist:
+        if not item:
+            print("[WARNING] Essential configuration is missing!")
+            print("Please copy .env.example to .env and change the values.")
+            return
+
+    if (db_url == "database_url_here" or api_key == "api_key_here"
+       or zion == "zion_endpoint_here"):
+        print("[WARNING] Configuration values are invalid.")
+        print("Remember to change the values in the .env file.")
         return
 
-    # Printing the exact output expected by the subject
     print("Configuration loaded:")
     print(f"Mode: {mode}")
     print("Database: Connected to local instance" if db_url else (
@@ -67,4 +72,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    oracle()
