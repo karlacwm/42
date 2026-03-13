@@ -38,7 +38,6 @@ def loading() -> None:
         print("To install the required packages, run:")
         # run in venv
         print("- Option 1 with pip:")
-        print("source matrix_env/bin/activate")
         print("pip install -r requirements.txt")
         # pip install poetry in global if command not found
         print("- Option 2 with Poetry:")
@@ -52,6 +51,8 @@ def run_analysis(pd, np, plt) -> None:
     print("Analyzing Matrix data...")
     print("Processing 1000 data points...")
 
+    # possible to use a seed for exact same graph
+    np.random.seed(42)
     # numpy: create an array of numbers from 0 to 999
     x = np.arange(1000)
     # Create 1000 random decimal numbers
