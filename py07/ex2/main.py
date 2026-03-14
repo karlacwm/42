@@ -1,28 +1,52 @@
-from ex2.EliteCard import EliteCard
+from ex2.EliteCard import EliteCard, Card, Combatable, Magical
+
+
+def elitecard_capabilities() -> None:
+    print("EliteCard capabilities:")
+    card_method = [method for method in dir(Card) if not method.startswith('_')]
+    print(f"- Card: {card_method}")
+    combatable_method = [method for method in dir(Combatable) if not method.startswith('_')]
+    print(f"- Combatable: {combatable_method}")
+    magical_method = [method for method in dir(Magical) if not method.startswith('_')]
+    print(f"- Magical: {magical_method}")
 
 def main() -> None:
     print("=== DataDeck Ability System ===")
-    print("EliteCard capabilities:")
-    print("Card: ['play', 'get_card_info', 'is_playable']")
-    print("Combatable: ['attack', 'defend', 'get_combat_stats']")
-    print("Magical: ['cast_spell', 'channel_mana', 'get_magic_stats']")
+    elitecard_capabilities()
+    print()
 
-    print("\nPlaying Arcane Warrior (Elite Card):")
-    # Cost: 6, Attack: 5, Health: 10
-    warrior = EliteCard("Arcane Warrior", 6, "Epic", 5, 10)
+    print("Playing Arcane arcade_Warrior (Elite Card):")
+    print()
+
+    arcade_warrior = EliteCard(
+        name="Arcane arcade_Warrior",
+        cost=6, 
+        rarity="Epic", 
+        attack=5, 
+        health=10
+        )
 
     print("Combat phase:")
-    print(f"Attack result: {warrior.attack('Enemy')}")
-    # Simulating taking 5 damage (3 blocked, 2 taken)
-    print(f"Defense result: {warrior.defend(5)}")
+    print(f"Attack result: {arcade_warrior.attack('Enemy')}")
+    print(f"Defense result: {arcade_warrior.defend(5)}")
+    print()
 
     print("Magic phase:")
-    print(f"Spell cast: {warrior.cast_spell('Fireball', ['Enemy1', 'Enemy2'])}")
-    print(f"Mana channel: {warrior.channel_mana(3)}"
+    print(f"Spell cast: {arcade_warrior.cast_spell('Fireball', ['Enemy1', 'Enemy2'])}")
+    print(f"Mana channel: {arcade_warrior.channel_mana(3)}")
+    print()
+
+    print("Multiple interface implementation suuccessful!")
 
 
 if __name__ == "__main__":
     main()
+
+
+
+
+# https://www.askpython.com/python/examples/find-all-methods-of-class
+
 
 # 1. How do multiple interfaces enable flexible card design?
 
