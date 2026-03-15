@@ -1,4 +1,3 @@
-import random
 from typing import Any
 from ex0.Card import Card
 from ex0.CreatureCard import CreatureCard
@@ -102,7 +101,7 @@ class FantasyCardFactory(CardFactory):
             else:
                 raise ValueError(f"Unsupported cycle category: {category}")
             deck.add_card(card)
-            random.shuffle(deck.cards)
+            deck.shuffle()
 
         return {"deck": deck, "stats": deck.get_deck_stats()}
 
