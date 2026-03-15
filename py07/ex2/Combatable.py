@@ -4,7 +4,7 @@ from typing import Any
 
 class Combatable(ABC):
     @abstractmethod
-    def attack(self, target) -> dict[str, Any]:
+    def attack(self, target: str) -> dict[str, Any]:
         pass
 
     @abstractmethod

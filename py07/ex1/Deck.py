@@ -17,13 +17,13 @@ class Deck:
                 return True
         return False
 
+    # shuffle() changes the original list, it does not return a new list
     def shuffle(self) -> None:
         random.shuffle(self.cards)
 
-    def draw_card(self) -> Card | None:
-        if self.cards:
-            return self.cards.pop(0)
-        return None
+    def draw_card(self) -> Card:
+        # no index: pop() removes and returns the last item in the list
+        return self.cards.pop(0)
 
     def get_deck_stats(self) -> dict[str, Any]:
         creature_count = 0

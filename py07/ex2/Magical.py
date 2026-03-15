@@ -4,7 +4,8 @@ from typing import Any
 
 class Magical(ABC):
     @abstractmethod
-    def cast_spell(self, spell_name: str, targets: list) -> dict[str, Any]:
+    def cast_spell(
+            self, spell_name: str, targets: list[Any]) -> dict[str, Any]:
         pass
 
     @abstractmethod

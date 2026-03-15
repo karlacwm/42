@@ -1,7 +1,11 @@
-from ex3 import AggressiveStrategy, FantasyCardFactory, GameEngine
+from typing import Any
+from ex0.Card import Card
+from ex3.AggressiveStrategy import AggressiveStrategy
+from ex3.GameEngine import GameEngine
+from ex3.FantasyCardFactory import FantasyCardFactory
 
 
-def format_hand(hand: list) -> list[str]:
+def format_hand(hand: list[Card]) -> list[str]:
     result = []
     for card in hand:
         result.append(f"{card.name} ({card.cost})")
@@ -12,43 +16,28 @@ def main() -> None:
     print("=== DataDeck Game Engine ===")
     print()
 
-    cards = {
-        "dragon": ("Fire Dragon", 5, "Legendary", 8, 8),
-        "goblin": ("Goblin Warrior", 2, "Common", 3, 2),
-    }
-    spells = {
-        "fireball": ("Fireball", 4, "Rare", "Burn"),
-        "lightning": ("Lightning Bolt", 3, "Rare", "Shock"),
-        "ice": ("Ice Lance", 2, "Common", "Freeze"),
-    }
-    artifacts = {
-        "mana_ring": ("Mana Ring", 1, "Uncommon", 3, "+1 mana each turn"),
-        "arcane_staff": ("Arcane Staff", 3, "Rare", 4, "Boost spell power"),
-        "crystal": ("Aether Crystal", 2, "Common", 2, "Store magical charge"),
-    }
-    deck_order = [
-        ("creature", "dragon"),
-        ("creature", "goblin"),
-        ("spell", "fireball"),
-        ("spell", "lightning"),
-        ("artifact", "mana_ring"),
-    ]
-
     spell_damage = {
         "Lightning Bolt": 5,
         "Fireball": 4,
-        "Ice Lance": 3,
+        "Ice Shard": 3,
     }
     mana_limit = 5
     enemy_tag = "Enemy"
-    default_targets = ["Enemy Player"]
+    default_targets = ["Enemy Creature", "Enemy Player"]
 
-    factory = FantasyCardFactory(
-        cards=cards,
-        spells=spells,
-        artifacts=artifacts,
-        deck_order=deck_order,
-    )
+    deck_order = [
+        ("creature", "dragon"),
+        ("spell", "fireball"),
+        ("artifact", "mana_ring"),
+        ("creature", "goblin"),
+        ("spell", "lightning"),
+        ("artifact", "crystals"),
+        ("creature", "troll"),
+        ("spell", "ice"),
+        ("artifact", "staffs"),
+    ]
+
+    factory = FantasyCardFactory(deck_order=deck_order)
     strategy = AggressiveStrategy(
         mana_limit=mana_limit,
         spell_damage=spell_damage,
@@ -56,14 +45,15 @@ def main() -> None:
         default_targets=default_targets,
     )
     engine = GameEngine()
-    engine.configure_engine(factory, strategy)
+    engine.configure_engine(factory=factory, strategy=strategy)
 
-    hand = [
-        factory.create_creature("dragon"),
-        factory.create_creature("goblin"),
-        factory.create_spell("lightning"),
-    ]
-    battlefield = ["Enemy Creature", "Enemy Player"]
+    themed_deck_result = factory.create_themed_deck(size=50)
+    themed_deck = themed_deck_result["deck"]
+    hand: list[Card] = []
+    for _ in range(3):
+        hand.append(themed_deck.draw_card())
+
+    battlefield = default_targets
     engine.current_hand = hand
     engine.current_battlefield = battlefield
 
@@ -74,8 +64,12 @@ def main() -> None:
     print()
 
     print("Simulating aggressive turn...")
-    actions = engine.simulate_turn()
-    print(f"Hand: {format_hand(hand)}")
+    actions: dict[str, Any] = {}
+    try:
+        actions = engine.simulate_turn()
+    except RuntimeError as exc:
+        print(f"Setup error: {exc}")
+    print(f"Hand: {format_hand(hand=hand)}")
     print()
 
     print("Turn execution:")
@@ -92,15 +86,14 @@ if __name__ == "__main__":
     main()
 
 
-
-#How do Abstract Factory and Strategy patterns work together? 
+# How do Abstract Factory and Strategy patterns work together?
 # What makes this combination powerful for game engine systems?".
 
-# The Answer: "They perfectly separate creation from behavior. 
+# The Answer: "They perfectly separate creation from behavior.
 # The Abstract Factory handles all the messy logic of spawning the right cards
-#  (creation), while the Strategy handles the AI logic of playing them 
-# (behavior). Because the GameEngine relies purely on abstract interfaces 
+#  (creation), while the Strategy handles the AI logic of playing them
+# (behavior). Because the GameEngine relies purely on abstract interfaces
 # instead of concrete classes, I could swap in a SciFiCardFactory and a
-#  DefensiveStrategy without changing a single line of code in the Game Engine 
-# itself. This makes the system incredibly modular, plug-and-play, 
+#  DefensiveStrategy without changing a single line of code in the Game Engine
+# itself. This makes the system incredibly modular, plug-and-play,
 # and easy to scale!"

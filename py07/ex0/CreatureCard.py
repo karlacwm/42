@@ -24,7 +24,7 @@ class CreatureCard(Card):
         }
         return game_state
 
-    def attack_target(self, target: Any) -> dict[str, Any]:
+    def attack_target(self, target: str) -> dict[str, Any]:
         attack_state: dict[str, Any] = {
             "attacker": self.name,
             "target": target,

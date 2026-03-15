@@ -3,4 +3,8 @@ from .Magical import Magical
 from .EliteCard import EliteCard
 
 
-__all__ = ["Combatable", "Magical", "EliteCard"]
+__all__: list[str] = [
+    "Combatable",
+    "Magical",
+    "EliteCard",
+]
