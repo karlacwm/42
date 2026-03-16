@@ -5,7 +5,7 @@ from typing import Any
 # (no function name, just lambda)(parameter): (return value)
 def artifact_sorter(artifacts: list[dict[str, Any]]) -> list[dict[str, Any]]:
     # sorted() can use a lambda as a key for custom sorting
-    # reverse=True makes it descending.
+    # reverse=True makes it descending
     return sorted(artifacts, key=lambda artifact: artifact["power"],
                   reverse=True)
 
@@ -13,8 +13,7 @@ def artifact_sorter(artifacts: list[dict[str, Any]]) -> list[dict[str, Any]]:
 def power_filter(
         mages: list[dict[str, Any]], min_power: int) -> list[dict[str, Any]]:
     # filter() creates a list of items for which a function returns True
-    # We must wrap it in list() to convert the result
-    # from an iterator back to a list.
+    # wrap it in list() to convert the result from an iterator back to a list
     return list(filter(lambda mage: mage["power"] >= min_power, mages))
 
 
@@ -35,40 +34,89 @@ def mage_stats(mages: list[dict[str, Any]]) -> dict[str, int | float]:
             power_list) else 0.0
     }
 
-def lambda_spells() -> None:
-    print("Testing artifact_sorter...")
-    artifacts = [
-        {"name": "Fire Staff", "power": 92},
-        {"name": "Crystal Orb", "power": 85},
-    ]
-    sorted_artifacts = artifact_sorter(artifacts)
-    first = sorted_artifacts[0]
-    second = sorted_artifacts[1]
-    print(f"{first['name']} ({first['power']} power) comes before "
-          f"{second['name']} ({second['power']} power)")
-    print()
 
-    print("Testing spell transformer...")
-    spells = ["fireball", "heal", "shield"]
-    transformed_spells = spell_transformer(spells)
-    print(*transformed_spells)
+class SpellCaster:
+    def __init__(self) -> None:
+        self.artifacts = [
+            {'name': 'Light Prism', 'power': 75, 'type': 'weapon'},
+            {'name': 'Fire Staff', 'power': 95, 'type': 'focus'},
+            {'name': 'Crystal Orb', 'power': 85, 'type': 'relic'},
+            {'name': 'Earth Shield', 'power': 65, 'type': 'armor'}
+        ]
+
+        self.spells = ["fireball", "heal", "shield"]
+
+        self.mages = [
+            {'name': 'Rowan', 'power': 92, 'element': 'fire'},
+            {'name': 'Zara', 'power': 82, 'element': 'wind'},
+            {'name': 'Luna', 'power': 97, 'element': 'fire'},
+            {'name': 'Ash', 'power': 87, 'element': 'ice'},
+            {'name': 'Sage', 'power': 107, 'element': 'fire'}
+        ]
+
+    def sorter(self) -> None:
+        print("Testing artifact_sorter...")
+        sorted_artifacts = artifact_sorter(self.artifacts)
+        first = sorted_artifacts[0]
+        second = sorted_artifacts[1]
+        print(f"{first['name']} ({first['power']} power) comes before "
+              f"{second['name']} ({second['power']} power)")
+        print()
+
+    def spell_transformer(self) -> None:
+        print("Testing spell_transformer...")
+        transformed_spells = spell_transformer(self.spells)
+        print(*transformed_spells)
+
+    def filter(self) -> None:
+        print()
+        print("Testing power filter...")
+        min_power = 90
+        filtered_mages = power_filter(self.mages, min_power)
+        for mage in filtered_mages:
+            print(f"{mage['name']} has at least "
+                  f"{min_power} power ({mage['power']})")
+
+    def stats(self) -> None:
+        print()
+        print("Testing mage_stats...")
+        stats = mage_stats(self.mages)
+        print(f"Max Power: {stats['max_power']}")
+        print(f"Min Power: {stats['min_power']}")
+        print(f"Avg Power: {stats['avg_power']}")
+
+    def demo(self) -> None:
+        self.sorter()
+        self.spell_transformer()
+        # self.filter()
+        # self.stats()
+
+
+def main() -> None:
+    try:
+        spell_caster = SpellCaster()
+        spell_caster.demo()
+    except Exception as e:
+        print(f"Error caught during spell casting: {e}")
+        return
+
 
 if __name__ == "__main__":
-    lambda_spells()
+    main()
 
 
 # 1. How do lambda expressions make code more concise?
 
-# "They allow you to define simple, single-use transformation 
-# logic inline. Instead of writing a whole 3-line def block somewhere 
-# else in the file just to extract a dictionary key, you can do it 
-# right inside the sorted() or map() function call, saving space and 
+# "They allow you to define simple, single-use transformation
+# logic inline. Instead of writing a whole 3-line def block somewhere
+# else in the file just to extract a dictionary key, you can do it
+# right inside the sorted() or map() function call, saving space and
 # keeping the logic exactly where it's used."
 
 # 2. When should you use lambda vs. regular function definitions?
 
-# "You should use a lambda for simple, one-line expressions that 
-# you only need to use once (like a sorting key or a basic map 
-# transformation). If the logic is complex, requires multiple lines, 
+# "You should use a lambda for simple, one-line expressions that
+# you only need to use once (like a sorting key or a basic map
+# transformation). If the logic is complex, requires multiple lines,
 # needs if/else error handling, or needs to be reused in multiple places,
 #  you should always use a standard def function for readability."
