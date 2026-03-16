@@ -37,9 +37,11 @@ class TournamentPlatform:
         }
 
     def get_leaderboard(self) -> list[dict[str, Any]]:
-        board = []
-        for i in self.cards:
-            card = self.cards[i]
+        board: list[dict[str, Any]] = []
+        # for x in some_list: x is each element
+        # for x in some_dict: x is each key
+        for card_id in self.cards:
+            card = self.cards[card_id]
             board.append(
                 {
                     "card_id": card.card_id,
@@ -49,12 +51,12 @@ class TournamentPlatform:
                 }
             )
 
-        for i in range(len(board)):
-            for j in range(i + 1, len(board)):
-                if board[i]["rating"] < board[j]["rating"]:
-                    temp = board[i]
-                    board[i] = board[j]
-                    board[j] = temp
+        for index in range(len(board)):
+            for second_index in range(index + 1, len(board)):
+                if board[index]["rating"] < board[second_index]["rating"]:
+                    temp = board[index]
+                    board[index] = board[second_index]
+                    board[second_index] = temp
         return board
 
     def generate_tournament_report(self) -> dict[str, Any]:

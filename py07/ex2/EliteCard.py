@@ -9,6 +9,12 @@ class EliteCard(Card, Combatable, Magical):
                  attack: int, health: int) -> None:
         super().__init__(name, cost, rarity)
         self.type = "Elite"
+
+        if not isinstance(attack, int) or attack < 0:
+            raise ValueError("Attack must be a non-negative integer.")
+        if not isinstance(health, int) or health < 0:
+            raise ValueError("Health must be a non-negative integer.")
+
         self.attack_damage = attack
         self.health = health
         self.total_mana = 4

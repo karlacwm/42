@@ -7,24 +7,28 @@ def main() -> None:
 
     platform = TournamentPlatform()
 
-    fire_dragon = TournamentCard(
-        card_id="dragon_001",
-        name="Fire Dragon",
-        cost=7,
-        rarity="Legendary",
-        attack_power=8,
-        health=10,
-        rating=1200,
-    )
-    ice_wizard = TournamentCard(
-        card_id="wizard_001",
-        name="Ice Wizard",
-        cost=6,
-        rarity="Epic",
-        attack_power=6,
-        health=9,
-        rating=1150,
-    )
+    try:
+        fire_dragon = TournamentCard(
+            card_id="dragon_001",
+            name="Fire Dragon",
+            cost=7,
+            rarity="Legendary",
+            attack_power=8,
+            health=10,
+            rating=1200,
+        )
+        ice_wizard = TournamentCard(
+            card_id="wizard_001",
+            name="Ice Wizard",
+            cost=6,
+            rarity="Epic",
+            attack_power=6,
+            health=9,
+            rating=1150,
+        )
+    except (ValueError, TypeError) as e:
+        print(f"Error creating tournament card: {e}")
+        return
 
     print("Registering Tournament Cards...")
     print()
@@ -45,8 +49,12 @@ def main() -> None:
     print()
 
     print("Creating tournament match...")
-    result = platform.create_match(
-        card1_id=fire_dragon_id, card2_id=ice_wizard_id)
+    try:
+        result = platform.create_match(
+            card1_id=fire_dragon_id, card2_id=ice_wizard_id)
+    except KeyError as e:
+        print(f"Match error: card ID {e} not found in platform.")
+        return
     print(f"Match result: {result}")
     print()
 
@@ -68,22 +76,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
-
-# 1. How does multiple inheritance allow a class to implement several
-# interfaces?
-
-# "Python allows a class definition to accept a comma-separated list
-# of parent classes (e.g., class TournamentCard(Card, Combatable, Rankable)).
-# The child class simply inherits the requirements of all the parents. If any
-# abstract method from any of those parents is missing, Python's ABC module
-#  prevents the object from being created."
-
-# 2. What are the benefits of combining ranking capabilities with
-# card game mechanics?
-
-# "It creates a complete, self-contained ecosystem! By composing interfaces,
-#  my TournamentPlatform doesn't need to know how a card attacks or how much
-#   mana it costs. It only cares about the Rankable interface. This heavily
-#   decouples the code, making the system incredibly robust, scalable,
-#   and easy to test."

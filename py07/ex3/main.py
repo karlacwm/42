@@ -47,11 +47,15 @@ def main() -> None:
     engine = GameEngine()
     engine.configure_engine(factory=factory, strategy=strategy)
 
-    themed_deck_result = factory.create_themed_deck(size=50)
-    themed_deck = themed_deck_result["deck"]
-    hand: list[Card] = []
-    for _ in range(3):
-        hand.append(themed_deck.draw_card())
+    try:
+        themed_deck_result = factory.create_themed_deck(size=50)
+        themed_deck = themed_deck_result["deck"]
+        hand: list[Card] = []
+        for _ in range(3):
+            hand.append(themed_deck.draw_card())
+    except ValueError as e:
+        print(f"Error creating themed deck: {e}")
+        return
 
     battlefield = default_targets
     engine.current_hand = hand
@@ -77,23 +81,15 @@ def main() -> None:
     print(f"Actions: {actions}")
     print()
 
-    print(f"Game Report:\n{engine.get_engine_status()}")
+    try:
+        engine_status = engine.get_engine_status()
+    except RuntimeError as exc:
+        print(f"Engine status error: {exc}")
+        return
+    print(f"Game Report:\n{engine_status}")
     print()
     print("Abstract Factory + Strategy Pattern: Maximum flexibility achieved!")
 
 
 if __name__ == "__main__":
     main()
-
-
-# How do Abstract Factory and Strategy patterns work together?
-# What makes this combination powerful for game engine systems?".
-
-# The Answer: "They perfectly separate creation from behavior.
-# The Abstract Factory handles all the messy logic of spawning the right cards
-#  (creation), while the Strategy handles the AI logic of playing them
-# (behavior). Because the GameEngine relies purely on abstract interfaces
-# instead of concrete classes, I could swap in a SciFiCardFactory and a
-#  DefensiveStrategy without changing a single line of code in the Game Engine
-# itself. This makes the system incredibly modular, plug-and-play,
-# and easy to scale!"

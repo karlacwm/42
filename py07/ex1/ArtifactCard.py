@@ -7,11 +7,14 @@ class ArtifactCard(Card):
                  durability: int, effect: str) -> None:
         super().__init__(name, cost, rarity)
         self.type = "Artifact"
+
+        if not isinstance(durability, int) or durability < 0:
+            raise ValueError("Durability must be a non-negative integer.")
+
         self.durability = durability
         self.effect = effect
 
     def play(self, game_state: dict[str, Any]) -> dict[str, Any]:
-        """Implements the abstract play method for artifacts."""
         game_state = {
             'card_played': self.name,
             'mana_used': self.cost,
@@ -20,7 +23,6 @@ class ArtifactCard(Card):
         return game_state
 
     def activate_ability(self) -> dict[str, Any]:
-        """Specific method for Artifact ongoing effects."""
         self.durability -= 1
         return {
             'ability_activated': self.effect,
