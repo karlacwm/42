@@ -37,22 +37,25 @@ class SpaceMission(BaseModel):
     @model_validator(mode="after")
     def mission_validation(self) -> "SpaceMission":
         if not self.mission_id.startswith("M"):
-            raise ValueError("Mission ID must start with 'M")
+            raise ValueError("Mission ID must start with 'M'")
 
         has_leader = False
         for cm in self.crew:
             if cm.rank == Rank.commander or cm.rank == Rank.captain:
                 has_leader = True
         if not has_leader:
-            raise ValueError('Mission must have at least one Commander or Captain')
+            raise ValueError(
+                "Mission must have at least one Commander or Captain")
 
         if self.duration_days > 365:
-            experienced_count = sum(1 for c in self.crew if c.years_experience >= 5)
+            experienced_count = sum(
+                1 for c in self.crew if c.years_experience >= 5)
             if (experienced_count / len(self.crew)) < 0.5:
-                raise ValueError('Long missions (> 365 days) need 50% experienced crew (5+ years)')
+                raise ValueError("Long missions (> 365 days) need 50% "
+                                 "experienced crew (5+ years)")
 
         if not all(c.is_active for c in self.crew):
-            raise ValueError('All crew members must be active')
+            raise ValueError("All crew members must be active")
 
         return self
 
@@ -63,9 +66,12 @@ class SpaceMission(BaseModel):
         print(f"Destination: {self.destination}")
         print(f"Duration: {self.duration_days} days")
         print(f"Budget: ${self.budget_millions}M")
+        print(f"Crew size: {len(self.crew)}")
         print("Crew members:")
         for member in self.crew:
-            print(f"- {member.name} ({member.rank.value}) - {member.specialization}")
+            print(
+                f"- {member.name} ({member.rank.value}) - "
+                f"{member.specialization}")
 
 
 def main() -> None:
@@ -73,14 +79,14 @@ def main() -> None:
     print("=" * 40)
     try:
         member1 = CrewMember(
-                member_id="CM01",
-                name="Sarah Connor",
-                rank=Rank.commander,
-                age=43,
-                specialization="Mission Command",
-                years_experience=15,
-                is_active=True
-            )
+            member_id="CM01",
+            name="Sarah Connor",
+            rank=Rank.commander,
+            age=43,
+            specialization="Mission Command",
+            years_experience=15,
+            is_active=True
+        )
 
         member2 = CrewMember(
             member_id="CM02",

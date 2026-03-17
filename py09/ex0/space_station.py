@@ -59,7 +59,7 @@ def main() -> None:
             last_maintenance=datetime.now()
         )
         station2.print_info()
-        
+
     except ValidationError as e:
         error_message = e.errors()[0]["msg"]
         print(error_message)

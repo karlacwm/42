@@ -49,9 +49,9 @@ class AlienContact(BaseModel):
         print(f"Type: {self.contact_type}")
         print(f"Location: {self.location}")
         print(f"Signal: {self.signal_strength}/10")
-        print(f"Duration: {self.duration_minutes}")
+        print(f"Duration: {self.duration_minutes} minutes")
         print(f"Witnesses: {self.witness_count}")
-        print(f"Message: {self.message_received}")
+        print(f"Message: '{self.message_received}'")
         print()
 
 
