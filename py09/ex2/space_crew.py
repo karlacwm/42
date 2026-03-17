@@ -69,9 +69,7 @@ class SpaceMission(BaseModel):
         print(f"Crew size: {len(self.crew)}")
         print("Crew members:")
         for member in self.crew:
-            print(
-                f"- {member.name} ({member.rank.value}) - "
-                f"{member.specialization}")
+            member.member_info()
 
 
 def main() -> None:
