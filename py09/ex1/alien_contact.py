@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, model_validator, ValidationError
+from pydantic import BaseModel, Field, model_validator, ValidationError  # type: ignore
 # @model_validator(mode='before') vs (mode='after')
 # before: before pydantic parses fields
 # after: runs after validation and parsing
