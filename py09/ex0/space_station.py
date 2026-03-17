@@ -43,6 +43,7 @@ def main() -> None:
             power_level=85.5,
             oxygen_level=92.3,
             last_maintenance=datetime(2026, 3, 16),
+            # last_maintenance="2026-03-16T22:30:00Z",
             notes="The first space station ever"
         )
         station1.print_info()
