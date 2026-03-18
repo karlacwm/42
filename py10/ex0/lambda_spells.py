@@ -70,8 +70,8 @@ class SpellCaster:
 
     def filter(self) -> None:
         print()
-        print("Testing power filter...")
         min_power = 90
+        print("Testing power filter...")
         filtered_mages = power_filter(self.mages, min_power)
         for mage in filtered_mages:
             print(f"{mage['name']} has at least "
@@ -79,17 +79,19 @@ class SpellCaster:
 
     def stats(self) -> None:
         print()
-        print("Testing mage_stats...")
         stats = mage_stats(self.mages)
-        print(f"Max Power: {stats['max_power']}")
-        print(f"Min Power: {stats['min_power']}")
-        print(f"Avg Power: {stats['avg_power']}")
+        print(
+            "Testing mage_stats...\n"
+            f"Max Power: {stats['max_power']}\n"
+            f"Min Power: {stats['min_power']}\n"
+            f"Avg Power: {stats['avg_power']}"
+        )
 
     def demo(self) -> None:
         self.sorter()
         self.spell_transformer()
-        # self.filter()
-        # self.stats()
+        self.filter()
+        self.stats()
 
 
 def main() -> None:

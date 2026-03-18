@@ -41,6 +41,12 @@ def main():
     def heal(target: str) -> str:
         return f"Heals {target}"
 
+    def stun(target: str) -> str:
+        return f"Stuns {target}"
+
+    def trap(target: str) -> str:
+        return f"Traps {target}"
+
     def basic_damage() -> int:
         return 10
 
@@ -50,44 +56,54 @@ def main():
         return True
 
     try:
-        print("Testing spell combiner...")
         combined = spell_combiner(
             spell1=fireball,
             spell2=heal
         )
         result1, result2 = combined(target="Dragon")
-        print(f"Combined spell result: {result1}, {result2}")
-        print()
+        print(
+            "Testing spell combiner...\n"
+            f"Combined spell result: {result1}, {result2}\n"
+        )
 
-        print("Testing power amplifier...")
         mega_spell = power_amplifier(
             base_spell=basic_damage,
             multiplier=3
         )
-        print(f"Original: {basic_damage()}, Amplified: {mega_spell()}")
-        print()
+        print(
+            "Testing power amplifier...\n"
+            f"Original: {basic_damage()}, Amplified: {mega_spell()}\n"
+        )
 
-        print("Testing conditional caster...")
         enemy_spell = conditional_caster(
             condition=is_enemy,
             spell=fireball
         )
-        print(f"When target is Goblin (enemy): {enemy_spell(target='Goblin')}")
-        print(f"When target is Knight (ally): {enemy_spell(target='Knight')}")
-        print()
+        print(
+            "Testing conditional caster...\n"
+            f"When target is Goblin (enemy): {enemy_spell(target='Goblin')}\n"
+            f"When target is Knight (ally): {enemy_spell(target='Knight')}\n"
+        )
 
-        print("Testing spell sequence...")
         sequence = spell_sequence(
-            spells=[fireball, heal, heal, fireball]
+            spells=[stun, trap, fireball, stun]
         )
         results = sequence(target="Goblin")
-        print(f"Spell sequence results: {', '.join(results)}")
+        print(
+            "Testing spell sequence...\n"
+            f"Spell sequence results: {', '.join(results)}"
+        )
     except Exception as e:
         print(f"Error: {e}")
 
 
 if __name__ == "__main__":
     main()
+
+
+# higher order functions: functions that can take other functions as
+# arguments, or return them as results
+
 
 # 1. How do higher-order functions enable code reuse and composition?
 
