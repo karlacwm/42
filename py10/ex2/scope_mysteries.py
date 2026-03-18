@@ -1,85 +1,109 @@
-# ex2/scope_mysteries.py
+from typing import Callable
 
-def mage_counter() -> callable:
-    """Returns a closure that counts how many times it's been called."""
-    count = 0  # This variable will be "trapped" in the closure
-    
-    def counter():
-        nonlocal count  # Tells Python we want to modify the outer 'count'
+
+def mage_counter() -> Callable:
+    count = 0
+
+    def count_up():
+        nonlocal count
         count += 1
         return count
-        
-    return counter
+
+    return count_up
 
 
-def spell_accumulator(initial_power: int) -> callable:
-    """Returns a closure that accumulates power over time."""
+def spell_accumulator(initial_power: int) -> Callable:
     total_power = initial_power
-    
+
     def accumulate(amount: int):
         nonlocal total_power
         total_power += amount
         return total_power
-        
+
     return accumulate
 
 
-def enchantment_factory(enchantment_type: str) -> callable:
-    """Returns a closure that applies a specific enchantment type."""
-    # We don't need 'nonlocal' here because we are only reading the variable, not modifying it.
+def enchantment_factory(enchantment_type: str) -> Callable:
     def enchant(item_name: str):
         return f"{enchantment_type} {item_name}"
-        
+
     return enchant
 
 
-def memory_vault() -> dict[str, callable]:
-    """Returns a dict of functions sharing the same private memory storage."""
-    vault_storage = {}  # Private dictionary trapped in the closure
-    
-    def store(key: str, value):
-        # Dictionaries are mutable, so we don't need 'nonlocal' to add keys to it!
+def memory_vault() -> dict[str, Callable]:
+    vault_storage = {}
+
+    def store(key: str, value: str):
         vault_storage[key] = value
-        
+
     def recall(key: str):
         return vault_storage.get(key, "Memory not found")
-        
+
     return {'store': store, 'recall': recall}
 
 
+def main():
+    try:
+        my_counter = mage_counter()
+        print(
+            "Testing mage counter...\n"
+            f"Call 1: {my_counter()}\n"
+            f"Call 2: {my_counter()}\n"
+            f"Call 3: {my_counter()}"
+        )
+        print()
+
+        my_accumulator = spell_accumulator(100)
+        print(
+            "Testing spell accumulator...\n"
+            f"Initial power: 100\n"
+            f"After adding 20: {my_accumulator(20)}\n"
+            f"After adding 30: {my_accumulator(30)}\n"
+            f"After adding 50: {my_accumulator(50)}"
+        )
+        print()
+
+        fire_enchanter = enchantment_factory("Flaming")
+        ice_enchanter = enchantment_factory("Frozen")
+
+        print(
+            "Testing enchantment factory...\n"
+            f"{fire_enchanter('Sword')}\n"
+            f"{ice_enchanter('Shield')}"
+        )
+        print()
+
+        vault = memory_vault()
+        vault['store']("secret_spell", "Invisibility")
+        print(
+            "Testing memory vault...\n"
+            f"Recalling 'secret_spell': {vault['recall']('secret_spell')}\n"
+            f"Recalling 'non_existent': {vault['recall']('non_existent')}"
+        )
+
+    except Exception as e:
+        print(f"Error: {e}")
+
+
 if __name__ == "__main__":
-    # --- Testing Logic to Match Expected Output ---
-    
-    print("Testing mage counter...")
-    # We create the counter. 'count' is set to 0 and trapped inside my_counter.
-    my_counter = mage_counter()
-    print(f"Call 1: {my_counter()}")
-    print(f"Call 2: {my_counter()}")
-    print(f"Call 3: {my_counter()}")
-    
-    print("Testing enchantment factory...")
-    # We create two completely separate closures, each remembering a different string!
-    fire_enchanter = enchantment_factory("Flaming")
-    ice_enchanter = enchantment_factory("Frozen")
-    
-    print(fire_enchanter("Sword"))
-    print(ice_enchanter("Shield"))
+    main()
 
-
+# lexical scoping: inner functions can look "outward" and see the
+# outer function's variables, but not the other way around
 
 # 1. How do closures enable functions to "remember" their creation environment?
 
-# "When an inner function references variables from its outer function, 
-# Python takes those variables and bundles them together with the inner 
-# function into a single object called a closure. Even after the outer 
+# "When an inner function references variables from its outer function,
+# Python takes those variables and bundles them together with the inner
+# function into a single object called a closure. Even after the outer
 # function finishes executing and returns, that bundle of variables is
 #  kept alive in memory as long as the inner function still exists."
 
 # 2. What are the benefits of lexical scoping in functional programming?
 
-# "It allows us to maintain state and privacy without resorting to global 
-# variables or writing full Object-Oriented classes. For example, in our 
+# "It allows us to maintain state and privacy without resorting to global
+# variables or writing full Object-Oriented classes. For example, in our
 # memory_vault(), the vault_storage dictionary is completely hidden from
-#  the outside world. The only way to interact with it is through the 
+#  the outside world. The only way to interact with it is through the
 #  specific store and recall functions we provided, which creates perfect
 #   data encapsulation."
