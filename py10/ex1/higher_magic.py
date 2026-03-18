@@ -49,38 +49,41 @@ def main():
             return False
         return True
 
-    print("Testing spell combiner...")
-    combined = spell_combiner(
-        spell1=fireball,
-        spell2=heal
-    )
-    result1, result2 = combined(target="Dragon")
-    print(f"Combined spell result: {result1}, {result2}")
-    print()
+    try:
+        print("Testing spell combiner...")
+        combined = spell_combiner(
+            spell1=fireball,
+            spell2=heal
+        )
+        result1, result2 = combined(target="Dragon")
+        print(f"Combined spell result: {result1}, {result2}")
+        print()
 
-    print("Testing power amplifier...")
-    mega_spell = power_amplifier(
-        base_spell=basic_damage,
-        multiplier=3
-    )
-    print(f"Original: {basic_damage()}, Amplified: {mega_spell()}")
-    print()
+        print("Testing power amplifier...")
+        mega_spell = power_amplifier(
+            base_spell=basic_damage,
+            multiplier=3
+        )
+        print(f"Original: {basic_damage()}, Amplified: {mega_spell()}")
+        print()
 
-    print("Testing conditional caster...")
-    enemy_spell = conditional_caster(
-        condition=is_enemy,
-        spell=fireball
-    )
-    print(f"When target is Goblin (enemy): {enemy_spell(target='Goblin')}")
-    print(f"When target is Knight (ally): {enemy_spell(target='Knight')}")
-    print()
+        print("Testing conditional caster...")
+        enemy_spell = conditional_caster(
+            condition=is_enemy,
+            spell=fireball
+        )
+        print(f"When target is Goblin (enemy): {enemy_spell(target='Goblin')}")
+        print(f"When target is Knight (ally): {enemy_spell(target='Knight')}")
+        print()
 
-    print("Testing spell sequence...")
-    sequence = spell_sequence(
-        spells=[fireball, heal, heal, fireball]
-    )
-    results = sequence(target="Goblin")
-    print(f"Spell sequence results: {', '.join(results)}")
+        print("Testing spell sequence...")
+        sequence = spell_sequence(
+            spells=[fireball, heal, heal, fireball]
+        )
+        results = sequence(target="Goblin")
+        print(f"Spell sequence results: {', '.join(results)}")
+    except Exception as e:
+        print(f"Error: {e}")
 
 
 if __name__ == "__main__":
