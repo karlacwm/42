@@ -8,33 +8,40 @@ from typing import Callable, Any
 # **kwargs (keyword arg): catches any named arguments (key=value),
 # and packs them into a dict
 
-def spell_combiner(spell1: Callable, spell2: Callable) -> Callable:
-    def combined_spell(*args, **kwargs) -> tuple[Any, Any]:
-        return (spell1(*args, **kwargs), spell2(*args, **kwargs))
+def spell_combiner(
+        spell1: Callable[[str], str],
+        spell2: Callable[[str], str]) -> Callable[[str], tuple[str, str]]:
+    def combined_spell(target: str) -> tuple[str, str]:
+        return (spell1(target), spell2(target))
     return combined_spell
 
 
-def power_amplifier(base_spell: Callable, multiplier: int) -> Callable:
-    def amplified_spell(*args, **kwargs) -> int:
+def power_amplifier(
+        base_spell: Callable[[], int],
+        multiplier: int) -> Callable[[], int]:
+    def amplified_spell(*args: Any, **kwargs: Any) -> int:
         return base_spell(*args, **kwargs) * multiplier
     return amplified_spell
 
 
-def conditional_caster(condition: Callable, spell: Callable) -> Callable:
-    def cast_if_true(*args, **kwargs) -> Any:
+def conditional_caster(
+        condition: Callable[[Any], bool],
+        spell: Callable[[Any], Any]) -> Callable[[Any], Any]:
+    def cast_if_true(*args: Any, **kwargs: Any) -> Any:
         if condition(*args, **kwargs):
             return spell(*args, **kwargs)
         return "Spell fizzled"
     return cast_if_true
 
 
-def spell_sequence(spells: list[Callable]) -> Callable:
-    def cast_sequence(*args, **kwargs) -> list[Any]:
+def spell_sequence(
+        spells: list[Callable[[Any], Any]]) -> Callable[[Any], list[Any]]:
+    def cast_sequence(*args: Any, **kwargs: Any) -> list[Any]:
         return [spell(*args, **kwargs) for spell in spells]
     return cast_sequence
 
 
-def main():
+def main() -> None:
     def fireball(target: str) -> str:
         return f"Fireball hits {target}"
 
@@ -60,41 +67,37 @@ def main():
             spell1=fireball,
             spell2=heal
         )
-        result1, result2 = combined(target="Dragon")
-        print(
-            "Testing spell combiner...\n"
-            f"Combined spell result: {result1}, {result2}\n"
-        )
+        result1, result2 = combined("Dragon")
+        print("Testing spell combiner...")
+        print(f"Combined spell result: {result1}, {result2}")
+        print()
 
         mega_spell = power_amplifier(
             base_spell=basic_damage,
             multiplier=3
         )
-        print(
-            "Testing power amplifier...\n"
-            f"Original: {basic_damage()}, Amplified: {mega_spell()}\n"
-        )
+        print("Testing power amplifier...")
+        print(f"Original: {basic_damage()}, Amplified: {mega_spell()}")
+        print()
 
         enemy_spell = conditional_caster(
             condition=is_enemy,
             spell=fireball
         )
-        print(
-            "Testing conditional caster...\n"
-            f"When target is Goblin (enemy): {enemy_spell(target='Goblin')}\n"
-            f"When target is Knight (ally): {enemy_spell(target='Knight')}\n"
-        )
+        print("Testing conditional caster...")
+        print(f"When target is Goblin (enemy): {enemy_spell('Goblin')}")
+        print(f"When target is Knight (ally): {enemy_spell('Knight')}")
+        print()
 
         sequence = spell_sequence(
             spells=[stun, trap, fireball, stun]
         )
-        results = sequence(target="Goblin")
-        print(
-            "Testing spell sequence...\n"
-            f"Spell sequence results: {', '.join(results)}"
-        )
+        results = sequence("Goblin")
+        print("Testing spell sequence...")
+        print(f"Spell sequence results: {', '.join(results)}")
+
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error caught: {e}")
 
 
 if __name__ == "__main__":

@@ -80,12 +80,11 @@ class SpellCaster:
     def stats(self) -> None:
         print()
         stats = mage_stats(self.mages)
-        print(
-            "Testing mage_stats...\n"
-            f"Max Power: {stats['max_power']}\n"
-            f"Min Power: {stats['min_power']}\n"
-            f"Avg Power: {stats['avg_power']}"
-        )
+        print("Testing mage_stats...")
+        print(f"Max Power: {stats['max_power']}")
+        print(f"Min Power: {stats['min_power']}")
+        print(f"Avg Power: {stats['avg_power']}")
+        print()
 
     def demo(self) -> None:
         self.sorter()
