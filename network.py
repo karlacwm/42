@@ -3,7 +3,7 @@ from typing import List, Optional
 
 
 class Zone:
-    """Represents a single hub/node in the drone network."""
+    """Represents a zone (or hub) in the drone network."""
 
     def __init__(self, name: str, x: int, y: int, zone_type: str = "normal",
                  color: Optional[str] = None, max_drones: int = 1) -> None:
@@ -15,23 +15,15 @@ class Zone:
         self.max_drones: int = max_drones
         self.current_drones: int = 0
 
-    def __repr__(self) -> str:
-        return (f"Zone({self.name}, type={self.zone_type}, "
-                f"max={self.max_drones})")
-
 
 class Connection:
-    """Represents a bidirectional edge between two zones."""
+    """Represents the connection path between two zones."""
 
     def __init__(self, zone1: Zone, zone2: Zone,
                  max_link_capacity: int = 1) -> None:
         self.zone1: Zone = zone1
         self.zone2: Zone = zone2
         self.max_link_capacity: int = max_link_capacity
-
-    def __repr__(self) -> str:
-        return (f"Conn({self.zone1.name}-{self.zone2.name}, "
-                f"cap={self.max_link_capacity})")
 
 
 class Graph:
