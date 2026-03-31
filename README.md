@@ -13,6 +13,14 @@ for algorithm
 https://graphable.ai/blog/pathfinding-algorithms/
 https://www.geeksforgeeks.org/dsa/dijkstras-shortest-path-algorithm-greedy-algo-7/
 
+for visualisation - tkinter
+https://www.geeksforgeeks.org/python/python-gui-tkinter/
+https://steam.oxxostudio.tw/category/python/tkinter/start.html
+
+tkinter canvas
+https://steam.oxxostudio.tw/category/python/tkinter/canvas.html
+
+
 
 • A “Description” section that clearly presents the project, including its goal and a brief overview.
 
