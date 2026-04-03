@@ -31,6 +31,8 @@ https://thenewstack.io/python-dataclasses-a-complete-guide-to-boilerplatefree-ob
 https://www.pythonmorsels.com/customizing-dataclass-fields/
 <!-- init=False argument makes a dataclass field that cannot be specified when we make a new instance of the class.
 default_factory must be a callable with no arguments -->
+https://elshad-karimov.medium.com/unlocking-the-hidden-power-of-dataclasses-field-9fd0f66aa960
+
 
 
 • A “Description” section that clearly presents the project, including its goal and a brief overview.
