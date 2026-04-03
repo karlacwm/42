@@ -1,10 +1,11 @@
 """Defines the core structures for the drone network graph."""
 from typing import List, Optional
 from enum import Enum
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 class ZoneType(str, Enum):
+    """Defines a set of valid types of zones."""
     normal = "normal"
     blocked = "blocked"
     restricted = "restricted"
@@ -14,18 +15,15 @@ class ZoneType(str, Enum):
 @dataclass
 class Zone:
     """Represents a zone in the drone network."""
-
-    def __init__(self, name: str, x: int, y: int, zone_type: str = "normal",
-                 colour: Optional[str] = None, max_drones: int = 1) -> None:
-        self.name: str = name
-        self.x: int = x
-        self.y: int = y
-        self.zone_type: ZoneType = ZoneType.normal
-        self.colour: Optional[str] = colour
-        self.max_drones: int = max_drones
-        self.current_drones: int = 0
-        self.is_full = False if (self.current_drones <= self.max_drones
-                                 ) else True
+    name: str
+    x: int
+    y: int
+    zone_type: ZoneType = field(default=ZoneType.normal)
+    colour: Optional[str] = field(default=None)
+    max_drones: int = field(default=1)
+    current_drones: List['Drone'] = field(default_factory=list)
+    is_full: bool = field(default=False if (len(current_drones) <= max_drones)
+                          else True)
 
 
 class Connection:
