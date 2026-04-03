@@ -18,6 +18,7 @@ install: $(VENV_BIN)/$(PYTHON)
 # 	$(VENV_PIP) install --upgrade pip
 	$(VENV_PIP) install flake8
 	$(VENV_PIP) install mypy
+# 	$(VENV_PIP) install pydantic
 
 run: $(VENV_BIN)/$(PYTHON)
 # 	$(VENV_PYTHON) $(MAIN) $(CONFIG)
