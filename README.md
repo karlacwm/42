@@ -20,11 +20,17 @@ https://steam.oxxostudio.tw/category/python/tkinter/start.html
 tkinter canvas
 https://steam.oxxostudio.tw/category/python/tkinter/canvas.html
 
+enum
+https://mimo.org/glossary/python/enum
+
 Python module Dataclass
 https://realpython.com/python-data-classes/
 https://www.dataquest.io/blog/how-to-use-python-data-classes/
+<!-- As a reminder, Python doesn't accept a non-default attribute after default in both class and functions, so this would throw an error -->
 https://thenewstack.io/python-dataclasses-a-complete-guide-to-boilerplatefree-objects/
 https://www.pythonmorsels.com/customizing-dataclass-fields/
+<!-- init=False argument makes a dataclass field that cannot be specified when we make a new instance of the class.
+default_factory must be a callable with no arguments -->
 
 
 • A “Description” section that clearly presents the project, including its goal and a brief overview.
