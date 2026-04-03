@@ -18,22 +18,20 @@ class Zone:
     name: str
     x: int
     y: int
-    zone_type: ZoneType = field(default=ZoneType.normal)
-    colour: Optional[str] = field(default=None)
-    max_drones: int = field(default=1)
+    zone_type: ZoneType = ZoneType.normal
+    colour: Optional[str] = None
+    max_drones: int = 1
     current_drones: List['Drone'] = field(default_factory=list)
-    is_full: bool = field(default=False if (len(current_drones) <= max_drones)
-                          else True)
+    is_full: bool = field(init=False)
+# self.is_full = len(self.current_drones) > self.max_drones
 
 
+@dataclass
 class Connection:
     """Represents the connection path between two zones."""
-
-    def __init__(self, zone1: Zone, zone2: Zone,
-                 max_link_capacity: int = 1) -> None:
-        self.zone1: Zone = zone1
-        self.zone2: Zone = zone2
-        self.max_link_capacity: int = max_link_capacity
+    zone1: Zone
+    zone2: Zone
+    max_link_capacity: int = 1
 
 
 class Network:
