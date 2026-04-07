@@ -22,8 +22,11 @@ class Zone:
     colour: Optional[str] = None
     max_drones: int = 1
     current_drones: List['Drone'] = field(default_factory=list)
-    is_full: bool = field(init=False)
-# self.is_full = len(self.current_drones) > self.max_drones
+
+    @property
+    def is_full(self) -> bool:
+        """Dynamically checks if the zone is full."""
+        return len(self.current_drones) >= self.max_drones
 
 
 @dataclass
@@ -50,5 +53,20 @@ class Network:
         self.connections.append(conn)
 
 
+@dataclass
 class Drone:
     """Represents one drone unit"""
+    _id: str
+    x: int
+    y: int
+    reached_goal: bool = field(init=False)
+    next_zone: Optional[Zone]
+    cooldown: int = 0
+    shotdown: bool = False
+
+    def cooling_down(self) -> None:
+        """Updates the cooldown status in restricted zones."""
+        if self.cooldown > 0:
+            self.cooldown -= 1
+        else:
+            pass
