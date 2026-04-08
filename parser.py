@@ -3,7 +3,7 @@ Class MapParser reads a map file and creates a Network object,
 validating the format and content of the map file.
 It raises ParseError for any parsing-related issues.
 """
-import re
+from network import Zone, Connection
 
 
 class ParseError(Exception):
@@ -26,13 +26,29 @@ class MapParser:
             line = line.strip()
             if not line or line.startswith('#'):
                 continue
-            print(row, line)
-            match = re.match(r'^([a-z]*_?[a-z]*:)\s*([0-9]*\s*)$', line)
-            print(match)
+            # print(row, line)
+            
+            elements = line.split()
+            key = elements[0]
+            if key == "nb_drones:":
+                drones_total = elements[1]
+                # print(drones_total)
+
+            elif key in ["hub:", "start_hub:", "end_hub:"]:
+                zone = Zone(elements[1], elements[2], elements[3])
+                # print(zone)
+                
+            elif key == "connection:":
+                zone1 = elements[1].split("-")[0]
+                zone2 = elements[1].split("-")[1]
+                connection = Connection(zone1, zone2)
+                # print(connection)
+            else:
+                raise ParseError(f"Parsing error: Invalid map config on line {row}")
 
         
 
 
 # test python3 parser.py
-parser = MapParser("/home/wcheung/git-fly/maps/easy/01_linear_path.txt")
+parser = MapParser("/workspaces/fly-in/maps/easy/01_linear_path.txt")
 parser.parse()
