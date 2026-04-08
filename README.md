@@ -33,6 +33,18 @@ https://www.pythonmorsels.com/customizing-dataclass-fields/
 default_factory must be a callable with no arguments -->
 https://elshad-karimov.medium.com/unlocking-the-hidden-power-of-dataclasses-field-9fd0f66aa960
 
+property decorator
+https://www.freecodecamp.org/news/python-property-decorator/
+https://www.programiz.com/python-programming/property
+https://medium.com/@christopher.kelly1997/python-decorators-and-dynamic-properties-55402a2e1aff
+
+readline()
+https://www.geeksforgeeks.org/python/readline-in-python/
+
+enumerate()
+https://www.geeksforgeeks.org/python/enumerate-in-python/
+
+AI usage
 
 
 • A “Description” section that clearly presents the project, including its goal and a brief overview.
@@ -62,6 +74,8 @@ not sure about:
 - how do i parse the information from txt files of maps and connect them to my classes?
 
 also:
+- colours:
+https://inventwithpython.com/blog/complete-list-tkinter-colors-valid-and-tested.html
 
 ------------------------------------------
 How to parse and connect to classes:
