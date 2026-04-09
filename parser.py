@@ -103,5 +103,5 @@ class MapParser:
 
 
 # test python3 parser.py
-# parser = MapParser("/home/wcheung/git-fly/maps/hard/03_ultimate_challenge.txt")
+# parser = MapParser("")
 # parser.parse()
