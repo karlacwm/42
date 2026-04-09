@@ -44,6 +44,10 @@ https://www.geeksforgeeks.org/python/readline-in-python/
 enumerate()
 https://www.geeksforgeeks.org/python/enumerate-in-python/
 
+regex
+https://realpython.com/ref/stdlib/re/
+
+
 AI usage
 
 
