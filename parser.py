@@ -52,13 +52,13 @@ class MapParser:
             key = elements[0]
             if key == "nb_drones:":
                 self.drones_total = int(elements[1])
-                # print(drones_total)
+                # print(self.drones_total)
 
             elif key in ["hub:", "start_hub:", "end_hub:"]:
                 config = self.lookup_config(line) or {}
 
                 config_type = config.get("zone", "normal")
-                config_colour = config.get("color", None)
+                config_colour = config.get("color", "grey")
                 config_max_drones = int(config.get("max_drones", 1))
 
                 zone = Zone(
@@ -72,10 +72,10 @@ class MapParser:
                 # print(config)
                 self.network.add_zone(zone)
 
-                # if key == "start_hub:":
-                #     self.network.start_hub = zone
-                # elif key == "end_hub:":
-                #     self.network.end_hub = zone
+                if key == "start_hub:":
+                    self.network.start_hub = zone
+                elif key == "end_hub:":
+                    self.network.end_hub = zone
 
             elif key == "connection:":
                 config = self.lookup_config(line) or {}
@@ -100,8 +100,3 @@ class MapParser:
             else:
                 raise ParseError(
                     f"Parsing error: Invalid map config on line {row}")
-
-
-# test python3 parser.py
-# parser = MapParser("")
-# parser.parse()

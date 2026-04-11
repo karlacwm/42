@@ -69,6 +69,7 @@ what i need:
 - algorithm for path finding
 - engine
 - visualisation (i'm thinking about tkinter or pygame)
+- simulation output
 - makefile
 - readme
 

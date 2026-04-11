@@ -19,7 +19,7 @@ class Zone:
     x: int
     y: int
     zone_type: ZoneType = ZoneType.normal
-    colour: Optional[str] = None
+    colour: str = "grey"
     max_drones: int = 1
     current_drones: List['Drone'] = field(default_factory=list)
 
@@ -49,8 +49,16 @@ class Network:
     def add_zone(self, zone: Zone) -> None:
         self.zones[zone.name] = zone
 
-    def add_connection(self, conn: Connection) -> None:
-        self.connections.append(conn)
+    def add_connection(self, connection: Connection) -> None:
+        self.connections.append(connection)
+
+    def __repr__(self) -> str:
+        return (
+            "network parsed:\n\n"
+            f"zones:\n{self.zones}\n\n"
+            f"start:\n{self.start_hub}\n\n"
+            f"end:\n{self.end_hub}\n\n"
+            f"connections:\n{self.connections}")
 
 
 @dataclass

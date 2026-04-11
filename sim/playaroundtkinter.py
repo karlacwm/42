@@ -15,7 +15,7 @@ class Shape:
 
 
 class Circle(Shape):
-    def __init__(self, x, y, r=20, color="blue"):
+    def __init__(self, x, y, r=20, color="green"):
         super().__init__(x, y, color)
         self.r = r
 
@@ -28,11 +28,13 @@ class Circle(Shape):
 
 
 root = tk.Tk()
-canvas = tk.Canvas(root, width=400, height=300)
+canvas = tk.Canvas(root, width=1700, height=1200)
 canvas.pack()
 
-c = Circle(200, 150)
+c = Circle(100, 150, 50, "blue")
+c2 = Circle(150, 150)
 c.draw(canvas)
+c2.draw(canvas)
 
 root.mainloop()
 
