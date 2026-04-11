@@ -14,7 +14,7 @@ def main() -> None:
 
         parser = MapParser(filepath=filepath)
         parser.parse()
-        print(parser.network)
+        # print(parser.network)
 
         testing = Visualiser(network=parser.network, canvas_w=1700,
                              canvas_h=1200, padding=60)
@@ -22,6 +22,8 @@ def main() -> None:
     except ParseError as e:
         print(e)
     except FileNotFoundError as e:
+        print(e)
+    except ValueError as e:
         print(e)
     except Exception as e:
         print(f"Caught an unexpected error: {e}")
