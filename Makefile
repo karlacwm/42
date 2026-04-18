@@ -4,33 +4,39 @@ VENV_BIN= $(VENV)/bin
 VENV_PYTHON = $(VENV)/bin/python3
 VENV_PIP = $(VENV)/bin/pip
 
-# MAIN = a_maze_ing.py
-# CONFIG = config.txt
+MAIN = main.py
+MAP_FILE = maps/easy/01_linear_path.txt
 
 all: install run
 
-$(VENV_BIN)/$(PYTHON):
+$(VENV_PYTHON):
 	@echo "Creating virtual environment..."
-	python3 -m venv $(VENV)
+	$(PYTHON) -m venv $(VENV)
 
-install: $(VENV_BIN)/$(PYTHON)
-# 	cd mazegen && $(abspath $(VENV_PIP)) install -e .[dev]
-# 	$(VENV_PIP) install --upgrade pip
+install: $(VENV_PYTHON)
+	$(VENV_PIP) install --upgrade pip
 	$(VENV_PIP) install flake8
 	$(VENV_PIP) install mypy
-# 	$(VENV_PIP) install pydantic
 
-run: $(VENV_BIN)/$(PYTHON)
-# 	$(VENV_PYTHON) $(MAIN) $(CONFIG)
+run: $(VENV_PYTHON)
+	$(VENV_PYTHON) $(MAIN) $(MAP_FILE)
 
-debug: $(VENV_BIN)/$(PYTHON)
-# 	$(VENV_PYTHON) -m pdb $(MAIN) $(CONFIG)
+debug: $(VENV_PYTHON)
+	$(VENV_PYTHON) -m pdb $(MAIN) $(MAP_FILE)
 
-lint: $(VENV_BIN)/$(PYTHON)
+# test-maps: $(VENV_PYTHON)
+# 	@set -e; \
+# 	for map in $$(find maps -type f -name '*.txt' | sort); do \
+# 		echo "Testing $$map"; \
+# 		$(VENV_PYTHON) -c "from parser import MapParser; from visualiser import Visualiser; p = MapParser('$$map'); p.parse(); Visualiser(p.network, 1700, 1200, 60).scale()"; \
+# 	done; \
+# 	echo "All maps validated."
+
+lint: $(VENV_PYTHON)
 	$(VENV_PYTHON) -m flake8 .
 	$(VENV_PYTHON) -m mypy --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs .
 
-lint-strict: $(VENV_BIN)/$(PYTHON)
+lint-strict: $(VENV_PYTHON)
 	$(VENV_PYTHON) -m flake8 **/*.py
 	$(VENV_PYTHON) -m mypy --strict .
 
@@ -45,7 +51,7 @@ clean:
 
 re: clean install run
 
-.PHONY: all install run debug clean lint lint-strict re
+.PHONY: all install run debug clean lint lint-strict test-maps re
 
 # .pyc → compiled bytecode files (created automatically by Python)
 # .pyo → optimized bytecode (older Python versions, mostly obsolete now)
