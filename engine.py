@@ -3,17 +3,15 @@ from typing import List, Dict
 
 
 class Drone:
-    def __init__(self, drone_id: str, start_zone: Zone, path: List[Zone]) -> None:
+    def __init__(self, drone_id: str, start_zone: Zone,
+                 path: List[Zone]) -> None:
         self.id = drone_id
         self.current_zone = start_zone
-        self.path = path  # The list of zones it needs to visit
-        self.path_index = 0  # Where it currently is on that path
-
-        # Add the drone to the starting zone's capacity
+        self.path = path
+        self.path_index = 0
         self.current_zone.current_drones.append(self)
 
     def get_next_zone(self) -> Zone | None:
-        """Returns the next zone on the path, or None if it has reached the end."""
         if self.path_index + 1 < len(self.path):
             return self.path[self.path_index + 1]
         return None
@@ -45,7 +43,7 @@ class SimulationEngine:
             key = self._connection_key(conn.zone1, conn.zone2)
             link_usage[key] = 0
 
-        # A list to store the official output strings for this turn (e.g., "D1-roof1")
+        # A list for turn output strings (e.g., "D1-roof1")
         turn_output = []
 
         # 2. Process every drone
@@ -56,7 +54,7 @@ class SimulationEngine:
             if not next_zone:
                 continue
 
-            # Find the connection between where the drone is, and where it wants to go
+            # Find connection between current and next zone
             connection = self._find_connection(drone.current_zone, next_zone)
             if not connection:
                 continue  # Should never happen if pathfinder works!
@@ -102,18 +100,15 @@ class SimulationEngine:
         return z2.name, z1.name
 
     def _find_connection(self, z1: Zone, z2: Zone):
-        """Looks up the connection object between two zones."""
         for conn in self.network.connections:
-            if (conn.zone1 == z1 and conn.zone2 == z2) or (conn.zone1 == z2 and conn.zone2 == z1):
+            if ((conn.zone1 == z1 and conn.zone2 == z2) or
+                    (conn.zone1 == z2 and conn.zone2 == z1)):
                 return conn
         return None
 
     def _all_drones_finished(self) -> bool:
-        """Checks if every single drone is sitting in the end_hub."""
-        for drone in self.drones:
-            if drone.current_zone != self.network.end_hub:
-                return False
-        return True
+        end = self.network.end_hub
+        return all(drone.current_zone == end for drone in self.drones)
 
     def _record_history(self) -> None:
         """Saves positions so the Tkinter visualiser can replay the turns."""
