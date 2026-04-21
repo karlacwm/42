@@ -137,15 +137,32 @@ class MapParser:
                 zone1_key = elements[1].split("-")[0]
                 zone2_key = elements[1].split("-")[1]
 
-                zone1 = self.network.zones[zone1_key]
-                zone2 = self.network.zones[zone2_key]
+                try:
+                    zone1 = self.network.zones[zone1_key]
+                    zone2 = self.network.zones[zone2_key]
+                except KeyError:
+                    raise ParseError(
+                        f"Parsing Error: Invalid map config on line {row}\n"
+                        "Zone(s) in the connection not yet defined before :(")
 
                 connection = Connection(
                     zone1=zone1,
                     zone2=zone2,
                     max_link_capacity=config_link_cap
                 )
-                self.network.add_connection(connection)
+                same_connection = Connection(
+                    zone1=connection.zone2,
+                    zone2=connection.zone1,
+                    max_link_capacity=config_link_cap
+                )
+                if (connection not in self.network.connections and
+                        same_connection not in self.network.connections):
+                    self.network.add_connection(connection)
+                else:
+                    raise ParseError(
+                        f"Parsing error: Invalid map config on line {row}\n"
+                        "Connection already exist. No duplicates allowed :("
+                    )
 
         if not self.network.start_hub:
             raise ParseError("Parsing error: The start_hub is missing :(")

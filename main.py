@@ -7,7 +7,8 @@ from visualiser import Visualiser
 
 def main() -> None:
     if len(sys.argv) != 2:
-        print("Usage: python3 main.py <map_file.txt>")
+        print("Invalid format :(\n"
+              "Try again with: python3 main.py <map_file.txt>")
         sys.exit(1)
 
     try:
