@@ -1,0 +1,67 @@
+# py_string_permutation_checker
+# py_string_permutation_checker.py
+# ✕
+# Assignment
+# Write a function that determines if two strings are permutations of each other.
+# Two strings are permutations if they contain the same characters with the same frequencies.
+# Function signature
+# def string_permutation_checker(s1: str, s2: str) -> bool:
+# Examples
+# Input
+# string_permutation_checker("abc", "bca")
+# Output
+# True
+# Input
+# string_permutation_checker("abc", "def")
+# Output
+# False
+# Input
+# string_permutation_checker("listen", "silent")
+# Output
+# True
+# Input
+# string_permutation_checker("hello", "bello")
+# Output
+# False
+# Input
+# string_permutation_checker("", "")
+# Output
+# True
+# Input
+# string_permutation_checker("a", "")
+# Output
+# False
+# Input
+# string_permutation_checker("Abc", "abc")
+# Output
+# False
+# Input
+# string_permutation_checker("a gentleman", "elegant man")
+# Output
+# True
+# =====================================
+
+def string_permutation_checker(s1: str, s2: str) -> bool:
+    try:
+        if not s1 and not s2:
+            return True
+        elif not s1 or not s2:
+            return False
+        list1 = []
+        for c in s1:
+            list1.append(c)
+        for c in s2:
+            list1.remove(c)
+        return True
+    except Exception:
+        return False
+
+
+print(string_permutation_checker("abc", "bca"))
+print(string_permutation_checker("abc", "def"))
+print(string_permutation_checker("listen", "silent"))
+print(string_permutation_checker("hello", "bello"))
+print(string_permutation_checker("", ""))
+print(string_permutation_checker("a", ""))
+print(string_permutation_checker("Abc", "abc"))
+print(string_permutation_checker("a gentleman", "elegant man"))
