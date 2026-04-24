@@ -22,7 +22,7 @@ def main() -> None:
         # 3. Pass the parsed Network to the Visualizer
         viz = Visualiser(network=parser.network,
                          canvas_w=1600, parser=parser,
-                         canvas_h=1000, padding=30)
+                         canvas_h=1000, padding=80)
         viz.visualise()
 
     except ParseError as e:

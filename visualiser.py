@@ -177,24 +177,22 @@ class Visualiser:
             z.draw(canvas)
 
             zone_info = (
-                f"'{zone.zone_type}' zone\n max. {zone.max_drones} drones")
+                f"{zone.name}\n({zone.zone_type} zone, "
+                f"max. {zone.max_drones} drones)")
 
             info_text_id = canvas.create_text(
-                x, y - current_radius - 18,
+                x, y - current_radius - 28,
                 text=zone_info,
                 fill="#2f2757",
                 state="hidden",
-                justify="left")
+                justify="center")
 
             z.hover_effect(canvas, info_text_id)
 
             if "start" in zone.name:
                 canvas.create_text(x, y, text="START", fill="white")
             elif "goal" in zone.name:
-                if zone.colour == "rainbow":
-                    canvas.create_text(x, y, text="GOAL", fill="black")
-                else:
-                    canvas.create_text(x, y, text="GOAL", fill="white")
+                canvas.create_text(x, y, text="GOAL", fill="white")
 
         # draw drones
 
@@ -233,8 +231,8 @@ class Visualiser:
         infos = tk.Frame(self.sidebar, bg="LavenderBlush3")
         infos.pack(side="right", expand=True, pady=20)
         for line in [
-            "                                                MAP DETAILS",
-            "============================================",
+            "                                               MAP DETAILS",
+            "==========================================",
             f"                Map file:   {filepath}",
             f"Number of drones:   {drones_total}                    ",
                 f"                      Turn:   {current_turn} / {total_turns}"
