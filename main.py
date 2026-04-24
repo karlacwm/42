@@ -1,53 +1,36 @@
 import sys
 from parser import MapParser, ParseError
-from pathfinder import Pathfinder
-from engine import SimulationEngine, Drone
 from visualiser import Visualiser
 
 
 def main() -> None:
+    # Ensure the user provides a map file
     if len(sys.argv) != 2:
-        print("Invalid format :(\n"
-              "Try again with: python3 main.py <map_file.txt>")
+        print("Usage: python3 main.py <map_file.txt>")
         sys.exit(1)
 
+    filepath = sys.argv[1]
+
+    # 1. Initialize your Parser
+    parser = MapParser(filepath)
+
     try:
-        filepath = sys.argv[1]
-        parser = MapParser(filepath)
+        # 2. Parse the file
         parser.parse()
-        network = parser.network
+        print(f"Success! Parsed map with {parser.drones_total} drones.")
 
-        pathfinder = Pathfinder(network)
-        path = pathfinder.find_shortest_path(
-            network.start_hub, network.end_hub)
+        # 3. Pass the parsed Network to the Visualizer
+        viz = Visualiser(network=parser.network,
+                         canvas_w=2000,
+                         canvas_h=1300, padding=80)
+        viz.visualise()
 
-        if not path:
-            print("No path found!")
-            return
-
-        drones = [Drone(f"D{i+1}", network.start_hub, path)
-                  for i in range(parser.drones_total)]
-
-        print("Running Simulation...")
-        engine = SimulationEngine(network, drones)
-        engine.run_simulation()
-
-        print(f"Simulation finished in {engine.turn_number} turns!")
-
-        flyin = Visualiser(
-            network,
-            canvas_w=1800,
-            canvas_h=1200,
-            padding=70,
-            map_filepath=filepath,
-        )
-        flyin.visualise(engine.history)
-    except FileNotFoundError as e:
-        print(e)
     except ParseError as e:
         print(e)
+    except FileNotFoundError as e:
+        print(e)
     except Exception as e:
-        print(f"Caught an unexpected error: {e}")
+        print(f"An unexpected error occurred: {e}")
 
 
 if __name__ == "__main__":

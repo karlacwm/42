@@ -19,6 +19,7 @@ https://steam.oxxostudio.tw/category/python/tkinter/start.html
 
 tkinter canvas
 https://steam.oxxostudio.tw/category/python/tkinter/canvas.html
+https://www.tutorialspoint.com/python/tk_pack.htm
 
 enum
 https://mimo.org/glossary/python/enum
@@ -72,6 +73,7 @@ what i need:
 - simulation output
 - makefile
 - readme
+- docstrings
 
 not sure about:
 - coordinates as tuples? how do i link them to my classes?
