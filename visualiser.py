@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import Canvas
 from network import Network
+# from engine import Drone
 
 
 class Shape:
@@ -33,10 +34,10 @@ class Circle(Shape):
                  colour: str) -> None:
         super().__init__(x, y)
         self.r = radius
-        self.colour = colour if colour else "grey"
+        self.colour = colour if colour else "light blue"
 
     def draw(self, canvas: Canvas) -> None:
-        valid_colour = self.check_colour(canvas, self.colour, "lightblue")
+        valid_colour = self.check_colour(canvas, self.colour, "light blue")
         if valid_colour == "rainbow":
             colours = [
                 "#E27F7F", "#E4A15D", "#E2E27B",
@@ -58,6 +59,24 @@ class Circle(Shape):
             self.x - self.r, self.y - self.r,
             self.x + self.r, self.y + self.r,
             fill=valid_colour, outline="#ffffff", width=3)
+
+
+class Triangle(Shape):
+    def __init__(self, x: int, y: int, size: int) -> None:
+        super().__init__(x, y)
+        self.size = size
+
+    def draw(self, canvas: Canvas) -> None:
+        canvas.create_polygon(
+            self.x,
+            self.y - self.size,
+            self.x - self.size,
+            self.y + self.size,
+            self.x + self.size,
+            self.y + self.size,
+            fill="#4E4683",
+            outline="#260DC7",
+        )
 
 
 class Visualiser:
@@ -133,11 +152,13 @@ class Visualiser:
             x = int(zone.x * scale + offset_x)
             y = int(zone.y * scale + offset_y)
 
-            growth_bonus = zone.max_drones * int(scale * 0.05)
-            current_radius = min(radius + growth_bonus, max_allowed_radius)
+            zone_scale = zone.max_drones * int(scale * 0.05)
+            current_radius = min(radius + zone_scale, max_allowed_radius)
 
             z = Circle(x, y, current_radius, zone.colour)
             z.draw(canvas)
+
+        # draw drones
 
         # graph.bind("<Right>", self.next_step)
         # graph.bind("<Left>", self.prev_step)
