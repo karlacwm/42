@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import Canvas
 from network import Network
+from parser import MapParser
 # from engine import Drone
 
 
@@ -35,14 +36,13 @@ class Circle(Shape):
         super().__init__(x, y)
         self.r = radius
         self.colour = colour if colour else "light blue"
+        self.zone_tag = f"zone_{id(self)}"
 
     def draw(self, canvas: Canvas) -> None:
         valid_colour = self.check_colour(canvas, self.colour, "light blue")
         if valid_colour == "rainbow":
             colours = [
-                "#E27F7F", "#E4A15D", "#E2E27B",
-                "#76D176", "#648BE0", "#538366",
-                "#6E608F"]
+                "#E27F7F", "#E2E27B", "#76D176", "#648BE0", "#6E608F"]
             step = self.r // len(colours)
 
             for i, colour in enumerate(colours):
@@ -51,14 +51,29 @@ class Circle(Shape):
                     self.x - r, self.y - r,
                     self.x + r, self.y + r,
                     fill=colour,
-                    outline="#ffffff",
-                    width=2)
+                    outline="",
+                    tags=self.zone_tag)
             return
 
         self.draw_circle = canvas.create_oval(
             self.x - self.r, self.y - self.r,
             self.x + self.r, self.y + self.r,
-            fill=valid_colour, outline="#ffffff", width=3)
+            fill=valid_colour, outline="", tags=self.zone_tag)
+
+    def hover_effect(self, canvas: Canvas, info_text_id: int) -> None:
+        self.info_text = info_text_id
+        canvas.tag_bind(self.zone_tag, "<Enter>",
+                        lambda event: self._show_info(canvas))
+        canvas.tag_bind(self.zone_tag, "<Leave>",
+                        lambda event: self._hide_info(canvas))
+
+    def _show_info(self, canvas: Canvas) -> None:
+        if self.info_text is not None:
+            canvas.itemconfigure(self.info_text, state="normal")
+
+    def _hide_info(self, canvas: Canvas) -> None:
+        if self.info_text is not None:
+            canvas.itemconfigure(self.info_text, state="hidden")
 
 
 class Triangle(Shape):
@@ -75,24 +90,28 @@ class Triangle(Shape):
             self.x + self.size,
             self.y + self.size,
             fill="#4E4683",
-            outline="#260DC7",
         )
 
 
 class Visualiser:
     def __init__(self, network: Network, canvas_w: int,
                  canvas_h: int, padding: int,
-                 min_zoom: float = 30.0,
-                 max_zoom: float = 220.0) -> None:
+                 parser: MapParser,
+                 min_zoom: float = 0.5,
+                 max_zoom: float = 150.0) -> None:
+        self.parser = parser
         self.network = network
         self.canvas_w = canvas_w
-        self.sidebar_h = canvas_h * 0.2
-        self.canvas_h = canvas_h - self.sidebar_h
+        self.sidebar_h = int(canvas_h * 0.2)
+        self.canvas_h = int(canvas_h - self.sidebar_h)
         self.padding = padding
         self.min_zoom = min_zoom
         self.max_zoom = max_zoom
 
     def scale(self) -> tuple[float, float, float]:
+        if not self.network.zones:
+            return 1.0, 0.0, 0.0
+
         all_x = [z.x for z in self.network.zones.values()]
         all_y = [z.y for z in self.network.zones.values()]
 
@@ -122,18 +141,17 @@ class Visualiser:
     def connect(self, canvas: Canvas, x1: int, y1: int,
                 x2: int, y2: int) -> int:
         return canvas.create_line(x1, y1, x2, y2,
-                                  width=2, fill="LavenderBlush4")
+                                  width=2, fill="#9b94b6")
 
     def visualise(self) -> None:
         self.graph = tk.Tk()
         self.graph.title("Fly-in Visualiser")
 
         canvas = tk.Canvas(self.graph, width=self.canvas_w,
-                           height=self.canvas_h, bg="#88bcd1")
+                           height=self.canvas_h, bg="#b0e0e6")
         canvas.pack(side="top", fill="both", expand=True)
 
-        sidebar = tk.Frame(self.graph, height=self.sidebar_h, bg="#91BE90")
-        sidebar.pack(side="bottom", fill="both")
+        self.sidebar_config()
 
         scale, offset_x, offset_y = self.scale()
         max_allowed_radius = max(4, int(scale * 0.45))
@@ -158,6 +176,26 @@ class Visualiser:
             z = Circle(x, y, current_radius, zone.colour)
             z.draw(canvas)
 
+            zone_info = (
+                f"'{zone.zone_type}' zone\n max. {zone.max_drones} drones")
+
+            info_text_id = canvas.create_text(
+                x, y - current_radius - 18,
+                text=zone_info,
+                fill="#2f2757",
+                state="hidden",
+                justify="left")
+
+            z.hover_effect(canvas, info_text_id)
+
+            if "start" in zone.name:
+                canvas.create_text(x, y, text="START", fill="white")
+            elif "goal" in zone.name:
+                if zone.colour == "rainbow":
+                    canvas.create_text(x, y, text="GOAL", fill="black")
+                else:
+                    canvas.create_text(x, y, text="GOAL", fill="white")
+
         # draw drones
 
         # graph.bind("<Right>", self.next_step)
@@ -169,3 +207,37 @@ class Visualiser:
     def quit(self, event=None) -> None:
         """Close the visualiser window."""
         self.graph.destroy()
+
+    def sidebar_config(self) -> None:
+        self.sidebar = tk.Frame(
+            self.graph, height=self.sidebar_h, bg="LavenderBlush3")
+        self.sidebar.pack(side="bottom", fill="x")
+
+        controls = tk.Frame(self.sidebar, bg="LavenderBlush3")
+        controls.pack(side="left", expand=True, pady=20)
+        for line in [
+            "          CONTROLS         ",
+            "===========================",
+            "[🢂]    Next turn",
+            "      [🢀]    Previous turn",
+            "     [ESC]   Quit visualiser"
+        ]:
+            tk.Label(controls, text=line, bg="LavenderBlush3",
+                     fg="#443b69", anchor="w").pack()
+
+        filepath = self.parser.filepath
+        drones_total = self.parser.drones_total
+        current_turn = 1
+        total_turns = 5
+
+        infos = tk.Frame(self.sidebar, bg="LavenderBlush3")
+        infos.pack(side="right", expand=True, pady=20)
+        for line in [
+            "                                                MAP DETAILS",
+            "============================================",
+            f"                Map file:   {filepath}",
+            f"Number of drones:   {drones_total}                    ",
+                f"                      Turn:   {current_turn} / {total_turns}"
+        ]:
+            tk.Label(infos, text=line, bg="LavenderBlush3",
+                     fg="#443b69", anchor="w", justify="center").pack(fill="x")

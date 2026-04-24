@@ -16,10 +16,15 @@ https://www.geeksforgeeks.org/dsa/dijkstras-shortest-path-algorithm-greedy-algo-
 for visualisation - tkinter
 https://www.geeksforgeeks.org/python/python-gui-tkinter/
 https://steam.oxxostudio.tw/category/python/tkinter/start.html
-
-tkinter canvas
-https://steam.oxxostudio.tw/category/python/tkinter/canvas.html
 https://www.tutorialspoint.com/python/tk_pack.htm
+https://steam.oxxostudio.tw/category/python/tkinter/canvas.html
+https://inventwithpython.com/blog/complete-list-tkinter-colors-valid-and-tested.html
+https://www.geeksforgeeks.org/python/python-tkinter-create-different-shapes-using-canvas-class/
+https://www.tutorialspoint.com/python/tk_label.htm
+https://youtu.be/fGx8-RmaJbg
+
+maximum flow
+https://www.w3schools.com/dsa/dsa_theory_graphs_maxflow.php
 
 enum
 https://mimo.org/glossary/python/enum
@@ -49,6 +54,7 @@ regex
 https://realpython.com/ref/stdlib/re/
 
 
+
 AI usage
 
 
@@ -67,7 +73,7 @@ initial plan
 what i need:
 - classes for zones and connections and the whole network and drones
 - parser and error handling for parser (use pydantic maybe?)
-- algorithm for path finding
+- algorithm for path finding: combine dijkstra and maximum flow
 - engine
 - visualisation (i'm thinking about tkinter or pygame)
 - simulation output
