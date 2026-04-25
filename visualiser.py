@@ -214,11 +214,11 @@ class Visualiser:
         controls = tk.Frame(self.sidebar, bg="LavenderBlush3")
         controls.pack(side="left", expand=True, pady=20)
         for line in [
-            "          CONTROLS         ",
+            "CONTROLS",
             "===========================",
-            "[🢂]    Next turn",
-            "      [🢀]    Previous turn",
-            "     [ESC]   Quit visualiser"
+            "[->]    Next turn      ",
+            "[<-]    Previous turn  ",
+            "[ESC]   Quit visualiser"
         ]:
             tk.Label(controls, text=line, bg="LavenderBlush3",
                      fg="#443b69", anchor="w").pack()
@@ -231,11 +231,11 @@ class Visualiser:
         infos = tk.Frame(self.sidebar, bg="LavenderBlush3")
         infos.pack(side="right", expand=True, pady=20)
         for line in [
-            "                                               MAP DETAILS",
+            "                MAP DETAILS",
             "==========================================",
-            f"                Map file:   {filepath}",
-            f"Number of drones:   {drones_total}                    ",
-                f"                      Turn:   {current_turn} / {total_turns}"
+            f"Map file         :   {filepath}   ",
+            f"Number of drones :   {drones_total}",
+                f"Turn             :   {current_turn} / {total_turns}"
         ]:
             tk.Label(infos, text=line, bg="LavenderBlush3",
-                     fg="#443b69", anchor="w", justify="center").pack(fill="x")
+                     fg="#443b69", anchor="w").pack(fill="x")
