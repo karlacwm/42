@@ -12,6 +12,7 @@ https://peps.python.org/pep-0257/
 for algorithm
 https://graphable.ai/blog/pathfinding-algorithms/
 https://www.geeksforgeeks.org/dsa/dijkstras-shortest-path-algorithm-greedy-algo-7/
+https://www.w3schools.com/dsa/dsa_algo_graphs_dijkstra.php
 
 for visualisation - tkinter
 https://www.geeksforgeeks.org/python/python-gui-tkinter/
@@ -53,7 +54,10 @@ https://www.geeksforgeeks.org/python/enumerate-in-python/
 regex
 https://realpython.com/ref/stdlib/re/
 
-
+queue
+https://medium.com/@shras_a/queue-in-python-34a74641502e
+https://realpython.com/ref/stdlib/queue/
+https://www.w3schools.com/python/ref_module_queue.asp
 
 AI usage
 

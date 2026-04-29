@@ -230,12 +230,14 @@ class Visualiser:
 
         infos = tk.Frame(self.sidebar, bg="LavenderBlush3")
         infos.pack(side="right", expand=True, pady=20)
+        tk.Label(infos, text="MAP DETAILS", bg="LavenderBlush3",
+                 fg="#443b69", anchor="w").pack()
         for line in [
-            "                MAP DETAILS",
+            "=========================================="
             "==========================================",
-            f"Map file         :   {filepath}   ",
-            f"Number of drones :   {drones_total}",
-                f"Turn             :   {current_turn} / {total_turns}"
+            f"Map file path  :   {filepath}   ",
+            f"Total drones   :   {drones_total}",
+                f"Turns stats     :   {current_turn} / {total_turns}"
         ]:
             tk.Label(infos, text=line, bg="LavenderBlush3",
                      fg="#443b69", anchor="w").pack(fill="x")

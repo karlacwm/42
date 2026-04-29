@@ -5,7 +5,7 @@ VENV_PYTHON = $(VENV)/bin/python3
 VENV_PIP = $(VENV)/bin/pip
 
 MAIN = main.py
-MAP_FILE = maps/easy/01_linear_path.txt
+MAP_FILE = /home/wcheung/git-fly/maps/hard/02_capacity_hell.txt
 
 all: install run
 
