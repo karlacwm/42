@@ -1,3 +1,6 @@
+import heapq
+from network import Network, Zone, ZoneType
+from typing import Optional
 from network import Network, Zone
 from typing import List, Optional
 
@@ -35,3 +38,33 @@ class Pathfinder:
                     queue.append(current_path + [neighbor])
 
         return None
+
+    while queue:
+        # Pop the CHEAPEST path we are currently exploring
+        current_cost, current_path = heapq.heappop(queue)
+        current_zone = current_path[-1]
+
+        # Because heapq always gives us the cheapest path, the FIRST
+        # time we hit the end hub, it is mathematically guaranteed to be the best path!
+        if current_zone == end:
+            return current_path
+
+        ways = self.find_neighbour(current_zone)
+        for neighbour in ways:
+            if neighbour.zone_type == ZoneType.blocked:
+                continue
+
+            # Calculate what it would cost to step here
+            new_cost = current_cost + self.get_cost(neighbour)
+
+            # Have we never been here? Or did we find a CHEAPER way to get here?
+            if neighbour.name not in visited_costs or new_cost < visited_costs[neighbour.name]:
+                # Update our records
+                visited_costs[neighbour.name] = new_cost
+
+                # Add it to the queue to explore later
+                new_path = list(current_path)
+                new_path.append(neighbour)
+                heapq.heappush(queue, (new_cost, new_path))
+
+    return None

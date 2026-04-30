@@ -3,3 +3,6 @@ drone_venv/
 __pycache__/
 *.pyc
 *.pyo
+engine3000.py
+pathfinder3000.py
+visualiser3000.py

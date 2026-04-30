@@ -58,6 +58,8 @@ queue
 https://medium.com/@shras_a/queue-in-python-34a74641502e
 https://realpython.com/ref/stdlib/queue/
 https://www.w3schools.com/python/ref_module_queue.asp
+https://www.geeksforgeeks.org/python/heap-queue-or-heapq-in-python/
+
 
 AI usage
 

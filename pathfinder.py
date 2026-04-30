@@ -1,5 +1,6 @@
 from network import Network, Zone, ZoneType
 from typing import Optional
+import heapq
 
 
 class Pathfinder:
@@ -19,48 +20,43 @@ class Pathfinder:
 
         return neighbour_list
 
-    def find_efficient_path(self, path_options: list[list[Zone]]
-                            ) -> tuple[list[Zone], float]:
-        cost_pair: list[tuple[list[Zone], float]] = []
-        for path in path_options:
-            cost: float = 0
-            for zone in path:
-                if zone.zone_type == ZoneType.normal:
-                    cost += 1
-                elif zone.zone_type == ZoneType.priority:
-                    cost += 0.5
-                elif zone.zone_type == ZoneType.restricted:
-                    cost += 5
-            cost_pair.append((path, cost))
-        cost_pair = sorted(
-            cost_pair, key=lambda lowest: lowest[1], reverse=False)
-        return cost_pair[0]
+    def get_cost(self, zone: Zone) -> float:
+        if zone.zone_type == ZoneType.priority:
+            return 0.5
+        elif zone.zone_type == ZoneType.restricted:
+            return 5
+        else:
+            return 1
 
     def find_path(self) -> Optional[list[Zone]]:
         start = self.network.start_hub
         end = self.network.end_hub
+        cost = 0.0
         if not start or not end:
             return None
 
-        visited = [start.name]
-        path = [[start]]
+        visited = {start.name: cost}
+        path = [(cost, [start])]
+        heapq.heapify(path)
 
         while path:
-            current_path = path.pop(0)
+            current_cost, current_path = heapq.heappop(path)
             current_zone = current_path[-1]
 
             if current_zone == end:
-                best_path = self.find_efficient_path(path)
-                return best_path[0]
+                return current_path
 
             ways = self.find_neighbour(current_zone)
             for neighbour in ways:
-                if neighbour.name not in visited and \
-                        neighbour.zone_type is not ZoneType.blocked:
-                    visited.append(neighbour.name)
+                if neighbour.zone_type is not ZoneType.blocked:
+                    visit_cost = current_cost + self.get_cost(neighbour)
+                    if visit_cost < visited[neighbour.name]:
+                        visited[neighbour.name] = visit_cost
+
                     new_path = list(current_path)
                     new_path.append(neighbour)
-                    path.append(new_path)
+                    heapq.heappush(path, (visit_cost, new_path))
+        print(path)
         return None
 
 
