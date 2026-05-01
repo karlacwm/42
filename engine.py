@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from os import path
 from network import Zone, Network
 
 
@@ -6,6 +7,10 @@ from network import Zone, Network
 class Drone:
     drone_id: int
     current_zone: Zone
+    cooldown: int
+    path: list[Zone]
+    path_tracking: int = 0
+    finished: bool = False
 
 
 class Simulation:
@@ -29,19 +34,26 @@ class Simulation:
 
     def play_turn(self) -> None:
         """The traffic cop logic for a single step of time."""
+        traffic_this_turn = {conn: 0 for conn in self.network.connections}
 
-        # 1. TURN PREP
-        # Create a dictionary to track how many drones cross a connection THIS TURN.
-        # It resets to 0 every single turn!
-        current_turn_traffic = {conn: 0 for conn in self.network.connections}
+        moves_output = []
 
-        # A list to hold the formatted strings for the terminal output
-        moves_this_turn = []
-
-        # 2. PROCESS EVERY DRONE
         for drone in self.drones:
             if drone.finished:
                 continue
+
+            if drone.cooldown > 0:
+                drone.cooldown -= 1
+            else:
+                drone.current_zone = drone.path[drone.path_tracking + 1]
+
+
+
+
+
+
+        if moves_this_turn:
+            print(" ".join(moves_this_turn))
 
             #  Is the drone on cooldown? (Reduce timer and skip if yes)
 
@@ -55,7 +67,3 @@ class Simulation:
 
             # If all checks pass -> Move the drone, update capacities, and add to moves_this_turn!
             pass
-
-        # 3. PRINT THE TURN
-        if moves_this_turn:
-            print(" ".join(moves_this_turn))
