@@ -2,6 +2,7 @@ import sys
 from parser import MapParser, ParseError
 from visualiser import Visualiser
 from pathfinder import Pathfinder
+from simulation import Simulation, Drone
 
 
 def main() -> None:
@@ -11,18 +12,20 @@ def main() -> None:
 
     filepath = sys.argv[1]
 
-    parser = MapParser(filepath)
-
     try:
+        parser = MapParser(filepath)
         parser.parse()
         print(f"Success! Parsed map with {parser.drones_total} drones.")
 
-        # visual = Visualiser(network=parser.network,
-        #                     canvas_w=1600, parser=parser,
-        #                     canvas_h=1000, padding=80)
-        # visual.visualise()
+        network = parser.network
+        visual = Visualiser(network=network,
+                            canvas_w=1600, parser=parser,
+                            canvas_h=1000, padding=80)
+        visual.visualise()
 
-        solver = Pathfinder(network=parser.network)
+        solver = Pathfinder(network=network)
+        # global_traffic = {}
+        # all_drones = []
         solver.find_path()
 
     except ParseError as e:

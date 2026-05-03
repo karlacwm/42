@@ -90,6 +90,7 @@ class Triangle(Shape):
             self.x + self.size,
             self.y + self.size,
             fill="#4E4683",
+            outline=""
         )
 
 
@@ -177,8 +178,8 @@ class Visualiser:
             z.draw(canvas)
 
             zone_info = (
-                f"{zone.name}\n({zone.zone_type} zone, "
-                f"max. {zone.max_drones} drones)")
+                f"{zone.name} -- [{zone.zone_type.upper()}]\n"
+                f"-- max. {zone.max_drones} drones allowed")
 
             info_text_id = canvas.create_text(
                 x, y - current_radius - 28,
@@ -241,3 +242,45 @@ class Visualiser:
         ]:
             tk.Label(infos, text=line, bg="LavenderBlush3",
                      fg="#443b69", anchor="w").pack(fill="x")
+
+    # for zone_name, drone_ids in drones_by_zone.items():
+    #         if zone_name not in self.network.zones:
+    #             continue
+
+    #         zone = self.network.zones[zone_name]
+    #         base_x = int(zone.x * scale + offset_x)
+    #         base_y = int(zone.y * scale + offset_y)
+
+    #         visible_count = min(len(drone_ids), 4)
+    #         for i in range(visible_count):
+    #             spot_x, spot_y = zone_spots[i]
+    #             dx = base_x + spot_x
+    #             dy = base_y + spot_y
+
+    #             self._draw_drone_triangle(dx, dy, drone_radius)
+
+    #         overflow = len(drone_ids) - 4
+    #         if overflow > 0:
+    #             self.canvas.create_text(
+    #                 base_x,
+    #                 base_y,
+    #                 text=f"+{overflow}",
+    #                 fill="white",
+    #                 font=("Arial", 9, "bold"),
+    #             )
+
+    # def quit(self, event=None) -> None:
+    #     """Close the visualiser window."""
+    #     self.graph.destroy()
+
+    # def next_step(self, event=None) -> None:
+    #     """Fires when you press the Right Arrow."""
+    #     if self.current_step < self.max_step:
+    #         self.current_step += 1
+    #         self.draw_frame()
+
+    # def prev_step(self, event=None) -> None:
+    #     """Fires when you press the Left Arrow."""
+    #     if self.current_step > 0:
+    #         self.current_step -= 1
+    #         self.draw_frame()

@@ -72,8 +72,9 @@ class Pathfinder:
                             path, (visit_cost, next(step), new_path))
         return None
 
-
+# note to self
+# dijkstra + maximum flow
 # o | cost
 # o | zone type
-# x | zone max
-# x | conn max
+# x | zone max (put in sim?)
+# x | conn max (sim)
