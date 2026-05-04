@@ -90,7 +90,7 @@ class Triangle(Shape):
             self.x + self.size,
             self.y + self.size,
             fill="#4E4683",
-            outline=""
+            outline="#FFFFFF"
         )
 
 
@@ -98,6 +98,7 @@ class Visualiser:
     def __init__(self, network: Network, canvas_w: int,
                  canvas_h: int, padding: int,
                  parser: MapParser,
+                 history: list[dict[str, str]] | None = None,
                  min_zoom: float = 0.5,
                  max_zoom: float = 150.0) -> None:
         self.parser = parser
@@ -108,6 +109,9 @@ class Visualiser:
         self.padding = padding
         self.min_zoom = min_zoom
         self.max_zoom = max_zoom
+        self.history = history or []
+        self.current_step = 0
+        self.turn_label: tk.Label | None = None
 
     def scale(self) -> tuple[float, float, float]:
         if not self.network.zones:
@@ -144,6 +148,69 @@ class Visualiser:
         return canvas.create_line(x1, y1, x2, y2,
                                   width=2, fill="#9b94b6")
 
+    def _draw_drones(self, canvas: Canvas, scale: float,
+                     offset_x: float, offset_y: float) -> None:
+        if self.history:
+            positions: dict[str, list[str]] = {}
+            for drone_id, zone_name in self.history[self.current_step].items():
+                positions.setdefault(zone_name, []).append(drone_id)
+        else:
+            positions = {}
+            for zone in self.network.zones.values():
+                positions[zone.name] = [
+                    d.drone_id for d in zone.current_drones
+                ]
+
+        for zone_name, drone_ids in positions.items():
+            zone = self.network.zones[zone_name]
+            zx = int(zone.x * scale + offset_x)
+            zy = int(zone.y * scale + offset_y - 10)
+            for i, drone_id in enumerate(drone_ids):
+                # sx, sy = spots[i % len(spots)]
+                # dx, dy = zx + sx, zy + sy
+                Triangle(zx, zy, 10).draw(canvas)
+                canvas.create_text(
+                    zx, zy + 25, text=drone_id, fill="#443b69")
+
+    def draw_frame(self, canvas: Canvas) -> None:
+        canvas.delete("all")
+        self.update_turn_info()
+
+        scale, offset_x, offset_y = self.scale()
+        max_allowed_radius = max(4, int(scale * 0.45))
+        radius = max(3, int(scale * 0.15))
+
+        for conn in self.network.connections:
+            x1 = int(conn.zone1.x * scale + offset_x)
+            y1 = int(conn.zone1.y * scale + offset_y)
+            x2 = int(conn.zone2.x * scale + offset_x)
+            y2 = int(conn.zone2.y * scale + offset_y)
+            self.connect(canvas, x1, y1, x2, y2)
+
+        for zone in self.network.zones.values():
+            x = int(zone.x * scale + offset_x)
+            y = int(zone.y * scale + offset_y)
+            zone_scale = zone.max_drones * int(scale * 0.05)
+            current_radius = min(radius + zone_scale, max_allowed_radius)
+            z = Circle(x, y, current_radius, zone.colour)
+            z.draw(canvas)
+
+            zone_info = (
+                f"{zone.name} -- [{zone.zone_type.upper()}]\n"
+                f"-- max. {zone.max_drones} drones allowed")
+            info_text_id = canvas.create_text(
+                x, y - current_radius - 28,
+                text=zone_info, fill="#2f2757",
+                state="hidden", justify="center")
+            z.hover_effect(canvas, info_text_id)
+
+            if "start" in zone.name:
+                canvas.create_text(x, y, text="START", fill="white")
+            elif "goal" in zone.name:
+                canvas.create_text(x, y, text="GOAL", fill="white")
+
+        self._draw_drones(canvas, scale, offset_x, offset_y)
+
     def visualise(self) -> None:
         self.graph = tk.Tk()
         self.graph.title("Fly-in Visualiser")
@@ -154,54 +221,34 @@ class Visualiser:
 
         self.sidebar_config()
 
-        scale, offset_x, offset_y = self.scale()
-        max_allowed_radius = max(4, int(scale * 0.45))
-        radius = max(3, int(scale * 0.15))
+        self.draw_frame(canvas)
 
-        for conn in self.network.connections:
-            x1 = int(conn.zone1.x * scale + offset_x)
-            y1 = int(conn.zone1.y * scale + offset_y)
-
-            x2 = int(conn.zone2.x * scale + offset_x)
-            y2 = int(conn.zone2.y * scale + offset_y)
-
-            self.connect(canvas, x1, y1, x2, y2)
-
-        for zone in self.network.zones.values():
-            x = int(zone.x * scale + offset_x)
-            y = int(zone.y * scale + offset_y)
-
-            zone_scale = zone.max_drones * int(scale * 0.05)
-            current_radius = min(radius + zone_scale, max_allowed_radius)
-
-            z = Circle(x, y, current_radius, zone.colour)
-            z.draw(canvas)
-
-            zone_info = (
-                f"{zone.name} -- [{zone.zone_type.upper()}]\n"
-                f"-- max. {zone.max_drones} drones allowed")
-
-            info_text_id = canvas.create_text(
-                x, y - current_radius - 28,
-                text=zone_info,
-                fill="#2f2757",
-                state="hidden",
-                justify="center")
-
-            z.hover_effect(canvas, info_text_id)
-
-            if "start" in zone.name:
-                canvas.create_text(x, y, text="START", fill="white")
-            elif "goal" in zone.name:
-                canvas.create_text(x, y, text="GOAL", fill="white")
-
-        # draw drones
+        if self.history:
+            self.graph.bind("<Right>", lambda event: self.next_step(canvas))
+            self.graph.bind("<Left>", lambda event: self.prev_step(canvas))
 
         # graph.bind("<Right>", self.next_step)
         # graph.bind("<Left>", self.prev_step)
         self.graph.bind("<Escape>", self.quit)
 
         self.graph.mainloop()
+
+    def next_step(self, canvas: Canvas) -> None:
+        if self.current_step + 1 < len(self.history):
+            self.current_step += 1
+            self.draw_frame(canvas)
+
+    def prev_step(self, canvas: Canvas) -> None:
+        if self.current_step > 0:
+            self.current_step -= 1
+            self.draw_frame(canvas)
+
+    def update_turn_info(self) -> None:
+        if self.turn_label is not None:
+            total = len(self.history) if self.history else 1
+            self.turn_label.config(
+                text=f"Turns stats     :   {self.current_step + 1}  /  {total}"
+            )
 
     def quit(self, event=None) -> None:
         """Close the visualiser window."""
@@ -226,9 +273,6 @@ class Visualiser:
 
         filepath = self.parser.filepath
         drones_total = self.parser.drones_total
-        current_turn = 1
-        total_turns = 5
-
         infos = tk.Frame(self.sidebar, bg="LavenderBlush3")
         infos.pack(side="right", expand=True, pady=20)
         tk.Label(infos, text="MAP DETAILS", bg="LavenderBlush3",
@@ -238,49 +282,16 @@ class Visualiser:
             "==========================================",
             f"Map file path  :   {filepath}   ",
             f"Total drones   :   {drones_total}",
-                f"Turns stats     :   {current_turn} / {total_turns}"
         ]:
             tk.Label(infos, text=line, bg="LavenderBlush3",
                      fg="#443b69", anchor="w").pack(fill="x")
 
-    # for zone_name, drone_ids in drones_by_zone.items():
-    #         if zone_name not in self.network.zones:
-    #             continue
-
-    #         zone = self.network.zones[zone_name]
-    #         base_x = int(zone.x * scale + offset_x)
-    #         base_y = int(zone.y * scale + offset_y)
-
-    #         visible_count = min(len(drone_ids), 4)
-    #         for i in range(visible_count):
-    #             spot_x, spot_y = zone_spots[i]
-    #             dx = base_x + spot_x
-    #             dy = base_y + spot_y
-
-    #             self._draw_drone_triangle(dx, dy, drone_radius)
-
-    #         overflow = len(drone_ids) - 4
-    #         if overflow > 0:
-    #             self.canvas.create_text(
-    #                 base_x,
-    #                 base_y,
-    #                 text=f"+{overflow}",
-    #                 fill="white",
-    #                 font=("Arial", 9, "bold"),
-    #             )
-
-    # def quit(self, event=None) -> None:
-    #     """Close the visualiser window."""
-    #     self.graph.destroy()
-
-    # def next_step(self, event=None) -> None:
-    #     """Fires when you press the Right Arrow."""
-    #     if self.current_step < self.max_step:
-    #         self.current_step += 1
-    #         self.draw_frame()
-
-    # def prev_step(self, event=None) -> None:
-    #     """Fires when you press the Left Arrow."""
-    #     if self.current_step > 0:
-    #         self.current_step -= 1
-    #         self.draw_frame()
+        total_turns = len(self.history) if self.history else 1
+        self.turn_label = tk.Label(
+            infos,
+            bg="LavenderBlush3",
+            fg="#443b69",
+            anchor="w",
+            text=f"Turns stats     :   1  /  {total_turns}",
+        )
+        self.turn_label.pack(fill="x")

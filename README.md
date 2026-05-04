@@ -10,6 +10,7 @@ for docstrings
 https://peps.python.org/pep-0257/
 
 for algorithm
+https://www.codementor.io/blog/basic-pathfinding-explained-with-python-5pil8767c1
 https://graphable.ai/blog/pathfinding-algorithms/
 https://www.geeksforgeeks.org/dsa/dijkstras-shortest-path-algorithm-greedy-algo-7/
 https://www.w3schools.com/dsa/dsa_algo_graphs_dijkstra.php

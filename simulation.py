@@ -1,15 +1,15 @@
 from dataclasses import dataclass
-from network import Zone, Network, Connection
+from network import Zone, Network, Connection, ZoneType, connection_pair
 from typing import Optional
 
 
 @dataclass
 class Drone:
-    drone_id: int
+    drone_id: str
     current_zone: Zone
-    cooldown: int
     path: list[Zone]
     path_tracking: int = 0
+    cooldown: int = 0
     finished: bool = False
 
     def find_next_zone(self) -> Optional[Zone]:
@@ -17,18 +17,33 @@ class Drone:
             return self.path[self.path_tracking + 1]
         return None
 
+    def __post_init__(self) -> None:
+        try:
+            self.current_zone.current_drones.append(self)
+        except Exception:
+            pass
+
 
 class Simulation:
     def __init__(self, network: Network, drones: list[Drone]) -> None:
         self.network = network
         self.drones = drones
         self.turn_number = 0
+        self.history: list[dict[str, str]] = []
+
+    def record_history(self) -> None:
+        snapshot = {
+            drone.drone_id: drone.current_zone.name for drone in self.drones
+        }
+        self.history.append(snapshot)
 
     def run(self) -> None:
         """The main loop. Keeps running until all drones are done."""
+        self.record_history()
         while not self.all_drones_finished():
             self.turn_number += 1
             self.play_turn()
+            self.record_history()
 
     def all_drones_finished(self) -> bool:
         """Checks if every drone has reached the end_hub."""
@@ -51,11 +66,25 @@ class Simulation:
                 count += 1
         return count
 
+    def drone_sort_key(self, drone: Drone) -> tuple[bool, bool, int]:
+        digits = "".join(char for char in drone.drone_id if char.isdigit())
+        number = int(digits) if digits else 0
+        return (
+            drone.finished,
+            drone.current_zone.zone_type != ZoneType.priority,
+            number,
+        )
+
     def play_turn(self) -> None:
         """The traffic cop logic for a single step of time."""
-        traffic_this_turn = {conn: 0 for conn in self.network.connections}
+        traffic_this_turn = {
+            connection_pair(conn.zone1, conn.zone2): 0
+            for conn in self.network.connections
+        }
 
         moves_output = []
+
+        self.drones.sort(key=self.drone_sort_key)
 
         for drone in self.drones:
             if drone.finished:
@@ -63,8 +92,7 @@ class Simulation:
 
             if drone.cooldown > 0:
                 drone.cooldown -= 1
-            else:
-                drone.current_zone = drone.path[drone.path_tracking + 1]
+                continue
 
             next_zone = drone.find_next_zone()
             if not next_zone:
@@ -74,8 +102,33 @@ class Simulation:
             if not conn:
                 continue
 
-            if self.drones_in_zone(drone.current_zone) < drone.current_zone.max_drones:
-                
+            conn_key = connection_pair(conn.zone1, conn.zone2)
+
+            if traffic_this_turn[conn_key] >= conn.max_link_capacity:
+                continue
+
+            if next_zone != self.network.end_hub:
+                if self.drones_in_zone(next_zone) >= next_zone.max_drones:
+                    continue
+
+            try:
+                drone.current_zone.current_drones.remove(drone)
+            except ValueError:
+                pass
+
+            drone.current_zone = next_zone
+            drone.path_tracking += 1
+            next_zone.current_drones.append(drone)
+
+            traffic_this_turn[conn_key] += 1
+
+            if next_zone.zone_type == ZoneType.restricted:
+                drone.cooldown = 1
+
+            if next_zone == self.network.end_hub:
+                drone.finished = True
+
+            moves_output.append(f"{drone.drone_id}-{next_zone.name}")
 
         if moves_output:
             print(" ".join(moves_output))

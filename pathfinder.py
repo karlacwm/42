@@ -1,7 +1,10 @@
-from network import Network, Zone, ZoneType, Connection
+from network import Network, Zone, ZoneType, Connection, connection_pair
 from typing import Optional
 from itertools import count
 import heapq
+
+
+TrafficMap = dict[tuple[str, str], int]
 
 
 class Pathfinder:
@@ -30,14 +33,18 @@ class Pathfinder:
         else:
             return 1
 
-    def path_is_full(self, conn: Connection, traffic: dict) -> bool:
-        status = traffic.get(conn, 0)
+    def get_connection_cost(
+            self, conn: Connection, traffic: TrafficMap) -> float:
+        key = connection_pair(conn.zone1, conn.zone2)
+        usage = traffic.get(key, 0)
 
-        if status >= conn.max_link_capacity:
-            return True
-        return False
+        if usage <= conn.max_link_capacity:
+            return usage / conn.max_link_capacity
 
-    def find_path(self) -> Optional[list[Zone]]:
+        overflow = usage - conn.max_link_capacity + 1
+        return (usage / conn.max_link_capacity) + (overflow * 5)
+
+    def find_path(self, traffic: TrafficMap) -> Optional[list[Zone]]:
         start = self.network.start_hub
         end = self.network.end_hub
         cost = 0.0
@@ -54,22 +61,26 @@ class Pathfinder:
             current_zone = current_path[-1]
 
             if current_zone == end:
-                print(current_path)
                 return current_path
 
             ways = self.find_neighbour(current_zone)
             for neighbour, conn in ways:
-                if neighbour.zone_type is not ZoneType.blocked and \
-                        not self.path_is_full(conn, traffic):
-                    visit_cost = current_cost + self.get_cost(neighbour)
-                    prev_cost = visited.get(neighbour.name)
-                    if prev_cost is None or visit_cost < prev_cost:
-                        visited[neighbour.name] = visit_cost
+                if neighbour.zone_type == ZoneType.blocked:
+                    continue
 
-                        new_path = list(current_path)
-                        new_path.append(neighbour)
-                        heapq.heappush(
-                            path, (visit_cost, next(step), new_path))
+                visit_cost = (
+                    current_cost
+                    + self.get_cost(neighbour)
+                    + self.get_connection_cost(conn, traffic)
+                )
+
+                prev_cost = visited.get(neighbour.name)
+                if prev_cost is None or visit_cost < prev_cost:
+                    visited[neighbour.name] = visit_cost
+
+                    new_path = list(current_path)
+                    new_path.append(neighbour)
+                    heapq.heappush(path, (visit_cost, next(step), new_path))
         return None
 
 # note to self

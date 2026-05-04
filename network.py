@@ -32,6 +32,12 @@ class Connection:
     max_link_capacity: int = 1
 
 
+def connection_pair(z1: Zone, z2: Zone) -> tuple[str, str]:
+    if z1.name <= z2.name:
+        return z1.name, z2.name
+    return z2.name, z1.name
+
+
 class Network:
     def __init__(self) -> None:
         self.zones: dict[str, Zone] = {}
