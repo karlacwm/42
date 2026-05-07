@@ -1,42 +1,56 @@
-# Assignment name  : py_pattern_tracker
-# Expected files   : py_pattern_tracker.py
-# Allowed functions: None
-# --------------------------------------------------------------------------------
+# py_pattern_tracker
+# py_pattern_tracker.py
+# ✕
+# Assignment
+# Write a function that counts the number of valid consecutive digit pairs in a
+# string. A valid pair consists of two adjacent digits where the second digit
+# is exactly one greater than the first digit. A 9 followed by a 0 is NOT a valid pair
+# and only consider consecutive characters that are both digits (0-9).
+# Function signature
+# def pattern_tracker(text: str) -> int:
+# Examples
+# Input
+# pattern_tracker("123")
+# Output
+# 2
+# Input
+# pattern_tracker("12a34")
+# Output
+# 2
+# Input
+# pattern_tracker("987654321")
+# Output
+# 0
+# Input
+# pattern_tracker("01234567")
+# Output
+# 7
+# Input
+# pattern_tracker("abc")
+# Output
+# 0
+# Input
+# pattern_tracker("1a2b3c4")
+# Output
+# 0
+# Input
+# pattern_tracker("112233")
+# Output
+# 2
+# =============================================
 
-# Write a function that takes a `pattern` string and a string `s` of words
-# separated by spaces. The function must return True if `s` follows the exact
-# same pattern.
+def pattern_tracker(text: str) -> int:
+    count = 0
+    for i in range(len(text) - 1):
+        a, b = text[i], text[i + 1]
+        if a.isdigit() and b.isdigit() and (int(b) - int(a) == 1):
+            count += 1
+    return count
 
-# "Following the pattern" means there is a full bijection (a two-way match)
-# between a letter in `pattern` and a non-empty word in `s`.
-
-# Your function must be declared as follows:
-
-# def pattern_tracker(pattern: str, s: str) -> bool:
-
-# Rules:
-# - You must map each character in `pattern` to exactly one unique word in `s`.
-# - No two characters can map to the same word.
-# - If the number of characters in `pattern` does not match the number of words
-#   in `s`, return False.
-
-# Examples:
-
-# Input: pattern_tracker("abba", "dog cat cat dog")
-# Output: True
-# (Explanation: 'a' maps to "dog", 'b' maps to "cat")
-
-# Input: pattern_tracker("abba", "dog cat cat fish")
-# Output: False
-# (Explanation: 'a' maps to "dog", but then 'a' tries to map to "fish" at the
-# end)
-
-# Input: pattern_tracker("aaaa", "dog cat cat dog")
-# Output: False
-
-# Input: pattern_tracker("abba", "dog dog dog dog")
-# Output: False
-# (Explanation: 'a' and 'b' cannot both map to "dog")
-
-
-print()
+print(pattern_tracker("123"))
+print(pattern_tracker("12a34"))
+print(pattern_tracker("987654321"))
+print(pattern_tracker("01234567"))
+print(pattern_tracker("abc"))
+print(pattern_tracker("1a2b3c4"))
+print(pattern_tracker("112233"))
