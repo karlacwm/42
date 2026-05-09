@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional, Any
 from enum import Enum
 from dataclasses import dataclass, field
 
@@ -18,7 +18,7 @@ class Zone:
     zone_type: ZoneType = ZoneType.normal
     colour: str = "grey"
     max_drones: int = 1
-    current_drones: List = field(default_factory=list)
+    current_drones: list[Any] = field(default_factory=list)
 
     @property
     def is_full(self) -> bool:
@@ -41,7 +41,7 @@ def connection_pair(z1: Zone, z2: Zone) -> tuple[str, str]:
 class Network:
     def __init__(self) -> None:
         self.zones: dict[str, Zone] = {}
-        self.connections: List[Connection] = []
+        self.connections: list[Connection] = []
         self.start_hub: Optional[Zone] = None
         self.end_hub: Optional[Zone] = None
 

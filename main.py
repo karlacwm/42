@@ -3,7 +3,6 @@ from parser import MapParser, ParseError
 from visualiser import Visualiser
 from pathfinder import Pathfinder
 from simulation import Simulation, Drone
-from network import connection_pair
 
 
 def main() -> None:
@@ -40,10 +39,6 @@ def main() -> None:
                 path=path,
             )
             all_drones.append(drone)
-
-            for current_zone, next_zone in zip(path, path[1:]):
-                edge_key = connection_pair(current_zone, next_zone)
-                traffic[edge_key] = traffic.get(edge_key, 0) + 1
 
         print("\n--- SIMULATION OUTPUT ---")
         sim = Simulation(network, all_drones)

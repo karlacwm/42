@@ -75,7 +75,7 @@ class Simulation:
             number,
         )
 
-    def play_turn(self) -> None:
+    def play_turn(self) -> int:
         """The traffic cop logic for a single step of time."""
         traffic_this_turn = {
             connection_pair(conn.zone1, conn.zone2): 0
@@ -133,6 +133,8 @@ class Simulation:
         if moves_output:
             print(" ".join(moves_output))
 
+        return len(moves_output)
+
 # note to self
 # is the drone on cooldown?
 # what is the drone's next zone? get from pathfinder
@@ -142,3 +144,5 @@ class Simulation:
 # (but the drone in next zone will also move)
 # if all checks pass -> move the drone, update capacities
 # and add to moves_output
+
+# remember docstrings

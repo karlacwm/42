@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import Canvas
 from network import Network
 from parser import MapParser
+from typing import Any
 # from engine import Drone
 
 
@@ -148,8 +149,8 @@ class Visualiser:
         return canvas.create_line(x1, y1, x2, y2,
                                   width=2, fill="#9b94b6")
 
-    def _draw_drones(self, canvas: Canvas, scale: float,
-                     offset_x: float, offset_y: float) -> None:
+    def draw_drones(self, canvas: Canvas, scale: float,
+                    offset_x: float, offset_y: float) -> None:
         if self.history:
             positions: dict[str, list[str]] = {}
             for drone_id, zone_name in self.history[self.current_step].items():
@@ -164,13 +165,11 @@ class Visualiser:
         for zone_name, drone_ids in positions.items():
             zone = self.network.zones[zone_name]
             zx = int(zone.x * scale + offset_x)
-            zy = int(zone.y * scale + offset_y - 10)
-            for i, drone_id in enumerate(drone_ids):
-                # sx, sy = spots[i % len(spots)]
-                # dx, dy = zx + sx, zy + sy
-                Triangle(zx, zy, 10).draw(canvas)
+            zy = int(zone.y * scale + offset_y)
+            for drone_id in drone_ids:
+                Triangle(zx, zy, 5).draw(canvas)
                 canvas.create_text(
-                    zx, zy + 25, text=drone_id, fill="#443b69")
+                    zx, zy + 19, text=drone_id, fill="#9b94b6")
 
     def draw_frame(self, canvas: Canvas) -> None:
         canvas.delete("all")
@@ -209,7 +208,7 @@ class Visualiser:
             elif "goal" in zone.name:
                 canvas.create_text(x, y, text="GOAL", fill="white")
 
-        self._draw_drones(canvas, scale, offset_x, offset_y)
+        self.draw_drones(canvas, scale, offset_x, offset_y)
 
     def visualise(self) -> None:
         self.graph = tk.Tk()
@@ -227,8 +226,6 @@ class Visualiser:
             self.graph.bind("<Right>", lambda event: self.next_step(canvas))
             self.graph.bind("<Left>", lambda event: self.prev_step(canvas))
 
-        # graph.bind("<Right>", self.next_step)
-        # graph.bind("<Left>", self.prev_step)
         self.graph.bind("<Escape>", self.quit)
 
         self.graph.mainloop()
@@ -245,12 +242,12 @@ class Visualiser:
 
     def update_turn_info(self) -> None:
         if self.turn_label is not None:
-            total = len(self.history) if self.history else 1
+            total = len(self.history) - 1 if self.history else 1
             self.turn_label.config(
-                text=f"Turns stats     :   {self.current_step + 1}  /  {total}"
+                text=f"Turns stats     :   {self.current_step}  /  {total}"
             )
 
-    def quit(self, event=None) -> None:
+    def quit(self, event: Any = None) -> None:
         """Close the visualiser window."""
         self.graph.destroy()
 
@@ -286,12 +283,12 @@ class Visualiser:
             tk.Label(infos, text=line, bg="LavenderBlush3",
                      fg="#443b69", anchor="w").pack(fill="x")
 
-        total_turns = len(self.history) if self.history else 1
+        total_turns = len(self.history) - 1 if self.history else 1
         self.turn_label = tk.Label(
             infos,
             bg="LavenderBlush3",
             fg="#443b69",
             anchor="w",
-            text=f"Turns stats     :   1  /  {total_turns}",
+            text=f"Turns stats     :   {self.current_step}  /  {total_turns}",
         )
         self.turn_label.pack(fill="x")
