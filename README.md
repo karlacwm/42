@@ -2,6 +2,11 @@
 
 ## Description
 
+Minimum Cost Maximum Flow (MCMF)
+the algorithm you wrote—running Dijkstra repeatedly and increasing the cost of connections as they get used (get_connection_cost)—is a famous heuristic approach to MCMF called the Successive Shortest Path Algorithm.
+
+challenge: "fixed path per drone" to "dynamic routing at each step."
+
 ## Instructions
 
 ## Resources
@@ -60,6 +65,9 @@ https://medium.com/@shras_a/queue-in-python-34a74641502e
 https://realpython.com/ref/stdlib/queue/
 https://www.w3schools.com/python/ref_module_queue.asp
 https://www.geeksforgeeks.org/python/heap-queue-or-heapq-in-python/
+
+itertools-count()
+https://stackabuse.com/pythons-itertools-count-cycle-and-chain/
 
 
 AI usage

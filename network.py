@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 
 
 class ZoneType(str, Enum):
+    """Defines a set of valid types of zones."""
     normal = "normal"
     blocked = "blocked"
     restricted = "restricted"
@@ -12,6 +13,7 @@ class ZoneType(str, Enum):
 
 @dataclass
 class Zone:
+    """Represents a zone in the drone network."""
     name: str
     x: int
     y: int
@@ -22,11 +24,13 @@ class Zone:
 
     @property
     def is_full(self) -> bool:
+        """Dynamically checks if the zone is full."""
         return len(self.current_drones) >= self.max_drones
 
 
 @dataclass
 class Connection:
+    """Represents the connection path between two zones."""
     zone1: Zone
     zone2: Zone
     max_link_capacity: int = 1
@@ -39,6 +43,8 @@ def connection_pair(z1: Zone, z2: Zone) -> tuple[str, str]:
 
 
 class Network:
+    """The main network holding all zones and connections."""
+
     def __init__(self) -> None:
         self.zones: dict[str, Zone] = {}
         self.connections: list[Connection] = []

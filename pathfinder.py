@@ -4,9 +4,6 @@ from itertools import count
 import heapq
 
 
-TrafficMap = dict[tuple[str, str], int]
-
-
 class Pathfinder:
     def __init__(self, network: Network) -> None:
         self.network = network
@@ -22,7 +19,6 @@ class Pathfinder:
                 neighbour_list.append((conn.zone1, conn))
             else:
                 continue
-
         return neighbour_list
 
     def get_cost(self, zone: Zone) -> float:
@@ -34,17 +30,22 @@ class Pathfinder:
             return 1
 
     def get_connection_cost(
-            self, conn: Connection, traffic: TrafficMap) -> float:
+            self, conn: Connection,
+            traffic: dict[tuple[str, str], int]) -> float:
         key = connection_pair(conn.zone1, conn.zone2)
+        # using tuple as dict key to represent the same connection
         usage = traffic.get(key, 0)
 
         if usage <= conn.max_link_capacity:
+            # 0 is unused, 1 is occupied
             return usage / conn.max_link_capacity
 
         overflow = usage - conn.max_link_capacity + 1
+        # overflow * 5 to make the cost much more expensive
         return (usage / conn.max_link_capacity) + (overflow * 5)
 
-    def find_path(self, traffic: TrafficMap) -> Optional[list[Zone]]:
+    def find_path(
+            self, traffic: dict[tuple[str, str], int]) -> Optional[list[Zone]]:
         start = self.network.start_hub
         end = self.network.end_hub
         cost = 0.0
@@ -52,13 +53,18 @@ class Pathfinder:
             return None
 
         step = count()
-        visited = {start.name: cost}
+        visited = set()
         path = [(cost, next(step), [start])]
         heapq.heapify(path)
 
         while path:
             current_cost, _, current_path = heapq.heappop(path)
             current_zone = current_path[-1]
+
+            if current_zone.name in visited:
+                continue
+
+            visited.add(current_zone.name)
 
             if current_zone == end:
                 return current_path
@@ -68,20 +74,34 @@ class Pathfinder:
                 if neighbour.zone_type == ZoneType.blocked:
                     continue
 
+                if neighbour.name in visited:
+                    continue
+
                 visit_cost = (
                     current_cost
                     + self.get_cost(neighbour)
                     + self.get_connection_cost(conn, traffic)
                 )
 
-                prev_cost = visited.get(neighbour.name)
-                if prev_cost is None or visit_cost < prev_cost:
-                    visited[neighbour.name] = visit_cost
-
-                    new_path = list(current_path)
-                    new_path.append(neighbour)
-                    heapq.heappush(path, (visit_cost, next(step), new_path))
+                new_path = list(current_path)
+                new_path.append(neighbour)
+                heapq.heappush(path, (visit_cost, next(step), new_path))
         return None
+
+    def dynamic_pathfinder(
+            self, drones_total: int,
+            traffic: dict[tuple[str, str], int]) -> list[list[Zone]]:
+        paths: list[list[Zone]] = []
+        dynamic_traffic = dict(traffic)
+        for _ in range(drones_total):
+            path = self.find_path(dynamic_traffic)
+            if not path:
+                break
+            paths.append(path)
+            for i in range(len(path) - 1):
+                key = connection_pair(path[i], path[i + 1])
+                dynamic_traffic[key] = dynamic_traffic.get(key, 0) + 1
+        return sorted(paths, key=lambda x: len(x))
 
 # note to self
 # dijkstra + maximum flow
@@ -89,3 +109,6 @@ class Pathfinder:
 # o | zone type
 # x | zone max (put in sim?)
 # x | conn max (sim)
+
+# pathfinder: given current traffic, what's the cheapest route?
+# simulation: can i send a drone on this route? foes it have capacity?

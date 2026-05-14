@@ -25,12 +25,17 @@ class MapParser:
             return None
         try:
             config_str = config.group().strip("[]")
-            return {pair.split("=")[0]: pair.split("=")[1]
-                    for pair in config_str.split()}
-        except IndexError:
+            config_dict = {pair.split("=")[0]: pair.split("=")[1]
+                           for pair in config_str.split()}
+            for key in config_dict.keys():
+                if key not in ["zone", "color", "max_drones",
+                               "max_link_capacity"]:
+                    raise KeyError
+            return config_dict
+        except (IndexError, KeyError):
             raise ParseError(
                 f"Parsing error: Invalid map config on line {row}\n"
-                "Invalid metadata block format :(\n"
+                "Something is wrong with the metadata block format :(\n"
                 "It must be e.g. [zone=... color=... max_drones=...] for zones"
                 ", or [max_link_capacity=...] for connections")
 
@@ -46,15 +51,29 @@ class MapParser:
             if not line or line.startswith('#'):
                 continue
 
+            if '#' in line:
+                line = line.split('#', 1)[0].rstrip()
+                if not line:
+                    continue
+
             elements = line.split()
             key = elements[0]
-            if key == "nb_drones:":
-                self.drones_total = int(elements[1]) if int(
-                    elements[1]) > 0 else 0
-                if not self.drones_total > 0:
+            if key not in ["nb_drones:", "connection:",
+                           "hub:", "start_hub:", "end_hub:"]:
+                raise ParseError(
+                    f"Parsing error: Unknown map config on line {row}\nCheck"
+                    " if there is any missing space or missing element :(")
+            elif key == "nb_drones:":
+                if len(elements) == 2:
+                    self.drones_total = int(elements[1]) if int(
+                        elements[1]) > 0 else 0
+                else:
                     raise ParseError(
-                        f"Parsing error: Invalid map config on line {row}\n"
-                        "Number of drones must be a positive integer :(")
+                        "Parsing error: The number of drones is missing :(")
+                if self.drones_total <= 0:
+                    raise ParseError(
+                        f"Parsing error: Invalid map config on line {row}"
+                        "\nNumber of drones must be a positive integer :(")
 
             elif key in ["hub:", "start_hub:", "end_hub:"]:
                 config = self.lookup_config(line, row) or {}
@@ -65,9 +84,9 @@ class MapParser:
                         ZoneType(config_type)
                     except ValueError:
                         raise ParseError(
-                            f"Parsing error: Invalid map config on line {row}"
-                            "\nZone type must be one of normal, blocked, "
-                            "restricted or priority :("
+                            "Parsing error: Invalid map config on line"
+                            f" {row}\nZone type must be one of normal,"
+                            " blocked, restricted or priority :("
                         )
                 else:
                     config_type = config.get("zone", "normal")
@@ -77,16 +96,17 @@ class MapParser:
                 config_max_drones = int(config.get("max_drones", 1))
                 if not config_max_drones > 0:
                     raise ParseError(
-                        f"Parsing error: Invalid map config on line {row}\n"
-                        "Max number of drones must be a positive integer :(")
+                        "Parsing error: Invalid map config on line"
+                        f" {row}\nMax number of drones must be a positive"
+                        " integer :(")
 
                 try:
                     int(elements[2])
                     int(elements[3])
                 except ValueError:
                     raise ParseError(
-                        f"Parsing error: Invalid map config on line {row}\n"
-                        "Coordinates must be integers :(")
+                        f"Parsing error: Invalid map config on line {row}"
+                        "\nCoordinates must be integers :(")
 
                 if " " and "-" not in elements[1]:
                     if elements[1] not in self.unique_names:
@@ -101,13 +121,13 @@ class MapParser:
                         self.network.add_zone(zone)
                     else:
                         raise ParseError(
-                            f"Parsing error: Invalid map config on line {row}"
-                            "\nZone name is repeated :(")
+                            "Parsing error: Invalid map config on line"
+                            f" {row}\nZone name is repeated :(")
                 else:
                     raise ParseError(
-                        f"Parsing error: Invalid map config on line {row}\n"
-                        "Invalid characters in zone name, no dashes or "
-                        "spaces allowed :("
+                        "Parsing error: Invalid map config on line"
+                        f" {row}\nInvalid characters in zone name, "
+                        "no dashes or spaces allowed :("
                     )
 
                 if key == "start_hub:":
@@ -115,15 +135,15 @@ class MapParser:
                         self.network.start_hub = zone
                     else:
                         raise ParseError(
-                            f"Parsing Error: Invalid map config on line {row}"
-                            "\nOnly one start_hub is allowed :(")
+                            "Parsing Error: Invalid map config on line"
+                            f" {row}\nOnly one start_hub is allowed :(")
                 elif key == "end_hub:":
                     if not self.network.end_hub:
                         self.network.end_hub = zone
                     else:
                         raise ParseError(
-                            f"Parsing Error: Invalid map config on line {row}"
-                            "\nOnly one end_hub is allowed :(")
+                            "Parsing Error: Invalid map config on line"
+                            f" {row}\nOnly one end_hub is allowed :(")
 
             elif key == "connection:":
                 config = self.lookup_config(line, row) or {}
@@ -131,8 +151,9 @@ class MapParser:
                 config_link_cap = int(config.get("max_link_capacity", 1))
                 if not config_link_cap > 0:
                     raise ParseError(
-                        f"Parsing error: Invalid map config on line {row}\n"
-                        "Max link capacity must be a positive integer :(")
+                        "Parsing error: Invalid map config on line"
+                        f" {row}\nMax link capacity must be a positive"
+                        " integer :(")
 
                 zone1_key = elements[1].split("-")[0]
                 zone2_key = elements[1].split("-")[1]
@@ -142,8 +163,9 @@ class MapParser:
                     zone2 = self.network.zones[zone2_key]
                 except KeyError:
                     raise ParseError(
-                        f"Parsing Error: Invalid map config on line {row}\n"
-                        "Zone(s) in the connection not yet defined before :(")
+                        "Parsing Error: Invalid map config on line"
+                        f" {row}\nZone(s) in the connection not yet"
+                        " defined before :(")
 
                 connection = Connection(
                     zone1=zone1,
@@ -160,8 +182,9 @@ class MapParser:
                     self.network.add_connection(connection)
                 else:
                     raise ParseError(
-                        f"Parsing error: Invalid map config on line {row}\n"
-                        "Connection already exist. No duplicates allowed :("
+                        "Parsing error: Invalid map config on line"
+                        f" {row}\nConnection already exist. No duplicates"
+                        " allowed :("
                     )
 
         if not self.network.start_hub:

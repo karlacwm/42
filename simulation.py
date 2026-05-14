@@ -18,10 +18,8 @@ class Drone:
         return None
 
     def __post_init__(self) -> None:
-        try:
+        if self.current_zone:
             self.current_zone.current_drones.append(self)
-        except Exception:
-            pass
 
 
 class Simulation:
@@ -66,12 +64,13 @@ class Simulation:
                 count += 1
         return count
 
-    def drone_sort_key(self, drone: Drone) -> tuple[bool, bool, int]:
+    def drone_sort_key(self, drone: Drone) -> tuple[bool, int, int]:
         digits = "".join(char for char in drone.drone_id if char.isdigit())
         number = int(digits) if digits else 0
+        remaining_distance = len(drone.path) - drone.path_tracking
         return (
             drone.finished,
-            drone.current_zone.zone_type != ZoneType.priority,
+            remaining_distance,  # Prioritize drones closest to finish
             number,
         )
 

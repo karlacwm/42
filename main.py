@@ -8,7 +8,7 @@ from simulation import Simulation, Drone
 def main() -> None:
     if len(sys.argv) != 2:
         print("Try again with:\npython3 main.py <map_file.txt>\n\n"
-              "OR choose a map file in Makefile and run \"make run\"")
+              "OR choose a map file, put it in Makefile and run \"make run\"")
         sys.exit(1)
 
     filepath = sys.argv[1]
@@ -26,17 +26,18 @@ def main() -> None:
         solver = Pathfinder(network=network)
         traffic: dict[tuple[str, str], int] = {}
         all_drones: list[Drone] = []
+        best_count = 2
 
         for index in range(parser.drones_total):
-            path = solver.find_path(traffic)
-            if not path:
+            paths = solver.dynamic_pathfinder(parser.drones_total, traffic)
+            if not paths:
                 print(f"Error: Could not find a path for D{index + 1}!")
                 return
 
             drone = Drone(
                 drone_id=f"D{index + 1}",
                 current_zone=network.start_hub,
-                path=path,
+                path=paths[index % best_count],
             )
             all_drones.append(drone)
 

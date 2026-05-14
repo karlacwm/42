@@ -3,7 +3,6 @@ from tkinter import Canvas
 from network import Network
 from parser import MapParser
 from typing import Any
-# from engine import Drone
 
 
 class Shape:
@@ -91,8 +90,7 @@ class Triangle(Shape):
             self.x + self.size,
             self.y + self.size,
             fill="#4E4683",
-            outline="#FFFFFF"
-        )
+            outline="#FFFFFF")
 
 
 class Visualiser:
@@ -169,7 +167,7 @@ class Visualiser:
             for drone_id in drone_ids:
                 Triangle(zx, zy, 5).draw(canvas)
                 canvas.create_text(
-                    zx, zy + 19, text=drone_id, fill="#9b94b6")
+                    zx, zy + 19, text=drone_id, fill="#5F5843")
 
     def draw_frame(self, canvas: Canvas) -> None:
         canvas.delete("all")
@@ -261,8 +259,8 @@ class Visualiser:
         for line in [
             "CONTROLS",
             "===========================",
-            "[->]    Next turn      ",
-            "[<-]    Previous turn  ",
+            "[-->]    Next turn        ",
+            "[<--]    Previous turn  ",
             "[ESC]   Quit visualiser"
         ]:
             tk.Label(controls, text=line, bg="LavenderBlush3",

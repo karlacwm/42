@@ -23,7 +23,8 @@ install: $(VENV_PYTHON)
 run: $(VENV_PYTHON)
 	$(VENV_PYTHON) $(MAIN) $(MAP_FILE)
 
-test: $(VENV_PYTHON)
+
+maps: $(VENV_PYTHON)
 	$(VENV_PYTHON) $(MAIN) maps/easy/01_linear_path.txt
 	@echo "Target is less than 6 turns"
 	@echo "========================================"
@@ -79,7 +80,7 @@ clean:
 
 re: clean install run
 
-.PHONY: all install run debug clean lint lint-strict test re
+.PHONY: all install run debug clean lint lint-strict maps re
 
 # .pyc → compiled bytecode files (created automatically by Python)
 # .pyo → optimized bytecode (older Python versions, mostly obsolete now)
