@@ -35,11 +35,11 @@ class Circle(Shape):
                  colour: str) -> None:
         super().__init__(x, y)
         self.r = radius
-        self.colour = colour if colour else "light blue"
+        self.colour = colour if colour else "grey"
         self.zone_tag = f"zone_{id(self)}"
 
     def draw(self, canvas: Canvas) -> None:
-        valid_colour = self.check_colour(canvas, self.colour, "light blue")
+        valid_colour = self.check_colour(canvas, self.colour, "grey")
         if valid_colour == "rainbow":
             colours = [
                 "#E27F7F", "#E2E27B", "#76D176", "#648BE0", "#6E608F"]

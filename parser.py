@@ -69,14 +69,23 @@ class MapParser:
                         elements[1]) > 0 else 0
                 else:
                     raise ParseError(
-                        "Parsing error: The number of drones is missing :(")
+                        "Parsing error: The config with the number of "
+                        "drones is invalid :(")
                 if self.drones_total <= 0:
                     raise ParseError(
                         f"Parsing error: Invalid map config on line {row}"
                         "\nNumber of drones must be a positive integer :(")
 
             elif key in ["hub:", "start_hub:", "end_hub:"]:
-                config = self.lookup_config(line, row) or {}
+                if len(elements) > 4 and "[" in line and "]" in line:
+                    config = self.lookup_config(line, row) or {}
+                elif len(elements) == 4:
+                    config = {}
+                else:
+                    raise ParseError(
+                        f"Parsing error: Invalid map config on line {row}"
+                        "\nThe brackets \"[]\" are missing or not properly "
+                        "opened or closed :(")
 
                 if config.get("zone"):
                     config_type = config.get("zone")
