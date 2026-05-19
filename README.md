@@ -2,13 +2,85 @@
 
 ## Description
 
-Minimum Cost Maximum Flow (MCMF)
-the algorithm you wrote—running Dijkstra repeatedly and increasing the cost of connections as they get used (get_connection_cost)—is a famous heuristic approach to MCMF called the Successive Shortest Path Algorithm.
+This project implements a multi-agent routing simulation that aims to
+minimise total travel time by combining shortest-path search with
+traffic-aware costs. The core idea is a heuristic Successive Shortest
+Path approach: repeatedly run Dijkstra-like searches while increasing
+connection costs as links are reserved/used to reflect congestion.
 
-challenge: "fixed path per drone" to "dynamic routing at each step."
+Key components:
+
+- `parser.py`: parses plain-text map files into a `Network` model.
+- `network.py`: graph primitives (`Zone`, `Connection`, capacities).
+- `pathfinder.py`: computes least-cost routes with dynamic traffic
+	penalties (successive shortest-path heuristic).
+- `simulation.py`: turn-based engine that enforces zone and link
+	capacities, restricted-zone rules, and records history for playback.
+- `visualiser.py`: a `tkinter` GUI showing zones, links and drone
+	movement history; supports stepping through turns.
+
+Intended input/output:
+
+- Input: map files in `maps/` describing hubs, coordinates, metadata
+	and connections.
+- Output: console simulation logs plus an optional `tkinter` visual
+	playback of the simulation.
+
+Design goals:
+
+- Prefer simple, auditable heuristics over complex optimisations.
+- Preserve capacity and restricted-zone semantics required by the
+	challenge while allowing dynamic (per-turn) routing decisions.
 
 ## Instructions
 
+Installation
+
+Prerequisites:
+
+- Python 3.10 or newer
+- `tkinter` (for the GUI visualiser)
+
+Quick setup (recommended):
+
+```bash
+python3 -m venv drone_venv
+source drone_venv/bin/activate
+pip install -r requirements.txt  # optional; otherwise install required packages
+```
+
+Running
+
+- Run a single map (CLI + visualiser):
+
+```bash
+python3 main.py maps/easy/01_linear_path.txt
+```
+
+- Use the `Makefile` helper (example target):
+
+```bash
+make run MAP_FILE=maps/easy/01_linear_path.txt
+```
+
+- To run headless (no GUI), set `VISUALISER=0` environment variable or
+	call the relevant runner that skips the GUI (if available in your
+	environment).
+
+Linting and checks
+
+```bash
+make lint
+pydocstyle .
+flake8
+```
+
+Notes
+
+- The `maps/` folder contains several example maps ordered by
+	difficulty. Start with `maps/easy/` to see expected behaviour.
+- If the GUI fails to start, ensure `tkinter` is installed for your
+	platform or run the simulation in headless mode.
 ## Resources
 
 for docstrings
@@ -160,3 +232,82 @@ maps: $(VENV_PYTHON)
 
 	$(VENV_PYTHON) $(MAIN) maps/challenger/01_the_impossible_dream.txt
 	@echo "Target is less than 45 turns"
+
+### Installation
+
+Prerequisites:
+
+- Python 3.10 or newer
+- A virtual environment is recommended
+
+Quick setup:
+
+```bash
+python3 -m venv drone_venv
+source drone_venv/bin/activate
+pip install -r requirements.txt  # if you have one; otherwise install needed packages
+```
+
+You can also use the included `drone_venv` for a pre-made virtualenv.
+
+### Usage
+
+Run a map with the Makefile helper or directly with Python:
+
+```bash
+# using make (example)
+make run MAP_FILE=maps/easy/01_linear_path.txt
+
+# or directly
+python3 main.py maps/easy/01_linear_path.txt
+```
+
+The program will parse the map file, run the simulation and open the
+visualiser (tkinter) showing zones, links and drone movement history.
+
+### Map format (brief)
+
+- `nb_drones: N` — total number of drones
+- `hub: NAME X Y [zone=type color=... max_drones=...]` — define a zone
+- `start_hub:` / `end_hub:` — special hub zones
+- `connection: A-B [max_link_capacity=...]` — link two zones
+
+See the `maps/` directory for several example map files.
+
+### Algorithm and Implementation
+
+- Pathfinding: a Dijkstra-like successive shortest path heuristic is
+	used. The `Pathfinder` repeatedly finds the cheapest path while
+	incrementing temporary traffic to reserve link usage.
+- Connection cost increases as links become used; restricted and
+	priority zones have modified entry costs (in `get_cost`). This
+	produces behavior similar to Successive Shortest Path approaches for
+	Minimum Cost Maximum Flow problems.
+- Simulation: the `Simulation` engine moves drones in sorted order
+	each turn, enforcing link capacities, zone capacities, and restricted
+	zone cooldowns. Drones record their positions each turn for
+	playback.
+
+### Visualisation
+
+- Implemented with `tkinter`; zones are drawn as coloured circles and
+	drones as triangular markers.
+- Controls: Right/Left arrow to step through history, Escape to quit.
+- The sidebar shows map details and turn statistics.
+
+### AI usage
+
+- AI was used to add and reformat project docstrings, and to generate
+	README content expansions. The code, logic and algorithmic design
+	remain hand-authored.
+
+### Development & Linting
+
+Run the project's linters and docstring checks (if configured):
+
+```bash
+make lint
+# or, for common tools
+pydocstyle .
+flake8
+```
