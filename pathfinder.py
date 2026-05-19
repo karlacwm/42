@@ -1,3 +1,5 @@
+"""Pathfinding utilities that compute least-cost routes in a Network."""
+
 from network import Network, Zone, ZoneType, Connection, connection_pair
 from typing import Optional
 from itertools import count
@@ -5,11 +7,16 @@ import heapq
 
 
 class Pathfinder:
+    """Compute cheapest paths through a `Network` considering traffic."""
+
     def __init__(self, network: Network) -> None:
+        """Initialize with a `Network` instance."""
         self.network = network
 
     def find_neighbour(
             self, current_zone: Zone | None) -> list[tuple[Zone, Connection]]:
+        """Return neighbour (Zone, Connection) pairs for `current_zone`."""
+
         neighbour_list = []
 
         for conn in self.network.connections:
@@ -22,6 +29,8 @@ class Pathfinder:
         return neighbour_list
 
     def get_cost(self, zone: Zone) -> float:
+        """Return a cost factor for entering `zone` based on its type."""
+
         if zone.zone_type == ZoneType.priority:
             return 0.5
         elif zone.zone_type == ZoneType.restricted:
@@ -32,6 +41,8 @@ class Pathfinder:
     def get_connection_cost(
             self, conn: Connection,
             traffic: dict[tuple[str, str], int]) -> float:
+        """Return traversal cost for `conn` given current `traffic`."""
+
         key = connection_pair(conn.zone1, conn.zone2)
         # using tuple as dict key to represent the same connection
         usage = traffic.get(key, 0)
@@ -46,6 +57,7 @@ class Pathfinder:
 
     def find_path(
             self, traffic: dict[tuple[str, str], int]) -> Optional[list[Zone]]:
+        """Find the least-cost path from start to end hub or return None."""
         start = self.network.start_hub
         end = self.network.end_hub
         cost = 0.0
@@ -91,6 +103,8 @@ class Pathfinder:
     def dynamic_pathfinder(
             self, drones_total: int,
             traffic: dict[tuple[str, str], int]) -> list[list[Zone]]:
+        """Get multiple paths by reserving capacity in temporary traffic."""
+
         paths: list[list[Zone]] = []
         dynamic_traffic = dict(traffic)
         for _ in range(drones_total):

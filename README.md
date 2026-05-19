@@ -124,3 +124,39 @@ Verifying that a move won't exceed a zone's capacity after outgoing drones have 
 Handling the rule where drones entering a restricted zone must spend exactly 2 turns in transit and cannot wait on the connection.
 
 Formatting and printing the strict step-by-step output required for evaluation (e.g., D1-roof1 D2-corridorA)
+
+
+
+maps: $(VENV_PYTHON)
+	$(VENV_PYTHON) $(MAIN) maps/easy/01_linear_path.txt
+	@echo "Target is less than 6 turns"
+	@echo "========================================"
+	$(VENV_PYTHON) $(MAIN) maps/easy/02_simple_fork.txt
+	@echo "Target is less than 6 turns"
+	@echo "========================================"
+	$(VENV_PYTHON) $(MAIN) maps/easy/03_basic_capacity.txt
+	@echo "Target is less than 8 turns"
+	@echo "========================================"
+
+	$(VENV_PYTHON) $(MAIN) maps/medium/01_dead_end_trap.txt
+	@echo "Target is less than 15 turns"
+	@echo "========================================"
+	$(VENV_PYTHON) $(MAIN) maps/medium/02_circular_loop.txt
+	@echo "Target is less than 20 turns"
+	@echo "========================================"
+	$(VENV_PYTHON) $(MAIN) maps/medium/03_priority_puzzle.txt
+	@echo "Target is less than 12 turns"
+	@echo "========================================"
+
+	$(VENV_PYTHON) $(MAIN) maps/hard/01_maze_nightmare.txt
+	@echo "Target is less than 45 turns"
+	@echo "========================================"
+	$(VENV_PYTHON) $(MAIN) maps/hard/02_capacity_hell.txt
+	@echo "Target is less than 60 turns"
+	@echo "========================================"
+	$(VENV_PYTHON) $(MAIN) maps/hard/03_ultimate_challenge.txt
+	@echo "Target is less than 35 turns"
+	@echo "========================================"
+
+	$(VENV_PYTHON) $(MAIN) maps/challenger/01_the_impossible_dream.txt
+	@echo "Target is less than 45 turns"

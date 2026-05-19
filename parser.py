@@ -1,8 +1,4 @@
-"""
-Class MapParser reads a map file and creates a Network object,
-validating the format and content of the map file.
-It raises ParseError for any parsing-related issues.
-"""
+"""Parse map files and build a Network."""
 import re
 from network import Zone, Connection, Network, ZoneType
 
@@ -13,6 +9,8 @@ class ParseError(Exception):
 
 
 class MapParser:
+    """Parse a map file into a Network and store parser state."""
+
     def __init__(self, filepath: str) -> None:
         self.filepath: str = filepath
         self.network: Network = Network()
@@ -20,26 +18,49 @@ class MapParser:
         self.unique_names: list[str] = []
 
     def lookup_config(self, line: str, row: int) -> dict[str, str] | None:
+        """Extract a metadata config dict from a map line or return None."""
+
         config = re.search(r"\[(\S*\s?)*\]", line)
         if not config:
             return None
-        try:
-            config_str = config.group().strip("[]")
-            config_dict = {pair.split("=")[0]: pair.split("=")[1]
-                           for pair in config_str.split()}
-            for key in config_dict.keys():
-                if key not in ["zone", "color", "max_drones",
-                               "max_link_capacity"]:
-                    raise KeyError
-            return config_dict
-        except (IndexError, KeyError):
+        group = config.group()
+        if group.count('[') != 1 or group.count(']') != 1:
             raise ParseError(
                 f"Parsing error: Invalid map config on line {row}\n"
-                "Something is wrong with the metadata block format :(\n"
-                "It must be e.g. [zone=... color=... max_drones=...] for zones"
-                ", or [max_link_capacity=...] for connections")
+                "Must have only a single '[' and ']' for the metablock :(")
+
+        config_str = group.strip("[]").strip()
+        if not config_str:
+            raise ParseError(
+                f"Parsing error: Invalid map config on line {row}\n"
+                "Empty metadata block: expected something like"
+                " [zone=... color=...]")
+
+        parts = config_str.split()
+        config_dict: dict[str, str] = {}
+        for pair in parts:
+            if pair.count('=') != 1:
+                raise ParseError(
+                    f"Parsing error: Invalid map config on line {row}\n"
+                    f"Each metadata pair must contain exactly one '='")
+            key, value = pair.split('=', 1)
+            key = key.strip()
+            value = value.strip()
+            if not key or value == "":
+                raise ParseError(
+                    f"Parsing error: Invalid map config on line {row}\n"
+                    f"Key and value must not be empty :(")
+            if key not in ["zone", "color", "max_drones",
+                           "max_link_capacity"]:
+                raise ParseError(
+                    f"Parsing error: Invalid map config on line {row}\n"
+                    f"Unknown metadata key '{key}'")
+            config_dict[key] = value
+
+        return config_dict
 
     def parse(self) -> None:
+        """Parse the map file and populate the `network` attribute."""
         try:
             with open(self.filepath) as maps:
                 lines = maps.readlines()
@@ -62,11 +83,17 @@ class MapParser:
                            "hub:", "start_hub:", "end_hub:"]:
                 raise ParseError(
                     f"Parsing error: Unknown map config on line {row}\nCheck"
-                    " if there is any missing space or missing element :(")
+                    " if there is any missing space, missing element "
+                    "or invalid zone type :(")
             elif key == "nb_drones:":
                 if len(elements) == 2:
-                    self.drones_total = int(elements[1]) if int(
-                        elements[1]) > 0 else 0
+                    try:
+                        self.drones_total = int(elements[1]) if int(
+                            elements[1]) > 0 else 0
+                    except ValueError:
+                        raise ParseError(
+                            f"Parsing error: Invalid map config on line {row}"
+                            "\nNumber of drones must be a positive integer :(")
                 else:
                     raise ParseError(
                         "Parsing error: The config with the number of "
@@ -95,14 +122,19 @@ class MapParser:
                         raise ParseError(
                             "Parsing error: Invalid map config on line"
                             f" {row}\nZone type must be one of normal,"
-                            " blocked, restricted or priority :("
-                        )
+                            " blocked, restricted or priority :(")
                 else:
                     config_type = config.get("zone", "normal")
 
                 config_colour = config.get("color", "grey")
 
-                config_max_drones = int(config.get("max_drones", 1))
+                try:
+                    config_max_drones = int(config.get("max_drones", 1))
+                except ValueError:
+                    raise ParseError(
+                        "Parsing error: Invalid map config on line"
+                        f" {row}\nMax number of drones must be a positive"
+                        " integer :(")
                 if not config_max_drones > 0:
                     raise ParseError(
                         "Parsing error: Invalid map config on line"
@@ -115,7 +147,8 @@ class MapParser:
                 except ValueError:
                     raise ParseError(
                         f"Parsing error: Invalid map config on line {row}"
-                        "\nCoordinates must be integers :(")
+                        "\nZone name must not have spaces and coordinates "
+                        "must be integers :(")
 
                 if " " and "-" not in elements[1]:
                     if elements[1] not in self.unique_names:
@@ -155,9 +188,23 @@ class MapParser:
                             f" {row}\nOnly one end_hub is allowed :(")
 
             elif key == "connection:":
-                config = self.lookup_config(line, row) or {}
+                if len(elements) > 2 and "[" in line and "]" in line:
+                    config = self.lookup_config(line, row) or {}
+                elif len(elements) == 2:
+                    config = {}
+                else:
+                    raise ParseError(
+                        f"Parsing error: Invalid map config on line {row}"
+                        "\nThe brackets \"[]\" are missing or not properly "
+                        "opened or closed :(")
 
-                config_link_cap = int(config.get("max_link_capacity", 1))
+                try:
+                    config_link_cap = int(config.get("max_link_capacity", 1))
+                except ValueError:
+                    raise ParseError(
+                        "Parsing error: Invalid map config on line"
+                        f" {row}\nMax link capacity must be a positive"
+                        " integer :(")
                 if not config_link_cap > 0:
                     raise ParseError(
                         "Parsing error: Invalid map config on line"

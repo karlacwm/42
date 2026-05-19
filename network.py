@@ -1,10 +1,12 @@
+"""Network primitives: Zone, Connection and Network container."""
+
 from typing import Optional, Any
 from enum import Enum
 from dataclasses import dataclass, field
 
 
 class ZoneType(str, Enum):
-    """Defines a set of valid types of zones."""
+    """Enumeration of allowed zone types."""
     normal = "normal"
     blocked = "blocked"
     restricted = "restricted"
@@ -13,7 +15,7 @@ class ZoneType(str, Enum):
 
 @dataclass
 class Zone:
-    """Represents a zone in the drone network."""
+    """A node in the network representing a physical zone."""
     name: str
     x: int
     y: int
@@ -24,35 +26,43 @@ class Zone:
 
     @property
     def is_full(self) -> bool:
-        """Dynamically checks if the zone is full."""
+        """Return True when number of drones meets capacity."""
         return len(self.current_drones) >= self.max_drones
 
 
 @dataclass
 class Connection:
-    """Represents the connection path between two zones."""
+    """An undirected link between two `Zone` objects."""
     zone1: Zone
     zone2: Zone
     max_link_capacity: int = 1
 
 
 def connection_pair(z1: Zone, z2: Zone) -> tuple[str, str]:
+    """Return a canonical ordered pair of zone names for dict keys."""
+
     if z1.name <= z2.name:
         return z1.name, z2.name
     return z2.name, z1.name
 
 
 class Network:
-    """The main network holding all zones and connections."""
+    """Container holding zones, connections and start/end hubs."""
 
     def __init__(self) -> None:
+        """Create an empty `Network` object."""
+
         self.zones: dict[str, Zone] = {}
         self.connections: list[Connection] = []
         self.start_hub: Optional[Zone] = None
         self.end_hub: Optional[Zone] = None
 
     def add_zone(self, zone: Zone) -> None:
+        """Register a `Zone` in the network by its name."""
+
         self.zones[zone.name] = zone
 
     def add_connection(self, conn: Connection) -> None:
+        """Add a `Connection` object to the network's connections."""
+
         self.connections.append(conn)

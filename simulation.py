@@ -1,3 +1,5 @@
+"""Simulation primitives: Drone and Simulation runner."""
+
 from dataclasses import dataclass
 from network import Zone, Network, Connection, ZoneType, connection_pair
 from typing import Optional
@@ -5,6 +7,8 @@ from typing import Optional
 
 @dataclass
 class Drone:
+    """A drone with its id, position, planned path and movement state."""
+
     drone_id: str
     current_zone: Zone
     path: list[Zone]
@@ -13,30 +17,40 @@ class Drone:
     finished: bool = False
 
     def find_next_zone(self) -> Optional[Zone]:
+        """Return the next zone on the drone's path or `None` if at end."""
+
         if self.path_tracking + 1 < len(self.path):
             return self.path[self.path_tracking + 1]
         return None
 
     def __post_init__(self) -> None:
+        """Register the drone in its current zone's occupancy list."""
+
         if self.current_zone:
             self.current_zone.current_drones.append(self)
 
 
 class Simulation:
+    """Discrete-step simulation of drones moving through the Network."""
+
     def __init__(self, network: Network, drones: list[Drone]) -> None:
+        """Create a Simulation with a network and participating drones."""
+
         self.network = network
         self.drones = drones
         self.turn_number = 0
         self.history: list[dict[str, str]] = []
 
     def record_history(self) -> None:
+        """Append a snapshot of drones' current zones to the history."""
+
         snapshot = {
             drone.drone_id: drone.current_zone.name for drone in self.drones
         }
         self.history.append(snapshot)
 
     def run(self) -> None:
-        """The main loop. Keeps running until all drones are done."""
+        """Run turns until all drones have finished their paths."""
         self.record_history()
         while not self.all_drones_finished():
             self.turn_number += 1
@@ -44,13 +58,15 @@ class Simulation:
             self.record_history()
 
     def all_drones_finished(self) -> bool:
-        """Checks if every drone has reached the end_hub."""
+        """Return True when all drones have reached the end hub."""
         for drone in self.drones:
             if not drone.finished:
                 return False
         return True
 
     def get_connection(self, z1: Zone, z2: Zone) -> Optional[Connection]:
+        """Return the Connection linking `z1` and `z2`, or `None` if none."""
+
         for conn in self.network.connections:
             if (conn.zone1 == z1 and conn.zone2 == z2) or \
                     (conn.zone1 == z2 and conn.zone2 == z1):
@@ -58,6 +74,8 @@ class Simulation:
         return None
 
     def drones_in_zone(self, zone: Zone) -> int:
+        """Count active (not finished) drones currently in `zone`."""
+
         count = 0
         for drone in self.drones:
             if drone.current_zone == zone and not drone.finished:
@@ -65,6 +83,8 @@ class Simulation:
         return count
 
     def drone_sort_key(self, drone: Drone) -> tuple[bool, int, int]:
+        """Sorting key for prioritising drone moves each turn."""
+
         digits = "".join(char for char in drone.drone_id if char.isdigit())
         number = int(digits) if digits else 0
         remaining_distance = len(drone.path) - drone.path_tracking
@@ -75,7 +95,7 @@ class Simulation:
         )
 
     def play_turn(self) -> int:
-        """The traffic cop logic for a single step of time."""
+        """Execute one simulation turn and return number of moves made."""
         traffic_this_turn = {
             connection_pair(conn.zone1, conn.zone2): 0
             for conn in self.network.connections

@@ -1,3 +1,5 @@
+"""GUI visualiser using tkinter to render the network and simulation."""
+
 import tkinter as tk
 from tkinter import Canvas
 from network import Network
@@ -6,18 +8,23 @@ from typing import Any
 
 
 class Shape:
+    """Base drawable shape with an (x,y) position."""
+
     def __init__(self, x: int, y: int) -> None:
         self.x = x
         self.y = y
 
     def draw(self, canvas: Canvas) -> None:
-        pass
+        """Draw the shape on `canvas` (subclasses must implement)."""
+        raise NotImplementedError()
 
     def check_colour(self, canvas: Canvas, colour: str, default: str) -> str:
+        """Validate a colour that tkinter recognises, else raise exception."""
+
         if not colour:
             return default
 
-        elif colour == "rainbow":
+        if colour == "rainbow":
             return "rainbow"
 
         try:
@@ -31,6 +38,8 @@ class Shape:
 
 
 class Circle(Shape):
+    """Circle shape with customised radius visualising a zone."""
+
     def __init__(self, x: int, y: int, radius: int,
                  colour: str) -> None:
         super().__init__(x, y)
@@ -39,6 +48,8 @@ class Circle(Shape):
         self.zone_tag = f"zone_{id(self)}"
 
     def draw(self, canvas: Canvas) -> None:
+        """Render the circle on the canvas, supporting a rainbow fill."""
+
         valid_colour = self.check_colour(canvas, self.colour, "grey")
         if valid_colour == "rainbow":
             colours = [
@@ -61,6 +72,8 @@ class Circle(Shape):
             fill=valid_colour, outline="", tags=self.zone_tag)
 
     def hover_effect(self, canvas: Canvas, info_text_id: int) -> None:
+        """Attach hover bindings that show/hide a zone info text."""
+
         self.info_text = info_text_id
         canvas.tag_bind(self.zone_tag, "<Enter>",
                         lambda event: self._show_info(canvas))
@@ -68,20 +81,26 @@ class Circle(Shape):
                         lambda event: self._hide_info(canvas))
 
     def _show_info(self, canvas: Canvas) -> None:
+        """Internal: make the zone info text visible on hover."""
         if self.info_text is not None:
             canvas.itemconfigure(self.info_text, state="normal")
 
     def _hide_info(self, canvas: Canvas) -> None:
+        """Internal: hide the zone info text when hover ends."""
         if self.info_text is not None:
             canvas.itemconfigure(self.info_text, state="hidden")
 
 
 class Triangle(Shape):
+    """Simple triangular marker used to draw drones on the map."""
+
     def __init__(self, x: int, y: int, size: int) -> None:
         super().__init__(x, y)
         self.size = size
 
     def draw(self, canvas: Canvas) -> None:
+        """Draw the triangular drone marker on the canvas."""
+
         canvas.create_polygon(
             self.x,
             self.y - self.size,
@@ -94,6 +113,8 @@ class Triangle(Shape):
 
 
 class Visualiser:
+    """Visualise a Network and optional simulation history with tkinter."""
+
     def __init__(self, network: Network, canvas_w: int,
                  canvas_h: int, padding: int,
                  parser: MapParser,
@@ -113,6 +134,8 @@ class Visualiser:
         self.turn_label: tk.Label | None = None
 
     def scale(self) -> tuple[float, float, float]:
+        """Return mapping network coords to canvas."""
+
         if not self.network.zones:
             return 1.0, 0.0, 0.0
 
@@ -144,11 +167,15 @@ class Visualiser:
 
     def connect(self, canvas: Canvas, x1: int, y1: int,
                 x2: int, y2: int) -> int:
+        """Draw a connection line and return the canvas id."""
+
         return canvas.create_line(x1, y1, x2, y2,
                                   width=2, fill="#9b94b6")
 
     def draw_drones(self, canvas: Canvas, scale: float,
                     offset_x: float, offset_y: float) -> None:
+        """Draw drone markers for the current history step or live state."""
+
         if self.history:
             positions: dict[str, list[str]] = {}
             for drone_id, zone_name in self.history[self.current_step].items():
@@ -170,6 +197,8 @@ class Visualiser:
                     zx, zy + 19, text=drone_id, fill="#5F5843")
 
     def draw_frame(self, canvas: Canvas) -> None:
+        """Clear and redraw the visual frame (zones, links, drones)."""
+
         canvas.delete("all")
         self.update_turn_info()
 
@@ -209,6 +238,8 @@ class Visualiser:
         self.draw_drones(canvas, scale, offset_x, offset_y)
 
     def visualise(self) -> None:
+        """Create the tkinter window and start the visualiser loop."""
+
         self.graph = tk.Tk()
         self.graph.title("Fly-in Visualiser")
 
@@ -229,16 +260,22 @@ class Visualiser:
         self.graph.mainloop()
 
     def next_step(self, canvas: Canvas) -> None:
+        """Advance to the next history step and redraw the frame."""
+
         if self.current_step + 1 < len(self.history):
             self.current_step += 1
             self.draw_frame(canvas)
 
     def prev_step(self, canvas: Canvas) -> None:
+        """Step back one history turn and redraw the frame."""
+
         if self.current_step > 0:
             self.current_step -= 1
             self.draw_frame(canvas)
 
     def update_turn_info(self) -> None:
+        """Update the sidebar turn label to reflect the current step."""
+
         if self.turn_label is not None:
             total = len(self.history) - 1 if self.history else 1
             self.turn_label.config(
@@ -250,6 +287,8 @@ class Visualiser:
         self.graph.destroy()
 
     def sidebar_config(self) -> None:
+        """Create and layout the bottom sidebar with controls and info."""
+
         self.sidebar = tk.Frame(
             self.graph, height=self.sidebar_h, bg="LavenderBlush3")
         self.sidebar.pack(side="bottom", fill="x")

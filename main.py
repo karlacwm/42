@@ -1,3 +1,5 @@
+"""CLI runner: parse map, run simulation and visualise results."""
+
 import sys
 from parser import MapParser, ParseError
 from visualiser import Visualiser
@@ -6,9 +8,11 @@ from simulation import Simulation, Drone
 
 
 def main() -> None:
+    """Entry point: parse a map, run the simulation, and visualise."""
+
     if len(sys.argv) != 2:
         print("Try again with:\npython3 main.py <map_file.txt>\n\n"
-              "OR choose a map file, put it in Makefile and run \"make run\"")
+              "OR\nmake run <map_file.txt>")
         sys.exit(1)
 
     filepath = sys.argv[1]
