@@ -32,7 +32,7 @@ class Zone:
 
 @dataclass
 class Connection:
-    """An undirected link between two `Zone` objects."""
+    """An undirected link between two Zone objects."""
     zone1: Zone
     zone2: Zone
     max_link_capacity: int = 1
@@ -50,7 +50,7 @@ class Network:
     """Container holding zones, connections and start/end hubs."""
 
     def __init__(self) -> None:
-        """Create an empty `Network` object."""
+        """Create an empty Network object."""
 
         self.zones: dict[str, Zone] = {}
         self.connections: list[Connection] = []
@@ -58,11 +58,11 @@ class Network:
         self.end_hub: Optional[Zone] = None
 
     def add_zone(self, zone: Zone) -> None:
-        """Register a `Zone` in the network by its name."""
+        """Register a Zone in the network by its name."""
 
         self.zones[zone.name] = zone
 
     def add_connection(self, conn: Connection) -> None:
-        """Add a `Connection` object to the network's connections."""
+        """Add a Connection object to the network's connections."""
 
         self.connections.append(conn)

@@ -60,7 +60,7 @@ class MapParser:
         return config_dict
 
     def parse(self) -> None:
-        """Parse the map file and populate the `network` attribute."""
+        """Parse the map file and populate the network attribute."""
         try:
             with open(self.filepath) as maps:
                 lines = maps.readlines()

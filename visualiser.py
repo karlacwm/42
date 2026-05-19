@@ -15,8 +15,8 @@ class Shape:
         self.y = y
 
     def draw(self, canvas: Canvas) -> None:
-        """Draw the shape on `canvas` (subclasses must implement)."""
-        raise NotImplementedError()
+        """Draw the shape on canvas."""
+        pass
 
     def check_colour(self, canvas: Canvas, colour: str, default: str) -> str:
         """Validate a colour that tkinter recognises, else raise exception."""

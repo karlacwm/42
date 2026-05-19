@@ -17,7 +17,7 @@ class Drone:
     finished: bool = False
 
     def find_next_zone(self) -> Optional[Zone]:
-        """Return the next zone on the drone's path or `None` if at end."""
+        """Return the next zone on the drone's path or None if at end."""
 
         if self.path_tracking + 1 < len(self.path):
             return self.path[self.path_tracking + 1]
@@ -65,7 +65,7 @@ class Simulation:
         return True
 
     def get_connection(self, z1: Zone, z2: Zone) -> Optional[Connection]:
-        """Return the Connection linking `z1` and `z2`, or `None` if none."""
+        """Return the Connection linking z1 and z2, or None if none."""
 
         for conn in self.network.connections:
             if (conn.zone1 == z1 and conn.zone2 == z2) or \
@@ -74,7 +74,7 @@ class Simulation:
         return None
 
     def drones_in_zone(self, zone: Zone) -> int:
-        """Count active (not finished) drones currently in `zone`."""
+        """Count active (not finished) drones currently in zone."""
 
         count = 0
         for drone in self.drones:
