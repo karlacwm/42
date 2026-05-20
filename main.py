@@ -1,4 +1,4 @@
-"""CLI runner: parse map, run simulation and visualise results."""
+"""Parse map, run simulation and visualise results."""
 
 import sys
 from parser import MapParser, ParseError

@@ -2,161 +2,158 @@
 
 ## Description
 
-This project implements a multi-agent routing simulation that aims to
-minimise total travel time by combining shortest-path search with
-traffic-aware costs. The core idea is a heuristic Successive Shortest
-Path approach: repeatedly run Dijkstra-like searches while increasing
-connection costs as links are reserved/used to reflect congestion.
+This project is about designing a system that finds the most efficient path to send drones from start to end zone, while passing through different types of zone in between them.
+The challenge lies in finding the best path, not only considering the shortest path, but as well as traffic, since there are limits with zone capacity and connection capacity.
 
-Key components:
+The map is configured with a txt file which has strict syntactic rules, which will be then passed to the parser and followed by the pathfinder.
+The visualisation of the drones is handled with Tkinter, more information can be found in Resources below.
 
-- `parser.py`: parses plain-text map files into a `Network` model.
-- `network.py`: graph primitives (`Zone`, `Connection`, capacities).
-- `pathfinder.py`: computes least-cost routes with dynamic traffic
-	penalties (successive shortest-path heuristic).
-- `simulation.py`: turn-based engine that enforces zone and link
-	capacities, restricted-zone rules, and records history for playback.
-- `visualiser.py`: a `tkinter` GUI showing zones, links and drone
-	movement history; supports stepping through turns.
+My project structure:
 
-Intended input/output:
-
-- Input: map files in `maps/` describing hubs, coordinates, metadata
-	and connections.
-- Output: console simulation logs plus an optional `tkinter` visual
-	playback of the simulation.
-
-Design goals:
-
-- Prefer simple, auditable heuristics over complex optimisations.
-- Preserve capacity and restricted-zone semantics required by the
-	challenge while allowing dynamic (per-turn) routing decisions.
+- `Makefile`: defines a set of rules for installing dependencies(flake8 and mypy), running the program, debugging, cleanning up and checking lint
+- `main.py`: parse map, run simulation and visualise results
+- `parser.py`: parses plain text map files and add zones object into the `Network`
+- `network.py`: defines the classes `ZoneType`, `Zone`, `Connection` and `Network`
+- `pathfinder.py`: finds least-cost routes with dynamic traffic
+- `simulation.py`: turn-based engine that enforces zone and link capacities, restricted-zone rules, and records history (for visualiser)
+- `visualiser.py`: a `tkinter` GUI showing zones, links and drone movement, visualising each turn movement
 
 ## Instructions
 
-Installation
+### Usage
 
-Prerequisites:
-
-- Python 3.10 or newer
-- `tkinter` (for the GUI visualiser)
-
-Quick setup (recommended):
+Run a map with the Makefile helper or directly with Python:
 
 ```bash
-python3 -m venv drone_venv
-source drone_venv/bin/activate
-pip install -r requirements.txt  # optional; otherwise install required packages
+make install
+make run MAP_FILE=maps/easy/01_linear_path.txt
 ```
-
-Running
-
-- Run a single map (CLI + visualiser):
+OR
 
 ```bash
+make install
+source drone_venv/bin/activate
 python3 main.py maps/easy/01_linear_path.txt
 ```
 
-- Use the `Makefile` helper (example target):
-
-```bash
-make run MAP_FILE=maps/easy/01_linear_path.txt
-```
-
-- To run headless (no GUI), set `VISUALISER=0` environment variable or
-	call the relevant runner that skips the GUI (if available in your
-	environment).
-
-Linting and checks
+### Flake8 and mypy checks
 
 ```bash
 make lint
-pydocstyle .
-flake8
+make lint-strict
 ```
 
-Notes
+### Map format
 
-- The `maps/` folder contains several example maps ordered by
-	difficulty. Start with `maps/easy/` to see expected behaviour.
-- If the GUI fails to start, ensure `tkinter` is installed for your
-	platform or run the simulation in headless mode.
+- `nb_drones: N` — total number of drones
+- `hub: NAME X Y [zone=... color=... max_drones=...]` — define a zone
+- `start_hub:` / `end_hub:` — special hub zones
+- `connection: A-B [max_link_capacity=...]` — link two zones
+
+### Algorithm and Implementation
+
+Pathfinding: a Dijkstra-like algorithm is used for pathfinding.
+The `Pathfinder` repeatedly finds the cheapest path while incrementing temporary traffic to reserve link usage.
+
+Connection cost increases as links become used; restricted and priority zones have modified entry costs (in `get_cost`).
+This produces behavior similar to Successive Shortest Path approaches for Minimum Cost Maximum Flow problems.
+
+Minimum Cost Maximum Flow problems inspired me to the multi-paths approach in the project,
+where drones get their path from the list of path sorted by pathfinder.
+Instead of letting all the drones go the same path, I use a `path_list[index % best_cost]` to let the drones get different paths.
+The `best_cost` is handled in `main.py` to control the number of best paths to be looped.
+This number is not set dynamically for the moment but it is possible.
+
+Simulation controls each turn, and enforcing link capacities, zone capacities, and restricted zone cooldowns.
+Drones record their positions each turn for playback.
+
+### Visualisation
+
+The visualiser is implemented with `tkinter`.
+
+The map is drawn on the canvas with a sidebar on the bottom, showing controls options and information about the map file, total drones and turns.
+Besides the information in the sidebar, I added a hover effect on zones to display their name, zone type and max capacity.
+Zones are drawn as coloured circles and drones as triangular markers.
+
+Controls options:
+
+- Right/Left arrow to step through turns
+- Escape to quit
+
 ## Resources
 
-for docstrings
-https://peps.python.org/pep-0257/
+Lists of links that I used as reference sorted by topics
 
-for algorithm
-https://www.codementor.io/blog/basic-pathfinding-explained-with-python-5pil8767c1
-https://graphable.ai/blog/pathfinding-algorithms/
-https://www.geeksforgeeks.org/dsa/dijkstras-shortest-path-algorithm-greedy-algo-7/
-https://www.w3schools.com/dsa/dsa_algo_graphs_dijkstra.php
+- for docstrings
+[[1]](https://peps.python.org/pep-0257/)
 
-for visualisation - tkinter
-https://www.geeksforgeeks.org/python/python-gui-tkinter/
-https://steam.oxxostudio.tw/category/python/tkinter/start.html
-https://www.tutorialspoint.com/python/tk_pack.htm
-https://steam.oxxostudio.tw/category/python/tkinter/canvas.html
-https://inventwithpython.com/blog/complete-list-tkinter-colors-valid-and-tested.html
-https://www.geeksforgeeks.org/python/python-tkinter-create-different-shapes-using-canvas-class/
-https://www.tutorialspoint.com/python/tk_label.htm
-https://youtu.be/fGx8-RmaJbg
+- for algorithm
+[[1]](https://www.codementor.io/blog/basic-pathfinding-explained-with-python-5pil8767c1)
+[[2]](https://graphable.ai/blog/pathfinding-algorithms/)
+[[3]](https://www.geeksforgeeks.org/dsa/dijkstras-shortest-path-algorithm-greedy-algo-7/)
+[[4]](https://www.w3schools.com/dsa/dsa_algo_graphs_dijkstra.php)
 
-maximum flow
-https://www.w3schools.com/dsa/dsa_theory_graphs_maxflow.php
+- maximum flow
+[[1]](https://www.w3schools.com/dsa/dsa_theory_graphs_maxflow.php)
 
-enum
-https://mimo.org/glossary/python/enum
+- for visualisation - tkinter
+[[1]](https://www.geeksforgeeks.org/python/python-gui-tkinter/)
+[[2]](https://steam.oxxostudio.tw/category/python/tkinter/start.html)
+[[3]](https://www.tutorialspoint.com/python/tk_pack.htm)
+[[4]](https://steam.oxxostudio.tw/category/python/tkinter/canvas.html)
+[[5]](https://inventwithpython.com/blog/complete-list-tkinter-colors-valid-and-tested.html)
+[[6]](https://www.geeksforgeeks.org/python/python-tkinter-create-different-shapes-using-canvas-class/)
+[[7]](https://www.tutorialspoint.com/python/tk_label.htm)
+[[8]](https://youtu.be/fGx8-RmaJbg)
 
-Python module Dataclass
-https://realpython.com/python-data-classes/
-https://www.dataquest.io/blog/how-to-use-python-data-classes/
-<!-- As a reminder, Python doesn't accept a non-default attribute after default in both class and functions, so this would throw an error -->
-https://thenewstack.io/python-dataclasses-a-complete-guide-to-boilerplatefree-objects/
-https://www.pythonmorsels.com/customizing-dataclass-fields/
-<!-- init=False argument makes a dataclass field that cannot be specified when we make a new instance of the class.
-default_factory must be a callable with no arguments -->
-https://elshad-karimov.medium.com/unlocking-the-hidden-power-of-dataclasses-field-9fd0f66aa960
+- tkinter colours
+[[1]](https://inventwithpython.com/blog/complete-list-tkinter-colors-valid-and-tested.html)
 
-property decorator
-https://www.freecodecamp.org/news/python-property-decorator/
-https://www.programiz.com/python-programming/property
-https://medium.com/@christopher.kelly1997/python-decorators-and-dynamic-properties-55402a2e1aff
+- enum
+[[1]](https://mimo.org/glossary/python/enum)
 
-readline()
-https://www.geeksforgeeks.org/python/readline-in-python/
+- Python module Dataclass
+[[1]](https://elshad-karimov.medium.com/unlocking-the-hidden-power-of-dataclasses-field-9fd0f66aa960)
+[[2]](https://realpython.com/python-data-classes/)
+[[3]](https://www.dataquest.io/blog/how-to-use-python-data-classes/) <!-- Note: Python doesn't accept a non-default attribute after default in both class and functions, so this would throw an error -->
+[[4]](https://thenewstack.io/python-dataclasses-a-complete-guide-to-boilerplatefree-objects/)
+[[5]](https://www.pythonmorsels.com/customizing-dataclass-fields/) <!-- Note: init=False argument makes a dataclass field that cannot be specified when we make a new instance of the class. default_factory must be a callable with no arguments -->
 
-enumerate()
-https://www.geeksforgeeks.org/python/enumerate-in-python/
+- property decorator
+[[1]](https://www.freecodecamp.org/news/python-property-decorator/)
+[[2]](https://www.programiz.com/python-programming/property)
+[[31]](https://medium.com/@christopher.kelly1997/python-decorators-and-dynamic-properties-55402a2e1aff)
 
-regex
-https://realpython.com/ref/stdlib/re/
+- readline()
+[[1]](https://www.geeksforgeeks.org/python/readline-in-python/)
 
-queue
-https://medium.com/@shras_a/queue-in-python-34a74641502e
-https://realpython.com/ref/stdlib/queue/
-https://www.w3schools.com/python/ref_module_queue.asp
-https://www.geeksforgeeks.org/python/heap-queue-or-heapq-in-python/
+- enumerate()
+[[1]](https://www.geeksforgeeks.org/python/enumerate-in-python/)
 
-itertools-count()
-https://stackabuse.com/pythons-itertools-count-cycle-and-chain/
+- regex
+[[1]](https://realpython.com/ref/stdlib/re/)
+
+- queue
+[[1]](https://medium.com/@shras_a/queue-in-python-34a74641502e)
+[[2]](https://realpython.com/ref/stdlib/queue/)
+[[3]](https://www.w3schools.com/python/ref_module_queue.asp)
+[[4]](https://www.geeksforgeeks.org/python/heap-queue-or-heapq-in-python/)
+
+- itertools-count()
+[[1]](https://stackabuse.com/pythons-itertools-count-cycle-and-chain/)
 
 
-AI usage
+### AI usage
 
+- helped to verify if my ideas are feasible
+- helped with project planning
+- explained Python concepts, functions and methods usage, tkinter concepts
+- compared algorithms for pathfinding
+- helped with debugging and enhance the visualiser
+- explained errors I had and provided suggestions to improve my code
 
-• A “Description” section that clearly presents the project, including its goal and a brief overview.
-
-• An “Instructions” section containing any relevant information about compilation, installation, and/or execution.
-
-• A “Resources” section listing classic references related to the topic (documentation, articles, tutorials, etc.), as well as a description of how AI was used — specifying for which tasks and which parts of the project.
-
-• A detailed description of your algorithm choices and implementation strategy must also be included.
-
-• Documentation of the visual representation features and how they enhance the user experience.
-
---------------------------------------------
-initial plan
+<!-- --------------------------------------------
+my initial plan
 what i need:
 - classes for zones and connections and the whole network and drones
 - parser and error handling for parser (use pydantic maybe?)
@@ -172,142 +169,5 @@ not sure about:
 - coordinates as tuples? how do i link them to my classes?
 - shortest path is not the most efficient path, look into network flow algorithms (like Edmonds-Karp) or multi-agent pathfinding (MAPF) concepts
 - how do i parse the information from txt files of maps and connect them to my classes?
+-->
 
-also:
-- colours:
-https://inventwithpython.com/blog/complete-list-tkinter-colors-valid-and-tested.html
-
-------------------------------------------
-How to parse and connect to classes:
-The standard approach is a line-by-line reader.
-
-Read the file line by line.
-
-When you parse a line starting with hub:, instantiate a new Zone object with the extracted name, coordinates, and metadata. Store this object in a dictionary inside your Network class (e.g., self.zones["roof1"] = Zone(...)).
-
-When you reach a connection: line, extract the two zone names. Look them up in your dictionary, and pass those actual Zone objects into a new Connection object to link them together.
-
-------------------------------------------
-the engine
-Moving drones simultaneously.
-
-Verifying that a move won't exceed a zone's capacity after outgoing drones have left.
-
-Handling the rule where drones entering a restricted zone must spend exactly 2 turns in transit and cannot wait on the connection.
-
-Formatting and printing the strict step-by-step output required for evaluation (e.g., D1-roof1 D2-corridorA)
-
-
-
-maps: $(VENV_PYTHON)
-	$(VENV_PYTHON) $(MAIN) maps/easy/01_linear_path.txt
-	@echo "Target is less than 6 turns"
-	@echo "========================================"
-	$(VENV_PYTHON) $(MAIN) maps/easy/02_simple_fork.txt
-	@echo "Target is less than 6 turns"
-	@echo "========================================"
-	$(VENV_PYTHON) $(MAIN) maps/easy/03_basic_capacity.txt
-	@echo "Target is less than 8 turns"
-	@echo "========================================"
-
-	$(VENV_PYTHON) $(MAIN) maps/medium/01_dead_end_trap.txt
-	@echo "Target is less than 15 turns"
-	@echo "========================================"
-	$(VENV_PYTHON) $(MAIN) maps/medium/02_circular_loop.txt
-	@echo "Target is less than 20 turns"
-	@echo "========================================"
-	$(VENV_PYTHON) $(MAIN) maps/medium/03_priority_puzzle.txt
-	@echo "Target is less than 12 turns"
-	@echo "========================================"
-
-	$(VENV_PYTHON) $(MAIN) maps/hard/01_maze_nightmare.txt
-	@echo "Target is less than 45 turns"
-	@echo "========================================"
-	$(VENV_PYTHON) $(MAIN) maps/hard/02_capacity_hell.txt
-	@echo "Target is less than 60 turns"
-	@echo "========================================"
-	$(VENV_PYTHON) $(MAIN) maps/hard/03_ultimate_challenge.txt
-	@echo "Target is less than 35 turns"
-	@echo "========================================"
-
-	$(VENV_PYTHON) $(MAIN) maps/challenger/01_the_impossible_dream.txt
-	@echo "Target is less than 45 turns"
-
-### Installation
-
-Prerequisites:
-
-- Python 3.10 or newer
-- A virtual environment is recommended
-
-Quick setup:
-
-```bash
-python3 -m venv drone_venv
-source drone_venv/bin/activate
-pip install -r requirements.txt  # if you have one; otherwise install needed packages
-```
-
-You can also use the included `drone_venv` for a pre-made virtualenv.
-
-### Usage
-
-Run a map with the Makefile helper or directly with Python:
-
-```bash
-# using make (example)
-make run MAP_FILE=maps/easy/01_linear_path.txt
-
-# or directly
-python3 main.py maps/easy/01_linear_path.txt
-```
-
-The program will parse the map file, run the simulation and open the
-visualiser (tkinter) showing zones, links and drone movement history.
-
-### Map format (brief)
-
-- `nb_drones: N` — total number of drones
-- `hub: NAME X Y [zone=type color=... max_drones=...]` — define a zone
-- `start_hub:` / `end_hub:` — special hub zones
-- `connection: A-B [max_link_capacity=...]` — link two zones
-
-See the `maps/` directory for several example map files.
-
-### Algorithm and Implementation
-
-- Pathfinding: a Dijkstra-like successive shortest path heuristic is
-	used. The `Pathfinder` repeatedly finds the cheapest path while
-	incrementing temporary traffic to reserve link usage.
-- Connection cost increases as links become used; restricted and
-	priority zones have modified entry costs (in `get_cost`). This
-	produces behavior similar to Successive Shortest Path approaches for
-	Minimum Cost Maximum Flow problems.
-- Simulation: the `Simulation` engine moves drones in sorted order
-	each turn, enforcing link capacities, zone capacities, and restricted
-	zone cooldowns. Drones record their positions each turn for
-	playback.
-
-### Visualisation
-
-- Implemented with `tkinter`; zones are drawn as coloured circles and
-	drones as triangular markers.
-- Controls: Right/Left arrow to step through history, Escape to quit.
-- The sidebar shows map details and turn statistics.
-
-### AI usage
-
-- AI was used to add and reformat project docstrings, and to generate
-	README content expansions. The code, logic and algorithmic design
-	remain hand-authored.
-
-### Development & Linting
-
-Run the project's linters and docstring checks (if configured):
-
-```bash
-make lint
-# or, for common tools
-pydocstyle .
-flake8
-```
