@@ -69,11 +69,11 @@ class MapParser:
 
         for row, line in enumerate(lines, start=1):
             line = line.strip()
-            if not line or line.startswith('#'):
+            if not line or line.startswith("#"):
                 continue
 
-            if '#' in line:
-                line = line.split('#', 1)[0].rstrip()
+            if "#" in line:
+                line = line.split("#", 1)[0].rstrip()
                 if not line:
                     continue
 
@@ -150,7 +150,7 @@ class MapParser:
                         "\nZone name must not have spaces and coordinates "
                         "must be integers :(")
 
-                if " " and "-" not in elements[1]:
+                if " " not in elements[1] and "-" not in elements[1]:
                     if elements[1] not in self.unique_names:
                         zone = Zone(
                             name=elements[1],

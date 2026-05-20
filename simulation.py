@@ -73,15 +73,6 @@ class Simulation:
                 return conn
         return None
 
-    def drones_in_zone(self, zone: Zone) -> int:
-        """Count active (not finished) drones currently in zone."""
-
-        count = 0
-        for drone in self.drones:
-            if drone.current_zone == zone and not drone.finished:
-                count += 1
-        return count
-
     def drone_sort_key(self, drone: Drone) -> tuple[bool, int, int]:
         """Sorting key for prioritising drone moves each turn."""
 
@@ -90,7 +81,7 @@ class Simulation:
         remaining_distance = len(drone.path) - drone.path_tracking
         return (
             drone.finished,
-            remaining_distance,  # Prioritize drones closest to finish
+            remaining_distance,
             number,
         )
 
@@ -127,7 +118,7 @@ class Simulation:
                 continue
 
             if next_zone != self.network.end_hub:
-                if self.drones_in_zone(next_zone) >= next_zone.max_drones:
+                if len(next_zone.current_drones) >= next_zone.max_drones:
                     continue
 
             try:
