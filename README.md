@@ -80,6 +80,14 @@ Controls options:
 - Right/Left arrow to step through turns
 - Escape to quit
 
+### Simulation Output
+
+The simulation turns are recorded and presented in the terminal.
+
+Each line represents one turn and only lists the drones that moved.
+Drones that didnt move, e.g. in restricted zone, will be ignored.
+The output displays the drone movement in the format of `D<ID>-<zone>`, and drones that reached the end will not be tracked anymore.
+
 ## Resources
 
 Lists of links that I used as reference sorted by topics

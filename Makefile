@@ -50,7 +50,7 @@ clean:
 
 re: clean install run
 
-.PHONY: all install run debug clean lint lint-strict maps re
+.PHONY: all install run debug clean lint lint-strict re
 
 # .pyc → compiled bytecode files (created automatically by Python)
 # .pyo → optimized bytecode (older Python versions, mostly obsolete now)
