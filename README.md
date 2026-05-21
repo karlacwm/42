@@ -91,7 +91,7 @@ The output displays the drone movement in the format of `D<ID>-<zone>`, and dron
 
 ## Resources
 
-Lists of links that I used as reference sorted by topics
+Sources that I used as reference, sorted by topics
 
 - for docstrings
 [[1]](https://peps.python.org/pep-0257/)
@@ -131,7 +131,7 @@ Lists of links that I used as reference sorted by topics
 - property decorator
 [[1]](https://www.freecodecamp.org/news/python-property-decorator/)
 [[2]](https://www.programiz.com/python-programming/property)
-[[31]](https://medium.com/@christopher.kelly1997/python-decorators-and-dynamic-properties-55402a2e1aff)
+[[3]](https://medium.com/@christopher.kelly1997/python-decorators-and-dynamic-properties-55402a2e1aff)
 
 - readline()
 [[1]](https://www.geeksforgeeks.org/python/readline-in-python/)
