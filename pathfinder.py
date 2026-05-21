@@ -100,13 +100,11 @@ class Pathfinder:
                 heapq.heappush(path, (visit_cost, next(step), new_path))
         return None
 
-    def dynamic_pathfinder(
-            self, drones_total: int,
-            traffic: dict[tuple[str, str], int]) -> list[list[Zone]]:
+    def dynamic_pathfinder(self, drones_total: int) -> list[list[Zone]]:
         """Get multiple paths by reserving capacity in temporary traffic."""
 
         paths: list[list[Zone]] = []
-        dynamic_traffic = dict(traffic)
+        dynamic_traffic: dict[tuple[str, str], int] = {}
         for _ in range(drones_total):
             path = self.find_path(dynamic_traffic)
             if not path:

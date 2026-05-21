@@ -39,14 +39,13 @@ def main() -> None:
             return
 
         solver = Pathfinder(network=network)
-        traffic: dict[tuple[str, str], int] = {}
         all_drones: list[Drone] = []
         best_count = 1
         for conn in network.connections:
             if "start" in conn.zone1.name or "start" in conn.zone2.name:
                 best_count += 1
 
-        paths = solver.dynamic_pathfinder(parser.drones_total, traffic)
+        paths = solver.dynamic_pathfinder(parser.drones_total)
         if not paths:
             print("Error: Could not find paths for all drones!")
             return
