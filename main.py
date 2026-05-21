@@ -17,6 +17,17 @@ def main() -> None:
 
     filepath = sys.argv[1]
 
+    # argv = sys.argv[1:]
+    # cap = "--capacity-info" in argv
+    # argv = [arg for arg in argv if arg != "--capacity-info"]
+
+    # if len(argv) != 1:
+    #     print("Try again with:\npython3 main.py <map_file.txt>\n\n"
+    #           "OR\nmake run <map_file.txt>")
+    #     sys.exit(1)
+
+    # filepath = argv[0]
+
     try:
         parser = MapParser(filepath)
         parser.parse()

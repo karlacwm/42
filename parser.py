@@ -24,7 +24,7 @@ class MapParser:
         if not config:
             return None
         group = config.group()
-        if group.count('[') != 1 or group.count(']') != 1:
+        if group.count("[") != 1 or group.count("]") != 1:
             raise ParseError(
                 f"Parsing error: Invalid map config on line {row}\n"
                 "Must have only a single '[' and ']' for the metablock :(")
@@ -39,11 +39,11 @@ class MapParser:
         parts = config_str.split()
         config_dict: dict[str, str] = {}
         for pair in parts:
-            if pair.count('=') != 1:
+            if pair.count("=") != 1:
                 raise ParseError(
                     f"Parsing error: Invalid map config on line {row}\n"
                     f"Each metadata pair must contain exactly one '='")
-            key, value = pair.split('=', 1)
+            key, value = pair.split("=", 1)
             key = key.strip()
             value = value.strip()
             if not key or value == "":

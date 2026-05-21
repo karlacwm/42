@@ -34,12 +34,17 @@ class Simulation:
     """Discrete-step simulation of drones moving through the Network."""
 
     def __init__(self, network: Network, drones: list[Drone]) -> None:
+
+        # def __init__(self, network: Network, drones: list[Drone], cap: bool
+        #              ) -> None:
         """Create a Simulation with a network and participating drones."""
 
         self.network = network
         self.drones = drones
         self.turn_number = 0
         self.history: list[dict[str, str]] = []
+        # self.cap = cap
+        self.turn_traffic: dict[tuple[str, str], int] = {}
 
     def record_history(self) -> None:
         """Append a snapshot of drones' current zones to the history."""
@@ -91,6 +96,7 @@ class Simulation:
             connection_pair(conn.zone1, conn.zone2): 0
             for conn in self.network.connections
         }
+        self.turn_traffic = traffic_this_turn
 
         moves_output = []
 
@@ -143,7 +149,33 @@ class Simulation:
         if moves_output:
             print(" ".join(moves_output))
 
+        # if self.cap:
+        #     self.print_cap_info()
+
         return len(moves_output)
+
+    # def print_cap_info(self) -> None:
+    #     print("Capacity info:")
+
+    #     for zone in self.network.zones.values():
+    #         if "start" in zone.name or "goal" in zone.name:
+    #             print(f"Zone {zone.name}: "
+    #                   f"{len(zone.current_drones)}/- drones")
+    #         else:
+    #             print(
+    #                 f"Zone {zone.name}: "
+    #                 f"{len(zone.current_drones)}/{zone.max_drones} drones"
+    #             )
+
+    #     for conn in self.network.connections:
+    #         key = connection_pair(conn.zone1, conn.zone2)
+    #         print(
+    #             f"Connection {conn.zone1.name}-{conn.zone2.name}: "
+    #             f"{self.turn_traffic[key]}/"
+    #             f"{conn.max_link_capacity} capacity used"
+    #         )
+
+    #     print()
 
 # note to self
 # is the drone on cooldown?
