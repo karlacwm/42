@@ -41,11 +41,11 @@ class Circle(Shape):
     """Circle shape with customised radius visualising a zone."""
 
     def __init__(self, x: int, y: int, radius: int,
-                 colour: str) -> None:
+                 colour: str, name: str) -> None:
         super().__init__(x, y)
         self.r = radius
         self.colour = colour if colour else "grey"
-        self.zone_tag = f"zone_{id(self)}"
+        self.zone_tag = name
 
     def draw(self, canvas: Canvas) -> None:
         """Render the circle on the canvas, supporting a rainbow fill."""
@@ -76,16 +76,16 @@ class Circle(Shape):
 
         self.info_text = info_text_id
         canvas.tag_bind(self.zone_tag, "<Enter>",
-                        lambda event: self._show_info(canvas))
+                        lambda event: self.show_info(canvas))
         canvas.tag_bind(self.zone_tag, "<Leave>",
-                        lambda event: self._hide_info(canvas))
+                        lambda event: self.hide_info(canvas))
 
-    def _show_info(self, canvas: Canvas) -> None:
+    def show_info(self, canvas: Canvas) -> None:
         """Internal: make the zone info text visible on hover."""
         if self.info_text is not None:
             canvas.itemconfigure(self.info_text, state="normal")
 
-    def _hide_info(self, canvas: Canvas) -> None:
+    def hide_info(self, canvas: Canvas) -> None:
         """Internal: hide the zone info text when hover ends."""
         if self.info_text is not None:
             canvas.itemconfigure(self.info_text, state="hidden")
@@ -218,7 +218,7 @@ class Visualiser:
             y = int(zone.y * scale + offset_y)
             zone_scale = zone.max_drones * int(scale * 0.05)
             current_radius = min(radius + zone_scale, max_allowed_radius)
-            z = Circle(x, y, current_radius, zone.colour)
+            z = Circle(x, y, current_radius, zone.colour, zone.name)
             z.draw(canvas)
 
             zone_info = (
