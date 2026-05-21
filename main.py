@@ -30,7 +30,10 @@ def main() -> None:
         solver = Pathfinder(network=network)
         traffic: dict[tuple[str, str], int] = {}
         all_drones: list[Drone] = []
-        best_count = 2
+        best_count = 1
+        for conn in network.connections:
+            if "start" in conn.zone1.name or "start" in conn.zone2.name:
+                best_count += 1
 
         for index in range(parser.drones_total):
             paths = solver.dynamic_pathfinder(parser.drones_total, traffic)

@@ -62,7 +62,8 @@ Minimum Cost Maximum Flow problems inspired me to the multi-paths approach in th
 where drones get their path from the list of path sorted by pathfinder.
 Instead of letting all the drones go the same path, I use a `path_list[index % best_cost]` to let the drones get different paths.
 The `best_cost` is handled in `main.py` to control the number of best paths to be looped.
-This number is not set dynamically for the moment but it is possible.
+This number is set dynamically determined by the number of neighbours of start zone plus one.
+The `best_cost` is decided this way by multiple trials and this number always worked best.
 
 Simulation controls each turn, and enforcing link capacities, zone capacities, and restricted zone cooldowns.
 Drones record their positions each turn for playback.
@@ -174,8 +175,44 @@ what i need:
 - docstrings
 
 not sure about:
-- coordinates as tuples? how do i link them to my classes?
-- shortest path is not the most efficient path, look into network flow algorithms (like Edmonds-Karp) or multi-agent pathfinding (MAPF) concepts
-- how do i parse the information from txt files of maps and connect them to my classes?
--->
+- coordinates as tuples? how do i link them to the classes?
+- shortest path is not the most efficient path, look into network flow algorithms or multi-agent pathfinding (MAPF) concepts
+- how do i parse the information from txt files of maps and connect them to the classes?
+-------------------------------------------------
+
+check benchmarks:
+maps: $(VENV_PYTHON)
+	$(VENV_PYTHON) $(MAIN) maps/easy/01_linear_path.txt
+	@echo "Target is less than 6 turns"
+	@echo "========================================"
+	$(VENV_PYTHON) $(MAIN) maps/easy/02_simple_fork.txt
+	@echo "Target is less than 6 turns"
+	@echo "========================================"
+	$(VENV_PYTHON) $(MAIN) maps/easy/03_basic_capacity.txt
+	@echo "Target is less than 8 turns"
+	@echo "========================================"
+
+	$(VENV_PYTHON) $(MAIN) maps/medium/01_dead_end_trap.txt
+	@echo "Target is less than 15 turns"
+	@echo "========================================"
+	$(VENV_PYTHON) $(MAIN) maps/medium/02_circular_loop.txt
+	@echo "Target is less than 20 turns"
+	@echo "========================================"
+	$(VENV_PYTHON) $(MAIN) maps/medium/03_priority_puzzle.txt
+	@echo "Target is less than 12 turns"
+	@echo "========================================"
+
+	$(VENV_PYTHON) $(MAIN) maps/hard/01_maze_nightmare.txt
+	@echo "Target is less than 45 turns"
+	@echo "========================================"
+	$(VENV_PYTHON) $(MAIN) maps/hard/02_capacity_hell.txt
+	@echo "Target is less than 60 turns"
+	@echo "========================================"
+	$(VENV_PYTHON) $(MAIN) maps/hard/03_ultimate_challenge.txt
+	@echo "Target is less than 35 turns"
+	@echo "========================================"
+
+	$(VENV_PYTHON) $(MAIN) maps/challenger/01_the_impossible_dream.txt
+	@echo "Target is less than 45 turns"
+------------------------------------------------- -->
 
