@@ -50,6 +50,20 @@ make lint-strict
 - `start_hub:` / `end_hub:` — special hub zones
 - `connection: A-B [max_link_capacity=...]` — link two zones
 
+```
+Example input to map: maps/easy/01_linear_path.txt:
+nb_drones: 2
+
+start_hub: start 0 0 [color=green]
+hub: waypoint1 1 0 [color=blue]
+hub: waypoint2 2 0 [color=blue]
+end_hub: goal 3 0 [color=red]
+
+connection: start-waypoint1
+connection: waypoint1-waypoint2
+connection: waypoint2-goal
+```
+
 ### Algorithm and Implementation
 
 Pathfinding: a Dijkstra-like algorithm is used for pathfinding.
@@ -88,6 +102,15 @@ The simulation turns are recorded and presented in the terminal.
 Each line represents one turn and only lists the drones that moved.
 Drones that didnt move, e.g. in restricted zone, will be ignored.
 The output displays the drone movement in the format of `D<ID>-<zone>`, and drones that reached the end will not be tracked anymore.
+
+```
+Example output to map: maps/easy/01_linear_path.txt:
+--- SIMULATION OUTPUT ---
+D1-waypoint1
+D1-waypoint2 D2-waypoint1
+D1-goal D2-waypoint2
+D2-goal
+```
 
 ## Resources
 
