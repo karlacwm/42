@@ -171,7 +171,7 @@ class Simulation:
     #         key = connection_pair(conn.zone1, conn.zone2)
     #         print(
     #             f"Connection {conn.zone1.name}-{conn.zone2.name}: "
-    #             f"{self.turn_traffic[key]}/"
+    #             f"{self.traffic[key]}/"
     #             f"{conn.max_link_capacity} capacity used"
     #         )
 
