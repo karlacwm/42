@@ -1,41 +1,30 @@
-# Medium Level 4: The Illusion of Choice
-# Tests: Dijkstra cost balancing, restricted zone cooldowns, and bottleneck queuing.
+# my map  # and tesing comments
 nb_drones: 8
 
 start_hub: start 0 0 [color=green max_drones=8]
 
-# Path 1: The Trap (Looks like the shortest physical path, but is heavily restricted)
 hub: trap_door 2 0 [zone=restricted color=orange max_drones=1]
-
-# Path 2: The Scenic Route (Longest physical path, but priority zones make it "cheap")
-hub: scenic_1 1 2 [zone=priority color=cyan max_drones=3]
-
-hub: scenic_3 3 2 [zone=priority color=cyan max_drones=3]
-
-# Path 3: The Middle Ground (Normal zones, average capacity)
+hub: bottom_1 1 2 [zone=priority color=cyan max_drones=3]
+hub: bottom_2 3 2 [zone=priority color=cyan max_drones=3]
 hub: mid_1 1 -2 [color=blue max_drones=2]
 hub: mid_2 3 -2 [color=blue max_drones=2]
-
-# The Great Convergence (Forces all paths to merge and wait in line)
 hub: final_gate 4 0 [color=yellow max_drones=2]
+
 end_hub: goal 5 0 [color=red max_drones=8]
 
-# --- CONNECTIONS ---
-
-# Path 1 Connections (Low bandwidth)
+# path 1
 connection: start-trap_door [max_link_capacity=1]
 connection: trap_door-final_gate [max_link_capacity=1]
 
-# Path 2 Connections (High bandwidth, fast travel)
-connection: start-scenic_1 [max_link_capacity=3]
-connection: scenic_1-scenic_3 [max_link_capacity=3]
+# path 2
+connection: start-bottom_1 [max_link_capacity=3]
+connection: bottom_1-bottom_2 [max_link_capacity=3]
+connection: bottom_2-final_gate [max_link_capacity=3]
 
-connection: scenic_3-final_gate [max_link_capacity=3]
-
-# Path 3 Connections (Standard)
+# path 3
 connection: start-mid_1 [max_link_capacity=2]
 connection: mid_1-mid_2 [max_link_capacity=2]
 connection: mid_2-final_gate [max_link_capacity=2]
 
-# The Final Bottleneck
+# bottleneck
 connection: final_gate-goal [max_link_capacity=2]
