@@ -124,7 +124,7 @@ class Simulation:
                 continue
 
             if next_zone != self.network.end_hub:
-                if len(next_zone.current_drones) >= next_zone.max_drones:
+                if next_zone.is_full:
                     continue
 
             try:
