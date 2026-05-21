@@ -46,12 +46,12 @@ def main() -> None:
             if "start" in conn.zone1.name or "start" in conn.zone2.name:
                 best_count += 1
 
-        for index in range(parser.drones_total):
-            paths = solver.dynamic_pathfinder(parser.drones_total, traffic)
-            if not paths:
-                print(f"Error: Could not find a path for D{index + 1}!")
-                return
+        paths = solver.dynamic_pathfinder(parser.drones_total, traffic)
+        if not paths:
+            print("Error: Could not find paths for all drones!")
+            return
 
+        for index in range(parser.drones_total):
             drone = Drone(
                 drone_id=f"D{index + 1}",
                 current_zone=network.start_hub,
