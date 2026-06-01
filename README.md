@@ -11,6 +11,12 @@ https://www.youtube.com/watch?v=d9s_d28yJq0&list=PLfqABt5AS4FmuQf70psXrsMLEDQXNk
 https://www.youtube.com/watch?v=mvZKu0DfFLQ
 https://www.youtube.com/watch?v=zOpzGHwJ3MU
 https://www.youtube.com/watch?v=ldJ8WGZVXZk
+https://man7.org/linux/man-pages/man7/pthreads.7.html
+https://pubs.opengroup.org/onlinepubs/7908799/xsh/pthread.h.html
+https://www.geeksforgeeks.org/c/thread-functions-in-c-c/
+https://blog.gtwang.org/programming/pthread-multithreading-programming-in-c-tutorial/
+https://tigercosmos.xyz/en/post/2020/07/simple-pthread-usage/
+
 
 For this project, the README.md must also include:
 • A “Blocking cases handled” section describing all the concurrency issues addressed in your solution (e.g., deadlock prevention and Coffman’s conditions, starvation prevention, cooldown handling, precise burnout detection, and log serialization).
