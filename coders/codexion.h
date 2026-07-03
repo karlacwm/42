@@ -17,4 +17,7 @@
 # include <unistd.h>
 # include <pthread.h>
 
+int check_argv(int argc, char ** argv);
+
 #endif
+

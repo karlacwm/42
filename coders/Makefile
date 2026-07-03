@@ -3,7 +3,7 @@ CC = cc
 CFLAG = -Wall -Wextra -Werror -pthread
 RM = rm -f
 
-SRC = main.c
+SRC = main.c parser.c
 
 OBJ = ${SRC:%.c=%.o}
 
