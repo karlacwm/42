@@ -14,12 +14,17 @@
 
 int	main(int argc, char **argv)
 {
-	t_arg *args;
+	t_arg args;
+	t_coder *coders;
+	t_dongle *dongles;
 
-	args = parse_argv(argc, argv);
-	if (args == NULL)
+	if (parse_argv(argc, argv, &args) == 1)
 		return (1);
-	free(args);
+	if (init_data(&args, &coders, &dongles) == 1)
+		return (1);
+	printf("success :)\n");
+	free(coders);
+	free(dongles);
 	return (0);
 }
 

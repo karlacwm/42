@@ -31,7 +31,27 @@ typedef struct s_arg
 	int scheduler;              // 0 for fifo, 1 for edf
 }           t_arg;
 
-t_arg    *parse_argv(int argc, char ** argv);
+typedef struct s_dongle
+{
+	int id;
+	// int occupied;
+	long cooldown_until;        // handles dongle_cooldown
+	pthread_mutex_t mutex;      // protects this dongle from race conditions
+}           t_dongle;
+
+typedef struct s_coder
+{
+	int id;
+	int nb_compiles;
+	long last_compile_time;     // used to calculate burnout
+	pthread_t thread;			// thread for this coder
+	t_arg *args;				// pointer to the arguments struct
+	t_dongle *left_dongle;
+	t_dongle *right_dongle;
+}           t_coder;
+
+int parse_argv(int argc, char ** argv, t_arg *args);
+int	init_data(t_arg *args, t_coder **coders, t_dongle **dongles);
 
 #endif
 
