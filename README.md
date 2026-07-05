@@ -1,10 +1,29 @@
 *This project has been created as part of the 42 curriculum by wcheung.*
 
+# project plan
+Phase 1: Architecture & Parsing (📍 We are almost done here)Done: Parse and validate all command-line arguments.  Next: Define the data structures for the Coders and the Dongles, and allocate memory for them.
+
+Phase 2: Data Structures for SchedulersImplement a Priority Queue (a min-heap) in C. This is required to handle the fifo and edf scheduling policies fairly when multiple coders want the same dongles.  
+
+Phase 3: Thread Initialization & Core LoopSpin up one thread per coder using pthread_create.  Write the infinite loop where coders attempt to: grab dongles -> compile -> debug -> refactor.  
+
+Phase 4: Synchronization & ArbitrationThe hardest part: using pthread_mutex_t and condition variables to safely lock the dongles.  Implement the dongle_cooldown timer.  Serialize the logging so text doesn't overlap in the terminal.  
+
+Phase 5: The Monitor Thread & CleanupCreate a dedicated "Monitor" thread that constantly checks if any coder has exceeded time_to_burnout or if everyone hit number_of_compiles_required.  Cleanly shut down all threads, destroy all mutexes, and free all the memory we allocated.
+
+
+
 ## Description
 
 coders can compile, debug, or refactor
 
 ## Instruction
+
+## Blocking cases handled
+
+
+## Thread synchronization mechanisms
+
 
 ## Resources
 https://www.youtube.com/watch?v=d9s_d28yJq0&list=PLfqABt5AS4FmuQf70psXrsMLEDQXNkLq2&index=1
@@ -20,8 +39,4 @@ https://tigercosmos.xyz/en/post/2020/07/simple-pthread-usage/
 
 For this project, the README.md must also include:
 • A “Blocking cases handled” section describing all the concurrency issues addressed in your solution (e.g., deadlock prevention and Coffman’s conditions, starvation prevention, cooldown handling, precise burnout detection, and log serialization).
-• A “Thread synchronization mechanisms” section explaining the specific threading primitives used in your implementation (pthread_mutex_t, pthread_cond_t,
-custom event implementation) and how they coordinate access to shared resources
-(dongles, logging, monitor state). Include examples of how race conditions are
-prevented and how thread-safe communication is achieved between coders and the
-monitor
+• A “Thread synchronization mechanisms” section explaining the specific threading primitives used in your implementation (pthread_mutex_t, pthread_cond_t, custom event implementation) and how they coordinate access to shared resources (dongles, logging, monitor state). Include examples of how race conditions are prevented and how thread-safe communication is achieved between coders and the monitor
