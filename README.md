@@ -3,11 +3,11 @@
 # project plan
 Phase 1: Architecture & Parsing (📍 We are almost done here)Done: Parse and validate all command-line arguments.  Next: Define the data structures for the Coders and the Dongles, and allocate memory for them.
 
-Phase 2: Data Structures for SchedulersImplement a Priority Queue (a min-heap) in C. This is required to handle the fifo and edf scheduling policies fairly when multiple coders want the same dongles.  
+Phase 2: Data Structures for SchedulersImplement a Priority Queue (a min-heap) in C. This is required to handle the fifo and edf scheduling policies fairly when multiple coders want the same dongles.
 
-Phase 3: Thread Initialization & Core LoopSpin up one thread per coder using pthread_create.  Write the infinite loop where coders attempt to: grab dongles -> compile -> debug -> refactor.  
+Phase 3: Thread Initialization & Core LoopSpin up one thread per coder using pthread_create.  Write the infinite loop where coders attempt to: grab dongles -> compile -> debug -> refactor.
 
-Phase 4: Synchronization & ArbitrationThe hardest part: using pthread_mutex_t and condition variables to safely lock the dongles.  Implement the dongle_cooldown timer.  Serialize the logging so text doesn't overlap in the terminal.  
+Phase 4: Synchronization & ArbitrationThe hardest part: using pthread_mutex_t and condition variables to safely lock the dongles.  Implement the dongle_cooldown timer.  Serialize the logging so text doesn't overlap in the terminal.
 
 Phase 5: The Monitor Thread & CleanupCreate a dedicated "Monitor" thread that constantly checks if any coder has exceeded time_to_burnout or if everyone hit number_of_compiles_required.  Cleanly shut down all threads, destroy all mutexes, and free all the memory we allocated.
 
@@ -35,7 +35,9 @@ https://pubs.opengroup.org/onlinepubs/7908799/xsh/pthread.h.html
 https://www.geeksforgeeks.org/c/thread-functions-in-c-c/
 https://blog.gtwang.org/programming/pthread-multithreading-programming-in-c-tutorial/
 https://tigercosmos.xyz/en/post/2020/07/simple-pthread-usage/
-
+https://medium.com/@jalal92/the-dining-philosophers-7157cc05315
+https://suspectedoceano.notion.site/Philosophers-b1bf3c57eee6420cafa7d0900b3d3216
+https://www.codequoi.com/en/threads-mutexes-and-concurrent-programming-in-c/
 
 For this project, the README.md must also include:
 • A “Blocking cases handled” section describing all the concurrency issues addressed in your solution (e.g., deadlock prevention and Coffman’s conditions, starvation prevention, cooldown handling, precise burnout detection, and log serialization).

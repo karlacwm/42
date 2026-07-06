@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/03 18:49:21 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/06 22:52:27 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/06 23:49:01 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ static int	is_number(const char *str)
 
 static void	store_data(char **argv, t_arg *args)
 {
+	// check INT MAX???
 	args->nb_coders = atoi(argv[1]);
 	args->time_to_burnout = atoi(argv[2]);
 	args->time_to_compile = atoi(argv[3]);
