@@ -18,6 +18,7 @@
 # include <pthread.h>
 # include <string.h>
 # include <stdlib.h>
+# include <sys/time.h>
 
 typedef struct s_arg
 {
@@ -50,8 +51,9 @@ typedef struct s_coder
 	t_dongle *right_dongle;
 }           t_coder;
 
-int parse_argv(int argc, char ** argv, t_arg *args);
-int	init_data(t_arg *args, t_coder **coders, t_dongle **dongles);
+int		parse_argv(int argc, char ** argv, t_arg *args);
+int		init_data(t_arg *args, t_coder **coders, t_dongle **dongles);
+void 	*cycle(void *arg);
 
 #endif
 
