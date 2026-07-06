@@ -14,9 +14,9 @@
 
 int	main(int argc, char **argv)
 {
-	t_arg args;
-	t_coder *coders;
-	t_dongle *dongles;
+	t_arg		args;
+	t_coder		*coders;
+	t_dongle	*dongles;
 
 	if (parse_argv(argc, argv, &args) == 1)
 		return (1);
@@ -27,9 +27,6 @@ int	main(int argc, char **argv)
 	free(dongles);
 	return (0);
 }
-
-
-
 
 // --------learning about threads----------
 // void	*routine(void)

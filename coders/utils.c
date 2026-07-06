@@ -6,13 +6,12 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/06 18:51:04 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/06 18:52:34 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/06 22:49:35 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-long    get_time_in_ms(void)
+long	get_time_in_ms(void)
 {
-
 }
