@@ -1,9 +1,12 @@
 UV_CACHE := /goinfre/$(USER)/uv_cache
-export UV_CACHE
+HF_HOME := /goinfre/$(USER)/hf_cache
 LINT_CHECK = src/
+export UV_CACHE
+export HF_HOME
 
 install:
 	mkdir -p $(UV_CACHE)
+	mkdir -p $(HF_HOME)
 	uv sync
 
 run:
@@ -16,6 +19,7 @@ clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 	rm -rf .mypy_cache
 	rm -rf $(UV_CACHE)
+	rm -rf $(HF_HOME)
 
 lint:
 	uv run flake8 $(LINT_CHECK)
@@ -30,3 +34,5 @@ lint-strict:
 re: clean install run
 
 .PHONY: install run debug clean lint lint-strict re
+
+# UV_CACHE_DIR=/goinfre/$USER/uv_cache uv add ./llm_sdk
