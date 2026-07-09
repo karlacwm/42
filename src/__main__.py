@@ -28,7 +28,7 @@ def main() -> None:
         print(f"Error loading files: {e}")
         sys.exit(1)
 
-    print("✅ Files loaded successfully!")
+    print("Files loaded successfully!")
 
     # 3. Initialize LLM Manager
     llm = LLMManager()
@@ -40,7 +40,7 @@ def main() -> None:
         prompt=first_prompt, llm=llm, max_tokens=20)
 
     print(f"\nFinal Unconstrained Output:\n{first_prompt} {final_output}")
-    print("\n✅ Refactoring Complete!")
+    print("\nRefactoring Complete!")
 
 
 if __name__ == "__main__":

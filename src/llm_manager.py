@@ -1,9 +1,6 @@
 import json
 import sys
-from typing import List, Dict
-
-# Import the provided SDK
-from llm_sdk import Small_LLM_Model
+from llm_sdk.llm_sdk import Small_LLM_Model
 
 
 class LLMManager:
@@ -12,7 +9,7 @@ class LLMManager:
         try:
             self.model = Small_LLM_Model()
         except Exception as e:
-            print(f"❌ Failed to initialize model: {e}")
+            print(f"Failed to initialize model: {e}")
             sys.exit(1)
 
         # Load Vocabulary
@@ -24,12 +21,12 @@ class LLMManager:
             # Create reverse lookup dictionary
             self.id_to_token = {
                 int(v): k for k, v in self.token_to_id.items()}
-            print(f"✅ Vocabulary loaded! ({len(self.id_to_token)} tokens)")
+            print(f"Vocabulary loaded! ({len(self.id_to_token)} tokens)")
         except Exception as e:
-            print(f"❌ Failed to load vocabulary: {e}")
+            print(f"Failed to load vocabulary: {e}")
             sys.exit(1)
 
-    def encode(self, text: str) -> List[int]:
+    def encode(self, text: str) -> list[int]:
         """Convert text to a list of token IDs."""
         return self.model.encode(text).tolist()[0]
 
@@ -39,6 +36,6 @@ class LLMManager:
         # Clean up the Hugging Face space character 'Ġ'
         return raw_string.replace("Ġ", " ")
 
-    def get_logits(self, input_ids: List[int]) -> List[float]:
+    def get_logits(self, input_ids: list[int]) -> list[float]:
         """Get the raw probabilities for the next token."""
         return self.model.get_logits_from_input_ids(input_ids)
