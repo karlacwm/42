@@ -20,8 +20,8 @@ def main() -> None:
 
     # 2. Load Files
     try:
-        with open(args.functions_definition, 'r') as f:
-            functions_def = json.load(f)
+        # with open(args.functions_definition, 'r') as f:
+        #     functions_def = json.load(f)
         with open(args.input, 'r') as f:
             prompts_data = json.load(f)
     except Exception as e:

@@ -1,10 +1,10 @@
 import json
 import sys
-from llm_sdk.llm_sdk import Small_LLM_Model
+from llm_sdk import Small_LLM_Model  # type: ignore
 
 
 class LLMManager:
-    def __init__(self):
+    def __init__(self) -> None:
         print("Initializing Small_LLM_Model...")
         try:
             self.model = Small_LLM_Model()
