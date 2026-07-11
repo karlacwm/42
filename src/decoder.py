@@ -9,12 +9,12 @@ def generate_unconstrained(
     print(f"\nOriginal Prompt: '{prompt}'")
     print("Model is generating text...")
 
-    input_ids: List[int] = llm.encode(prompt)
+    input_ids: List[int] = llm.text_to_token_ids_list(prompt)
     generated_text = ""
 
     for step in range(max_tokens):
         # 1. Get probabilities
-        logits = llm.get_logits(input_ids)
+        logits = llm.get_logits_list(input_ids)
 
         # 2. Pick the highest scoring token
         best_token_id = int(np.argmax(logits))
@@ -23,7 +23,7 @@ def generate_unconstrained(
         input_ids.append(best_token_id)
 
         # 4. Map back to text
-        new_word_piece = llm.get_token_string(best_token_id)
+        new_word_piece = llm.token_id_to_string(best_token_id)
         generated_text += new_word_piece
 
         print(
