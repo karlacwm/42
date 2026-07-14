@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/06 18:51:04 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/14 21:46:45 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/14 22:13:04 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,25 @@ long	get_time_in_ms(void)
 		return (0);
 	}
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
+}
+
+void	log_message(t_coder *coder, char *status)
+{
+	long	time_passed;
+
+	time_passed = get_time_in_ms() - coder->args->start_time;
+	pthread_mutex_lock(&coder->args->message_mutex);
+	printf("%ld %d %s\n", time_passed, coder->id, status);
+	pthread_mutex_unlock(&coder->args->message_mutex);
+}
+
+void	usleep_in_ms(long time_to_sleep_in_ms)
+{
+	long	start_time;
+
+	start_time = get_time_in_ms();
+	while ((get_time_in_ms() - start_time) < time_to_sleep_in_ms)
+		usleep(500);
 }
 
 // tv_sec = seconds
