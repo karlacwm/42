@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 08:31:13 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/06 23:50:21 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/14 21:53:47 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,15 @@
 
 typedef struct s_arg
 {
-	int	nb_coders;
-	int	time_to_burnout;
-	int	time_to_compile;
-	int	time_to_debug;
-	int	time_to_refactor;
-	int	nb_compiles_required;
-	int	dongle_cooldown;
-	int	scheduler; // 0 for fifo, 1 for edf
+	int		nb_coders;
+	int		time_to_burnout;
+	int		time_to_compile;
+	int		time_to_debug;
+	int		time_to_refactor;
+	int		nb_compiles_required;
+	int		dongle_cooldown;
+	int		scheduler; // 0 for fifo, 1 for edf
+	long	start_time;
 }		t_arg;
 
 typedef struct s_dongle
@@ -54,5 +55,6 @@ typedef struct s_coder
 int		parse_argv(int argc, char **argv, t_arg *args);
 int		init_data(t_arg *args, t_coder **coders, t_dongle **dongles);
 void	*cycle(void *arg);
+long	get_time_in_ms(void);
 
 #endif

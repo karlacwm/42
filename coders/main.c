@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 08:30:26 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/06 23:05:06 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/14 21:55:16 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ int	main(int argc, char **argv)
 	t_coder		*coders;
 	t_dongle	*dongles;
 
+	args.start_time = get_time_in_ms();
+	printf("%ld\n", args.start_time);
 	if (parse_argv(argc, argv, &args) == 1)
 		return (1);
 	if (init_data(&args, &coders, &dongles) == 1)
