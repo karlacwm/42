@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 08:30:26 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/14 22:01:34 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/15 03:27:03 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,49 @@ int	main(int argc, char **argv)
 	t_arg		args;
 	t_coder		*coders;
 	t_dongle	*dongles;
+	int			i;
 
-	pthread_mutex_init(&args.message_mutex, NULL);
-	args.start_time = get_time_in_ms();
-	printf("%ld\n", args.start_time);
 	if (parse_argv(argc, argv, &args) == 1)
 		return (1);
 	if (init_data(&args, &coders, &dongles) == 1)
 		return (1);
+	if (pthread_mutex_init(&args.message_mutex, NULL) != 0)
+	{
+		printf("Error: Failed to initialize message mutex.\n");
+		free(coders);
+		free(dongles);
+		return (1);
+	}
+	args.start_time = get_time_in_ms();
+	i = 0;
+	while (i < args.nb_coders)
+	{
+		if (pthread_create(&coders[i].thread, NULL, cycle, &coders[i]) != 0)
+		{
+			printf("Error: Failed to create thread %d.\n", coders[i].id);
+			return (1);
+		}
+		i++;
+	}
+	i = 0;
+	while (i < args.nb_coders)
+	{
+		if (pthread_join(coders[i].thread, NULL) != 0)
+		{
+			printf("Error: Failed to join thread %d.\n", coders[i].id);
+			return (1);
+		}
+		i++;
+	}
+	printf("%ld\n", args.start_time);
 	printf("success :)\n");
+	pthread_mutex_destroy(&args.message_mutex);
 	free(coders);
 	free(dongles);
 	return (0);
 }
+
+//
 
 // --------learning about threads----------
 // void	*routine(void)

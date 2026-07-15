@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 08:31:13 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/14 22:13:23 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/15 03:44:32 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,5 +57,7 @@ int		parse_argv(int argc, char **argv, t_arg *args);
 int		init_data(t_arg *args, t_coder **coders, t_dongle **dongles);
 void	*cycle(void *arg);
 long	get_time_in_ms(void);
+void	usleep_in_ms(long time_to_sleep_in_ms);
+void	log_message(t_coder *coder, char *status);
 
 #endif
