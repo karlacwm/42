@@ -11,7 +11,13 @@ Phase 4: Synchronization & ArbitrationThe hardest part: using pthread_mutex_t an
 
 Phase 5: The Monitor Thread & CleanupCreate a dedicated "Monitor" thread that constantly checks if any coder has exceeded time_to_burnout or if everyone hit number_of_compiles_required.  Cleanly shut down all threads, destroy all mutexes, and free all the memory we allocated.
 
-
+========
+Phase 1: Parsing & Validation (Complete)
+Phase 2: Data Structures & Memory Allocation (Complete)
+Phase 3: Utility Functions (Time & Logging) (Complete)
+Phase 4: The Coder Lifecycle & Thread Launching (We are here)
+Phase 5: Synchronization & Scheduling (The hardest part: locking the dongles using FIFO/EDF).
+Phase 6: The Monitor Thread & Cleanup (Checking for burnouts and freeing memory)
 
 ## Description
 
