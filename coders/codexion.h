@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 08:31:13 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/17 02:16:01 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/18 01:27:13 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ typedef struct s_coder
 
 typedef struct s_request
 {
-	int		code_id;
+	int		coder_id;
 	long	arrival_time; // Used to sort if scheduler == 0 (FIFO
 	long	deadline; // Used to sort if scheduler == 1 (EDF)
 }		t_request;
