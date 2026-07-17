@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 08:31:13 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/17 02:14:50 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/17 02:16:01 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,9 @@ typedef struct s_arg
 	int				scheduler; // 0 for fifo, 1 for edf
 	long			start_time;
 	pthread_mutex_t	message_mutex;
+	t_heap			queue;
+	pthread_mutex_t	queue_mutex;
+	pthread_cond_t	queue_cond;
 }		t_arg;
 
 typedef struct s_dongle

@@ -44,6 +44,7 @@ https://tigercosmos.xyz/en/post/2020/07/simple-pthread-usage/
 https://medium.com/@jalal92/the-dining-philosophers-7157cc05315
 https://suspectedoceano.notion.site/Philosophers-b1bf3c57eee6420cafa7d0900b3d3216
 https://www.codequoi.com/en/threads-mutexes-and-concurrent-programming-in-c/
+https://www.geeksforgeeks.org/c/heap-in-c/
 
 For this project, the README.md must also include:
 • A “Blocking cases handled” section describing all the concurrency issues addressed in your solution (e.g., deadlock prevention and Coffman’s conditions, starvation prevention, cooldown handling, precise burnout detection, and log serialization).
