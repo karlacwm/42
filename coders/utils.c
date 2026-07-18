@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/06 18:51:04 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/14 22:13:04 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/18 02:22:50 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,16 @@ void	usleep_in_ms(long time_to_sleep_in_ms)
 	start_time = get_time_in_ms();
 	while ((get_time_in_ms() - start_time) < time_to_sleep_in_ms)
 		usleep(500);
+}
+
+int	check_burnout_or_coding(t_arg *args)
+{
+	int	status;
+
+	pthread_mutex_lock(&args->coding_mutex);
+	status = args->burnout_yet;
+	pthread_mutex_unlock(&args->coding_mutex);
+	return (status);
 }
 
 // tv_sec = seconds

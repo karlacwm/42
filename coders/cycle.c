@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/06 16:39:21 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/18 02:02:12 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/18 02:29:01 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,19 @@ void	*cycle(void *arg)
 
 	coder = (t_coder *)arg;
 	coder->last_compile_time = coder->args->start_time;
-	while (1)
+	while (check_burnout_or_coding(coder->args))
 	{
 		request_dongles(coder);
 		log_message(coder, "has taken a dongle");
 		log_message(coder, "has taken a dongle");
 		log_message(coder, "is compiling");
+		pthread_mutex_lock(&coder->args->coding_mutex);
 		coder->last_compile_time = get_time_in_ms(); // update for the monitor thread
+		pthread_mutex_unlock(&coder->args->coding_mutex);
 		usleep_in_ms(coder->args->time_to_compile);
+		pthread_mutex_lock(&coder->args->coding_mutex);
 		coder->nb_compiles++;
+		pthread_mutex_unlock(&coder->args->coding_mutex);
 		release_dongles(coder);
 		log_message(coder, "is debugging");
 		usleep_in_ms(coder->args->time_to_debug);
