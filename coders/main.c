@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 08:30:26 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/15 03:27:03 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/18 04:46:37 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ int	main(int argc, char **argv)
 		}
 		i++;
 	}
+	run_monitor(coders);
 	i = 0;
 	while (i < args.nb_coders)
 	{

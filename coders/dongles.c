@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/17 02:20:16 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/18 01:52:43 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/18 02:39:29 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ void	request_dongles(t_coder *coder)
 	{
 		if (coder->args->queue.requests[0].coder_id == coder->id)
 		{
-			if (get_time_in_ms() >= coder->left_dongle->cooldown_until
-				&& get_time_in_ms() >= coder->right_dongle->cooldown_until)
+			if (get_time_in_ms() >= coder->left_dongle->available_when
+				&& get_time_in_ms() >= coder->right_dongle->available_when)
 			{
 				pthread_mutex_lock(&coder->left_dongle->mutex);
 				pthread_mutex_lock(&coder->right_dongle->mutex);
@@ -46,8 +46,8 @@ void	release_dongles(t_coder *coder)
 
 	pthread_mutex_lock(&coder->args->queue_mutex);
 	current_time = get_time_in_ms();
-	coder->left_dongle->cooldown_until = current_time + coder->args->dongle_cooldown;
-	coder->right_dongle->cooldown_until = current_time + coder->args->dongle_cooldown;
+	coder->left_dongle->available_when = current_time + coder->args->dongle_cooldown;
+	coder->right_dongle->available_when = current_time + coder->args->dongle_cooldown;
 	pthread_mutex_unlock(&coder->left_dongle->mutex);
 	pthread_mutex_unlock(&coder->right_dongle->mutex);
 	pthread_cond_broadcast(&coder->args->queue_cond);

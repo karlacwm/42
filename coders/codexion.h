@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 08:31:13 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/18 02:23:26 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/18 02:39:04 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ typedef struct s_arg
 	int				dongle_cooldown;
 	int				scheduler; // 0 for fifo, 1 for edf
 	long			start_time;
-	int				burnout_yet; // 1 for coding, 0 for burnout
+	int				burnout_yet; // 0 for burnout, 1 for coding
 	pthread_mutex_t	coding_mutex;
 	pthread_mutex_t	message_mutex;
 	t_heap			queue;
@@ -58,7 +58,7 @@ typedef struct s_dongle
 {
 	int				id;
 	// int occupied;
-	long			cooldown_until; // handles dongle_cooldown
+	long			available_when; // handles dongle_cooldown
 	pthread_mutex_t	mutex; // protects this dongle from race conditions
 }		t_dongle;
 

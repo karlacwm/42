@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/03 18:49:21 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/06 23:49:01 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/18 02:39:33 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int	init_data(t_arg *args, t_coder **coders, t_dongle **dongles)
 	while (i < args->nb_coders)
 	{
 		(*dongles)[i].id = i;
-		(*dongles)[i].cooldown_until = 0;
+		(*dongles)[i].available_when = 0;
 		if (pthread_mutex_init(&(*dongles)[i].mutex, NULL) != 0)
 		{
 			free(*coders);
