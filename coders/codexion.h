@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 08:31:13 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/18 01:27:13 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/18 02:04:57 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,21 @@
 # include <string.h>
 # include <stdlib.h>
 # include <sys/time.h>
+
+typedef struct s_request
+{
+	int		coder_id;
+	long	arrival_time; // Used to sort if scheduler == 0 (FIFO
+	long	deadline; // Used to sort if scheduler == 1 (EDF)
+}		t_request;
+
+typedef struct s_heap
+{
+	t_request	*requests; // Array of requests allocated with malloc
+	int			size; // How many requests are currently in the queue
+	int			capacity; // Maximum number of requests (equals nb_coders)
+	int			scheduler; // 0 for FIFO, 1 for EDF
+}		t_heap;
 
 typedef struct s_arg
 {
@@ -56,21 +71,6 @@ typedef struct s_coder
 	t_dongle	*right_dongle;
 }		t_coder;
 
-typedef struct s_request
-{
-	int		coder_id;
-	long	arrival_time; // Used to sort if scheduler == 0 (FIFO
-	long	deadline; // Used to sort if scheduler == 1 (EDF)
-}		t_request;
-
-typedef struct s_heap
-{
-	t_request	*requests; // Array of requests allocated with malloc
-	int			size; // How many requests are currently in the queue
-	int			capacity; // Maximum number of requests (equals nb_coders)
-	int			scheduler; // 0 for FIFO, 1 for EDF
-}		t_heap;
-
 int			parse_argv(int argc, char **argv, t_arg *args);
 int			init_data(t_arg *args, t_coder **coders, t_dongle **dongles);
 void		*cycle(void *arg);
@@ -79,6 +79,7 @@ void		usleep_in_ms(long time_to_sleep_in_ms);
 void		log_message(t_coder *coder, char *status);
 void		join_heap_q(t_heap *heap, t_request new_req);
 t_request	take_out_top_and_replace(t_heap *heap);
-
+void	request_dongles(t_coder *coder);
+void	release_dongles(t_coder *coder);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/06 16:39:21 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/15 03:49:15 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/18 02:02:12 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,41 +17,27 @@ void	*cycle(void *arg)
 	t_coder	*coder;
 
 	coder = (t_coder *)arg;
-    coder->last_compile_time = coder->args->start_time;
-    while (1)
-    {
-        // grab dongles
-        pthread_mutex_lock(&coder->left_dongle->mutex);
-        log_message(coder, "has taken a dongle");
-
-        pthread_mutex_lock(&coder->right_dongle->mutex);
-        log_message(coder, "has taken a dongle");
-
-        // compiling
-        log_message(coder, "is compiling");
-        coder->last_compile_time = get_time_in_ms(); // update for the monitor thread
-        usleep_in_ms(coder->args->time_to_compile);
-        coder->nb_compiles++;
-
-        // release dongles
-        pthread_mutex_unlock(&coder->left_dongle->mutex);
-        pthread_mutex_unlock(&coder->right_dongle->mutex);
-
-        // debug
-        log_message(coder, "is debugging");
-        usleep_in_ms(coder->args->time_to_debug);
-
-        // refactoring
-        log_message(coder, "is refactoring");
-        usleep_in_ms(coder->args->time_to_refactor);
-
-        // check goal
-        if (coder->args->nb_compiles_required != -1 &&
-            coder->nb_compiles >= coder->args->nb_compiles_required)
-        {
-            break;
-        }
-    }
+	coder->last_compile_time = coder->args->start_time;
+	while (1)
+	{
+		request_dongles(coder);
+		log_message(coder, "has taken a dongle");
+		log_message(coder, "has taken a dongle");
+		log_message(coder, "is compiling");
+		coder->last_compile_time = get_time_in_ms(); // update for the monitor thread
+		usleep_in_ms(coder->args->time_to_compile);
+		coder->nb_compiles++;
+		release_dongles(coder);
+		log_message(coder, "is debugging");
+		usleep_in_ms(coder->args->time_to_debug);
+		log_message(coder, "is refactoring");
+		usleep_in_ms(coder->args->time_to_refactor);
+		if (coder->args->nb_compiles_required != -1 && coder->nb_compiles
+			>= coder->args->nb_compiles_required)
+		{
+			break;
+		}
+	}
 	return (NULL);
 }
 
