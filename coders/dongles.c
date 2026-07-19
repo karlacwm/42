@@ -6,13 +6,13 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/17 02:20:16 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/18 02:39:29 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/19 23:27:25 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-void	request_dongles(t_coder *coder)
+int	request_dongles(t_coder *coder)
 {
 	t_request	polite_request;
 
@@ -24,6 +24,12 @@ void	request_dongles(t_coder *coder)
 	join_heap_q(&coder->args->queue, polite_request);
 	while (1)
 	{
+		if (check_burnout_or_coding(coder->args) == 0)
+        {
+            pthread_mutex_unlock(&coder->args->queue_mutex);
+            return (0); // Return 0 to tell the cycle to abort!
+        }
+
 		if (coder->args->queue.requests[0].coder_id == coder->id)
 		{
 			if (get_time_in_ms() >= coder->left_dongle->available_when
@@ -38,6 +44,7 @@ void	request_dongles(t_coder *coder)
 		pthread_cond_wait(&coder->args->queue_cond, &coder->args->queue_mutex);
 	}
 	pthread_mutex_unlock(&coder->args->queue_mutex);
+	return (1);
 }
 
 void	release_dongles(t_coder *coder)

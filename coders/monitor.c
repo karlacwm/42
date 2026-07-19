@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/18 02:33:33 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/18 05:04:18 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/19 23:13:03 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	monitor_check(t_coder *coders)
     int all_finished;
     long time_since_last_compile;
 
-    while (check_simulation_running(coders[0].args))
+    while (check_burnout_or_coding(coders[0].args))
     {
         i = 0;
         all_finished = 1; // Assume everyone is done until proven otherwise

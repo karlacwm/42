@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 08:30:26 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/18 04:46:37 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/19 23:24:31 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,33 +30,24 @@ int	main(int argc, char **argv)
 		free(dongles);
 		return (1);
 	}
+	args.burnout_yet = 1;
 	args.start_time = get_time_in_ms();
 	i = 0;
 	while (i < args.nb_coders)
 	{
+		coders[i].last_compile_time = args.start_time;
+		dongles[i].available_when = args.start_time;
 		if (pthread_create(&coders[i].thread, NULL, cycle, &coders[i]) != 0)
-		{
-			printf("Error: Failed to create thread %d.\n", coders[i].id);
-			return (1);
-		}
-		i++;
+			i++;
 	}
-	run_monitor(coders);
+	monitor_check(coders);
 	i = 0;
 	while (i < args.nb_coders)
 	{
 		if (pthread_join(coders[i].thread, NULL) != 0)
-		{
-			printf("Error: Failed to join thread %d.\n", coders[i].id);
-			return (1);
-		}
-		i++;
+			i++;
 	}
-	printf("%ld\n", args.start_time);
-	printf("success :)\n");
-	pthread_mutex_destroy(&args.message_mutex);
-	free(coders);
-	free(dongles);
+	cleanup_simulation(&args, coders, dongles);
 	return (0);
 }
 

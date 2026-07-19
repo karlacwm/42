@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 08:31:13 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/18 02:39:04 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/19 23:28:04 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,10 @@ void		usleep_in_ms(long time_to_sleep_in_ms);
 void		log_message(t_coder *coder, char *status);
 void		join_heap_q(t_heap *heap, t_request new_req);
 t_request	take_out_top_and_replace(t_heap *heap);
-void		request_dongles(t_coder *coder);
+int			request_dongles(t_coder *coder);
 void		release_dongles(t_coder *coder);
-int			check_burnout_or_coding(t_arg *args)
+int			check_burnout_or_coding(t_arg *args);
+void		monitor_check(t_coder *coders);
+void		cleanup_simulation(t_arg *args, t_coder *coders, t_dongle *dongles);
 
 #endif

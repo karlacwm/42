@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/06 16:39:21 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/18 02:29:01 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/19 23:27:47 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,11 @@ void	*cycle(void *arg)
 	t_coder	*coder;
 
 	coder = (t_coder *)arg;
-	coder->last_compile_time = coder->args->start_time;
+	// coder->last_compile_time = coder->args->start_time;
 	while (check_burnout_or_coding(coder->args))
 	{
-		request_dongles(coder);
+		if (request_dongles(coder) == 0)
+            break;
 		log_message(coder, "has taken a dongle");
 		log_message(coder, "has taken a dongle");
 		log_message(coder, "is compiling");

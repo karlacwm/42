@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/06 18:51:04 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/18 02:22:50 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/19 23:19:07 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,36 @@ int	check_burnout_or_coding(t_arg *args)
 	status = args->burnout_yet;
 	pthread_mutex_unlock(&args->coding_mutex);
 	return (status);
+}
+
+void cleanup_simulation(t_arg *args, t_coder *coders, t_dongle *dongles)
+{
+    int i;
+
+    // 1. Destroy the global mutexes and condition variables
+    pthread_mutex_destroy(&args->message_mutex);
+    pthread_mutex_destroy(&args->coding_mutex);
+    pthread_mutex_destroy(&args->queue_mutex);
+    pthread_cond_destroy(&args->queue_cond);
+
+    // 2. Loop through and destroy every single dongle's mutex
+    i = 0;
+    while (i < args->nb_coders)
+    {
+        pthread_mutex_destroy(&dongles[i].mutex);
+        i++;
+    }
+
+    // 3. Free the dynamically allocated memory (malloc'd in Phase 2)
+    // Don't forget to free the priority queue array we built for the scheduler!
+    if (args->queue.requests)
+        free(args->queue.requests);
+        
+    if (coders)
+        free(coders);
+        
+    if (dongles)
+        free(dongles);
 }
 
 // tv_sec = seconds
