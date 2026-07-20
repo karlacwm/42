@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/06 18:51:04 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/19 23:19:07 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/20 00:31:57 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,17 @@ long	get_time_in_ms(void)
 void	log_message(t_coder *coder, char *status)
 {
 	long	time_passed;
+	int		is_running;
 
-	time_passed = get_time_in_ms() - coder->args->start_time;
 	pthread_mutex_lock(&coder->args->message_mutex);
-	printf("%ld %d %s\n", time_passed, coder->id, status);
+	pthread_mutex_lock(&coder->args->coding_mutex);
+	is_running = coder->args->burnout_yet;
+	pthread_mutex_unlock(&coder->args->coding_mutex);
+	if (is_running)
+	{
+		time_passed = get_time_in_ms() - coder->args->start_time;
+		printf("%ld %d %s\n", time_passed, coder->id, status);
+	}
 	pthread_mutex_unlock(&coder->args->message_mutex);
 }
 
@@ -53,34 +60,26 @@ int	check_burnout_or_coding(t_arg *args)
 	return (status);
 }
 
-void cleanup_simulation(t_arg *args, t_coder *coders, t_dongle *dongles)
+void	cleanup_simulation(t_arg *args, t_coder *coders, t_dongle *dongles)
 {
-    int i;
+	int	i;
 
-    // 1. Destroy the global mutexes and condition variables
-    pthread_mutex_destroy(&args->message_mutex);
-    pthread_mutex_destroy(&args->coding_mutex);
-    pthread_mutex_destroy(&args->queue_mutex);
-    pthread_cond_destroy(&args->queue_cond);
-
-    // 2. Loop through and destroy every single dongle's mutex
-    i = 0;
-    while (i < args->nb_coders)
-    {
-        pthread_mutex_destroy(&dongles[i].mutex);
-        i++;
-    }
-
-    // 3. Free the dynamically allocated memory (malloc'd in Phase 2)
-    // Don't forget to free the priority queue array we built for the scheduler!
-    if (args->queue.requests)
-        free(args->queue.requests);
-        
-    if (coders)
-        free(coders);
-        
-    if (dongles)
-        free(dongles);
+	pthread_mutex_destroy(&args->message_mutex);
+	pthread_mutex_destroy(&args->coding_mutex);
+	pthread_mutex_destroy(&args->queue_mutex);
+	pthread_cond_destroy(&args->queue_cond);
+	i = 0;
+	while (i < args->nb_coders)
+	{
+		pthread_mutex_destroy(&dongles[i].mutex);
+		i++;
+	}
+	if (args->queue.requests)
+		free(args->queue.requests);
+	if (coders)
+		free(coders);
+	if (dongles)
+		free(dongles);
 }
 
 // tv_sec = seconds

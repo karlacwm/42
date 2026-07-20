@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/18 02:33:33 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/19 23:13:03 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/20 00:31:57 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,7 @@ void	monitor_check(t_coder *coders)
                 pthread_mutex_lock(&coders[0].args->message_mutex);
                 printf("%ld %d burned out\n",
                        get_time_in_ms() - coders[0].args->start_time, coders[i].id);
-                // Note: We intentionally do NOT unlock the message_mutex here.
-                // This permanently silences the terminal so no coders can print after a death!
+                pthread_mutex_unlock(&coders[0].args->message_mutex);
 
                 // 3. Wake up any coders stuck in the waiting room so they can exit
                 pthread_cond_broadcast(&coders[0].args->queue_cond);

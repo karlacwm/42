@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/03 18:49:21 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/18 02:39:33 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/20 00:31:58 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,13 @@ int	parse_argv(int argc, char **argv, t_arg *args)
 		i++;
 	}
 	store_data(argv, args);
+	if (args->nb_coders <= 0 || args->time_to_burnout <= 0
+		|| args->time_to_compile <= 0 || args->time_to_debug <= 0
+		|| args->time_to_refactor <= 0 || args->dongle_cooldown < 0)
+	{
+		printf("Parsing error - all time values and coders must be positive.\n");
+		return (1);
+	}
 	return (0);
 }
 

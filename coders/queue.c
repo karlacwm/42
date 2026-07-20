@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/17 01:05:53 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/17 02:12:38 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/20 00:32:30 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static int	decide_who_first(t_request a, t_request b, int scheduler)
 {
 	if (scheduler == 0)
 		return (a.arrival_time < b.arrival_time);
-	return (a.arrival_time > b.arrival_time);
+	return (a.deadline < b.deadline);
 }
 
 
