@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/06 16:39:21 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/21 19:47:42 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/21 19:52:42 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,10 @@ void	*cycle(void *arg)
 	while (check_burnout_or_coding(coder->args))
 	{
 		if (request_dongles(coder) == 0)
-			break;
+			break ;
 		compile_start(coder);
 		if (compile_done(coder))
-			break;
+			break ;
 		debug_refactor(coder);
 	}
 	return (NULL);
