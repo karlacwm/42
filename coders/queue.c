@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/17 01:05:53 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/20 00:32:30 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/21 20:15:44 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ static int	decide_who_first(t_request a, t_request b, int scheduler)
 		return (a.arrival_time < b.arrival_time);
 	return (a.deadline < b.deadline);
 }
-
 
 void	join_heap_q(t_heap *heap, t_request new_req)
 {
@@ -32,7 +31,8 @@ void	join_heap_q(t_heap *heap, t_request new_req)
 	while (current > 0)
 	{
 		parent = (current - 1) / 2;
-		if (decide_who_first(heap->requests[current], heap->requests[parent], heap->scheduler))
+		if (decide_who_first(heap->requests[current],
+				heap->requests[parent], heap->scheduler))
 		{
 			temp = heap->requests[current];
 			heap->requests[current] = heap->requests[parent];
@@ -41,19 +41,43 @@ void	join_heap_q(t_heap *heap, t_request new_req)
 		}
 		else
 		{
-			break;
+			break ;
 		}
 	}
+}
+
+static int	actual_work(t_heap *heap, int current)
+{
+	t_request	temp;
+	int			left;
+	int			right;
+	int			most_urgent;
+
+	while (1)
+	{
+		most_urgent = current;
+		left = (2 * current) + 1;
+		right = (2 * current) + 2;
+		if (left < heap->size && decide_who_first(heap->requests[left],
+				heap->requests[most_urgent], heap->scheduler))
+			most_urgent = left;
+		if (right < heap->size && decide_who_first(heap->requests[right],
+				heap->requests[most_urgent], heap->scheduler))
+			most_urgent = right;
+		if (most_urgent == current)
+			return (-1);
+		temp = heap->requests[current];
+		heap->requests[current] = heap->requests[most_urgent];
+		heap->requests[most_urgent] = temp;
+		current = most_urgent;
+	}
+	return (current);
 }
 
 t_request	take_out_top_and_replace(t_heap *heap)
 {
 	t_request	top;
-	t_request	temp;
 	int			current;
-	int			left;
-	int			right;
-	int			most_urgent;
 
 	current = 0;
 	top = heap->requests[0];
@@ -61,25 +85,13 @@ t_request	take_out_top_and_replace(t_heap *heap)
 	if (heap->size == 0)
 		return (top);
 	heap->requests[0] = heap->requests[heap->size];
-	while (1)
+	current = 0;
+	while (current != -1)
 	{
-		most_urgent = current;
-		left = (2 * current) + 1;
-		right = (2 * current) + 2;
-		if (left < heap->size && decide_who_first(heap->requests[left], heap->requests[most_urgent], heap->scheduler))
-			most_urgent = left;
-		if (right < heap->size && decide_who_first(heap->requests[right], heap->requests[most_urgent], heap->scheduler))
-			most_urgent = right;
-		if (most_urgent == current)
-			break;
-		temp = heap->requests[current];
-		heap->requests[current] = heap->requests[most_urgent];
-		heap->requests[most_urgent] = temp;
-		current = most_urgent;
+		current = actual_work(heap, current);
 	}
 	return (top);
 }
-
 
 // heap is a specialized array,
 // where most important item always bubbles up to index 0
