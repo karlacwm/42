@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/06 16:39:21 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/21 19:52:42 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/21 23:24:10 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 static void	compile_start(t_coder *coder)
 {
-	log_message(coder, "has taken a dongle");
-	log_message(coder, "has taken a dongle");
-	log_message(coder, "is compiling");
 	pthread_mutex_lock(&coder->args->coding_mutex);
 	coder->last_compile_time = get_time_in_ms();
 	pthread_mutex_unlock(&coder->args->coding_mutex);
+	log_message(coder, "has taken a dongle");
+	log_message(coder, "has taken a dongle");
+	log_message(coder, "is compiling");
 	usleep_in_ms(coder->args->time_to_compile);
 }
 
