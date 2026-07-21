@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/03 18:49:21 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/21 02:44:59 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/21 15:30:28 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,11 +138,21 @@ int	parse_argv(int argc, char **argv, t_arg *args)
 	}
 	if (store_data(argv, args) != 0)
 		return (1);
-	if (args->nb_coders <= 0 || args->time_to_burnout <= 0
-		|| args->time_to_compile <= 0 || args->time_to_debug <= 0
-		|| args->time_to_refactor <= 0 || args->dongle_cooldown < 0)
+	if (args->nb_coders <= 0)
 	{
-		printf("Parsing error - all time values and coders must be positive.\n");
+		printf("Parsing error - should have at least one coder.\n");
+		return (1);
+	}
+	if (args->time_to_burnout < 0
+		|| args->time_to_compile < 0 || args->time_to_debug < 0
+		|| args->time_to_refactor < 0 || args->dongle_cooldown < 0)
+	{
+		printf("Parsing error - all time values must be positive.\n");
+		return (1);
+	}
+	if (args->nb_compiles_required < 0)
+	{
+		printf("Parsing error - no of compiles required must be positive.\n");
 		return (1);
 	}
 	return (0);
