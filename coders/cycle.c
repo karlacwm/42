@@ -6,44 +6,60 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/06 16:39:21 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/21 15:42:33 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/21 19:47:42 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
+
+static void	compile_start(t_coder *coder)
+{
+	log_message(coder, "has taken a dongle");
+	log_message(coder, "has taken a dongle");
+	log_message(coder, "is compiling");
+	pthread_mutex_lock(&coder->args->coding_mutex);
+	coder->last_compile_time = get_time_in_ms();
+	pthread_mutex_unlock(&coder->args->coding_mutex);
+	usleep_in_ms(coder->args->time_to_compile);
+}
+
+static int	compile_done(t_coder *coder)
+{
+	pthread_mutex_lock(&coder->args->coding_mutex);
+	coder->nb_compiles++;
+	if (coder->args->nb_compiles_required != -1
+		&& coder->nb_compiles >= coder->args->nb_compiles_required)
+	{
+		pthread_mutex_unlock(&coder->args->coding_mutex);
+		release_dongles(coder);
+		return (1);
+	}
+	pthread_mutex_unlock(&coder->args->coding_mutex);
+	return (0);
+}
+
+static void	debug_refactor(t_coder *coder)
+{
+	release_dongles(coder);
+	log_message(coder, "is debugging");
+	usleep_in_ms(coder->args->time_to_debug);
+	log_message(coder, "is refactoring");
+	usleep_in_ms(coder->args->time_to_refactor);
+}
 
 void	*cycle(void *arg)
 {
 	t_coder	*coder;
 
 	coder = (t_coder *)arg;
-	// coder->last_compile_time = coder->args->start_time;
 	while (check_burnout_or_coding(coder->args))
 	{
 		if (request_dongles(coder) == 0)
 			break;
-		log_message(coder, "has taken a dongle");
-		log_message(coder, "has taken a dongle");
-		log_message(coder, "is compiling");
-		pthread_mutex_lock(&coder->args->coding_mutex);
-		coder->last_compile_time = get_time_in_ms(); // update for the monitor thread
-		pthread_mutex_unlock(&coder->args->coding_mutex);
-		usleep_in_ms(coder->args->time_to_compile);
-		pthread_mutex_lock(&coder->args->coding_mutex);
-		coder->nb_compiles++;
-		if (coder->args->nb_compiles_required != -1
-			&& coder->nb_compiles >= coder->args->nb_compiles_required)
-		{
-			pthread_mutex_unlock(&coder->args->coding_mutex);
-			release_dongles(coder);
+		compile_start(coder);
+		if (compile_done(coder))
 			break;
-		}
-		pthread_mutex_unlock(&coder->args->coding_mutex);
-		release_dongles(coder);
-		log_message(coder, "is debugging");
-		usleep_in_ms(coder->args->time_to_debug);
-		log_message(coder, "is refactoring");
-		usleep_in_ms(coder->args->time_to_refactor);
+		debug_refactor(coder);
 	}
 	return (NULL);
 }
