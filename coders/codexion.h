@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 08:31:13 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/21 19:52:04 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/21 23:42:36 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,5 +85,7 @@ void		release_dongles(t_coder *coder);
 int			check_burnout_or_coding(t_arg *args);
 void		monitor_check(t_coder *coders);
 void		cleanup_simulation(t_arg *args, t_coder *coders, t_dongle *dongles);
+int			mutex_handle(t_arg *args);
+int			mutex_init(t_arg *args);
 
 #endif
