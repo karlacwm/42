@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/06 18:51:04 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/20 00:31:57 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/21 20:00:04 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 long	get_time_in_ms(void)
 {
-	struct	timeval time;
+	struct timeval	time;
 
 	if (gettimeofday(&time, NULL) != 0)
 	{
