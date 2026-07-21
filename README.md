@@ -25,6 +25,11 @@ coders can compile, debug, or refactor
 
 ## Instruction
 
+
+./codexion 5 500 50 50 50 3 50 fifo
+valgrind ./codexion 5 500 50 50 50 3 50 fifo
+valgrind --tool=helgrind ./codexion 5 500 50 50 50 3 50 fifo
+
 ## Blocking cases handled
 
 
