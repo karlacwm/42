@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 08:31:13 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/20 00:32:27 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/20 00:51:15 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ typedef struct s_request
 
 typedef struct s_heap
 {
-	t_request	*requests; // Array of requests allocated with malloc
-	int			size; // How many requests are currently in the queue
-	int			capacity; // Maximum number of requests (equals nb_coders)
+	t_request	*requests;
+	int			size;
+	int			capacity;
 	int			scheduler; // 0 for FIFO, 1 for EDF
 }		t_heap;
 
@@ -57,18 +57,17 @@ typedef struct s_arg
 typedef struct s_dongle
 {
 	int				id;
-	// int occupied;
-	long			available_when; // handles dongle_cooldown
-	pthread_mutex_t	mutex; // protects this dongle from race conditions
+	long			available_when;
+	pthread_mutex_t	mutex;
 }		t_dongle;
 
 typedef struct s_coder
 {
 	int			id;
 	int			nb_compiles;
-	long		last_compile_time; // used to calculate burnout
-	pthread_t	thread; // thread for this coder
-	t_arg		*args; // pointer to the arguments struct
+	long		last_compile_time;
+	pthread_t	thread;
+	t_arg		*args;
 	t_dongle	*left_dongle;
 	t_dongle	*right_dongle;
 }		t_coder;

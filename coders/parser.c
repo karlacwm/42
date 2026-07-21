@@ -6,40 +6,110 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/03 18:49:21 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/20 00:31:58 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/21 02:44:59 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-// return 0 if not a number, 1 if is a number
-static int	is_number(const char *str)
+static int	parse_int_arg(const char *str, int *value)
 {
-	if (!*str)
+	int		i;
+	int		sign;
+	long	result;
+	int		digit;
+
+	if (!str || !*str)
 		return (0);
-	while (*str)
+	i = 0;
+	sign = 1;
+	result = 0;
+	if (str[i] == '+')
+		i++;
+	else if (str[i] == '-')
 	{
-		if (*str < '0' || *str > '9')
-			return (0);
-		str++;
+		sign = -1;
+		i++;
 	}
+	if (str[i] == '\0')
+		return (0);
+	while (str[i] != '\0')
+	{
+		if (str[i] < '0' || str[i] > '9')
+			return (0);
+		digit = str[i] - '0';
+		if (sign > 0)
+		{
+			if (result > 2147483647 / 10
+				|| (result == 2147483647 / 10 && digit > 2147483647 % 10))
+				return (0);
+		}
+		else
+		{
+			if (result > 2147483648 / 10
+				|| (result == 2147483648 / 10 && digit > 2147483648 % 10))
+				return (0);
+		}
+		result = result * 10 + digit;
+		i++;
+	}
+	if (sign < 0)
+		result = -result;
+	*value = (int)result;
 	return (1);
 }
 
-static void	store_data(char **argv, t_arg *args)
+static int	store_data(char **argv, t_arg *args)
 {
-	// check INT MAX???
-	args->nb_coders = atoi(argv[1]);
-	args->time_to_burnout = atoi(argv[2]);
-	args->time_to_compile = atoi(argv[3]);
-	args->time_to_debug = atoi(argv[4]);
-	args->time_to_refactor = atoi(argv[5]);
-	args->nb_compiles_required = atoi(argv[6]);
-	args->dongle_cooldown = atoi(argv[7]);
+	int	value;
+
+	if (!parse_int_arg(argv[1], &value))
+	{
+		printf("Parsing error - %s is not a valid integer.\n", argv[1]);
+		return (1);
+	}
+	args->nb_coders = value;
+	if (!parse_int_arg(argv[2], &value))
+	{
+		printf("Parsing error - %s is not a valid integer.\n", argv[2]);
+		return (1);
+	}
+	args->time_to_burnout = value;
+	if (!parse_int_arg(argv[3], &value))
+	{
+		printf("Parsing error - %s is not a valid integer.\n", argv[3]);
+		return (1);
+	}
+	args->time_to_compile = value;
+	if (!parse_int_arg(argv[4], &value))
+	{
+		printf("Parsing error - %s is not a valid integer.\n", argv[4]);
+		return (1);
+	}
+	args->time_to_debug = value;
+	if (!parse_int_arg(argv[5], &value))
+	{
+		printf("Parsing error - %s is not a valid integer.\n", argv[5]);
+		return (1);
+	}
+	args->time_to_refactor = value;
+	if (!parse_int_arg(argv[6], &value))
+	{
+		printf("Parsing error - %s is not a valid integer.\n", argv[6]);
+		return (1);
+	}
+	args->nb_compiles_required = value;
+	if (!parse_int_arg(argv[7], &value))
+	{
+		printf("Parsing error - %s is not a valid integer.\n", argv[7]);
+		return (1);
+	}
+	args->dongle_cooldown = value;
 	if (strcmp(argv[8], "fifo") == 0)
 		args->scheduler = 0;
 	else
 		args->scheduler = 1;
+	return (0);
 }
 
 int	parse_argv(int argc, char **argv, t_arg *args)
@@ -59,14 +129,15 @@ int	parse_argv(int argc, char **argv, t_arg *args)
 	i = 1;
 	while (i < 8)
 	{
-		if (!is_number(argv[i]))
+		if (argv[i][0] == '\0')
 		{
-			printf("Parsing error - %s is not a positive integer.\n", argv[i]);
+			printf("Parsing error - %s is not a valid integer.\n", argv[i]);
 			return (1);
 		}
 		i++;
 	}
-	store_data(argv, args);
+	if (store_data(argv, args) != 0)
+		return (1);
 	if (args->nb_coders <= 0 || args->time_to_burnout <= 0
 		|| args->time_to_compile <= 0 || args->time_to_debug <= 0
 		|| args->time_to_refactor <= 0 || args->dongle_cooldown < 0)
@@ -106,12 +177,10 @@ int	init_data(t_arg *args, t_coder **coders, t_dongle **dongles)
 	i = 0;
 	while (i < args->nb_coders)
 	{
-		// Coders must be numbered from 1 to number_of_coders[cite: 1]
 		(*coders)[i].id = i + 1;
 		(*coders)[i].nb_compiles = 0;
 		(*coders)[i].last_compile_time = 0;
-		(*coders)[i].args = args; // Hand them the rulebook
-		// Link the left and right dongles
+		(*coders)[i].args = args;
 		(*coders)[i].left_dongle = &((*dongles)[i]);
 		(*coders)[i].right_dongle = &((*dongles)[(i + 1) % args->nb_coders]);
 		i++;
