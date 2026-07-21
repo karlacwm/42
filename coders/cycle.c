@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/06 16:39:21 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/20 00:31:58 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/21 15:42:33 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	*cycle(void *arg)
 	while (check_burnout_or_coding(coder->args))
 	{
 		if (request_dongles(coder) == 0)
-            break;
+			break;
 		log_message(coder, "has taken a dongle");
 		log_message(coder, "has taken a dongle");
 		log_message(coder, "is compiling");
@@ -31,17 +31,19 @@ void	*cycle(void *arg)
 		usleep_in_ms(coder->args->time_to_compile);
 		pthread_mutex_lock(&coder->args->coding_mutex);
 		coder->nb_compiles++;
+		if (coder->args->nb_compiles_required != -1
+			&& coder->nb_compiles >= coder->args->nb_compiles_required)
+		{
+			pthread_mutex_unlock(&coder->args->coding_mutex);
+			release_dongles(coder);
+			break;
+		}
 		pthread_mutex_unlock(&coder->args->coding_mutex);
 		release_dongles(coder);
 		log_message(coder, "is debugging");
 		usleep_in_ms(coder->args->time_to_debug);
 		log_message(coder, "is refactoring");
 		usleep_in_ms(coder->args->time_to_refactor);
-		if (coder->args->nb_compiles_required != -1 && coder->nb_compiles
-			>= coder->args->nb_compiles_required)
-		{
-			break;
-		}
 	}
 	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 08:30:26 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/20 00:31:58 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/21 03:11:10 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,11 @@ int	main(int argc, char **argv)
 	{
 		coders[i].last_compile_time = args.start_time;
 		dongles[i].available_when = args.start_time;
+		i++;
+	}
+	i = 0;
+	while (i < args.nb_coders)
+	{
 		if (pthread_create(&coders[i].thread, NULL, cycle, &coders[i]) != 0)
 			break ;
 		i++;

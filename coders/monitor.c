@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/18 02:33:33 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/20 00:31:57 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/21 15:42:33 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,64 +14,48 @@
 
 void	monitor_check(t_coder *coders)
 {
-	int i;
-    int all_finished;
-    long time_since_last_compile;
+	int		i;
+	int		all_finished;
+	long	time_since_last_compile;
+	int		nb_compiles;
+	long	last_compile_time;
 
-    while (check_burnout_or_coding(coders[0].args))
-    {
-        i = 0;
-        all_finished = 1; // Assume everyone is done until proven otherwise
-
-        while (i < coders[0].args->nb_coders)
-        {
-            // Lock to safely read the coder's current status
-            pthread_mutex_lock(&coders[0].args->coding_mutex);
-            time_since_last_compile = get_time_in_ms() - coders[i].last_compile_time;
-
-            // Check if this coder hasn't reached their quota yet
-            if (coders[i].args->nb_compiles_required == -1 ||
-                coders[i].nb_compiles < coders[i].args->nb_compiles_required)
-            {
-                all_finished = 0; // Someone is still working
-            }
-            pthread_mutex_unlock(&coders[0].args->coding_mutex);
-
-            // --- BURNOUT CHECK ---
-            if (time_since_last_compile > coders[0].args->time_to_burnout)
-            {
-                // 1. Flip the kill switch to stop all coders
-                pthread_mutex_lock(&coders[0].args->coding_mutex);
-                coders[0].args->burnout_yet = 0;
-                pthread_mutex_unlock(&coders[0].args->coding_mutex);
-
-                // 2. Print the death message. (We lock message_mutex so it doesn't garble)
-                pthread_mutex_lock(&coders[0].args->message_mutex);
-                printf("%ld %d burned out\n",
-                       get_time_in_ms() - coders[0].args->start_time, coders[i].id);
-                pthread_mutex_unlock(&coders[0].args->message_mutex);
-
-                // 3. Wake up any coders stuck in the waiting room so they can exit
-                pthread_cond_broadcast(&coders[0].args->queue_cond);
-                return ;
-            }
-            i++;
-        }
-
-        // --- QUOTA CHECK ---
-        // If the loop finished and all coders met their quota, stop the simulation cleanly
-        if (coders[0].args->nb_compiles_required != -1 && all_finished == 1)
-        {
-            pthread_mutex_lock(&coders[0].args->coding_mutex);
-            coders[0].args->burnout_yet = 0;
-            pthread_mutex_unlock(&coders[0].args->coding_mutex);
-
-            // Wake up anyone stuck in the waiting room
-            pthread_cond_broadcast(&coders[0].args->queue_cond);
-            return ;
-        }
-
-        // Sleep for a tiny amount (e.g., 1ms) so the monitor doesn't fry your CPU
-        usleep_in_ms(1);
-    }
+	while (check_burnout_or_coding(coders[0].args))
+	{
+		i = 0;
+		all_finished = 1;
+		while (i < coders[0].args->nb_coders)
+		{
+			pthread_mutex_lock(&coders[0].args->coding_mutex);
+			last_compile_time = coders[i].last_compile_time;
+			nb_compiles = coders[i].nb_compiles;
+			pthread_mutex_unlock(&coders[0].args->coding_mutex);
+			time_since_last_compile = get_time_in_ms() - last_compile_time;
+			if (coders[i].args->nb_compiles_required == -1
+				|| nb_compiles < coders[i].args->nb_compiles_required)
+				all_finished = 0;
+			if (time_since_last_compile > coders[0].args->time_to_burnout)
+			{
+				pthread_mutex_lock(&coders[0].args->coding_mutex);
+				coders[0].args->burnout_yet = 0;
+				pthread_mutex_unlock(&coders[0].args->coding_mutex);
+				pthread_mutex_lock(&coders[0].args->message_mutex);
+				printf("%ld %d burned out\n",
+					get_time_in_ms() - coders[0].args->start_time, coders[i].id);
+				pthread_mutex_unlock(&coders[0].args->message_mutex);
+				pthread_cond_broadcast(&coders[0].args->queue_cond);
+				return ;
+			}
+			i++;
+		}
+		if (coders[0].args->nb_compiles_required != -1 && all_finished == 1)
+		{
+			pthread_mutex_lock(&coders[0].args->coding_mutex);
+			coders[0].args->burnout_yet = 0;
+			pthread_mutex_unlock(&coders[0].args->coding_mutex);
+			pthread_cond_broadcast(&coders[0].args->queue_cond);
+			return ;
+		}
+		usleep_in_ms(1);
+	}
 }
