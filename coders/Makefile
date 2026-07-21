@@ -3,8 +3,8 @@ CC = cc
 CFLAG = -Wall -Wextra -Werror -pthread
 RM = rm -f
 
-SRC = main.c parser.c cycle.c utils.c queue.c \
-		dongles.c monitor.c mutex_utils.c
+SRC = main.c utils.c cycle.c queue.c dongles.c monitor.c \
+	mutex_utils.c parser1_parse.c parser2_store.c parser3_init.c
 
 OBJ = ${SRC:%.c=%.o}
 
