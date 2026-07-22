@@ -7,7 +7,6 @@ def generate_unconstrained(
         prompt: str, llm: LLMManager, max_tokens: int = 20) -> str:
     """Generates text purely by picking the most likely next token."""
     print(f"\nOriginal Prompt: '{prompt}'")
-    print("Model is generating text...")
 
     input_ids: List[int] = llm.text_to_token_ids_list(prompt)
     generated_text = ""

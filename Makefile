@@ -7,7 +7,7 @@ export HF_HOME
 install:
 	mkdir -p $(UV_CACHE)
 	mkdir -p $(HF_HOME)
-	uv sync
+	uv sync --cache-dir $(UV_CACHE)
 
 run:
 	uv run python -m src

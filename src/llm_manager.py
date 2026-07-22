@@ -5,11 +5,10 @@ from llm_sdk import Small_LLM_Model  # type: ignore
 
 class LLMManager:
     def __init__(self) -> None:
-        print("Initializing Small_LLM_Model...")
         try:
             self.model = Small_LLM_Model()
         except Exception as e:
-            print(f"Failed to initialize model: {e}")
+            print(f"Error occurred: {e}")
             sys.exit(1)
 
         # Load Vocabulary
@@ -23,7 +22,7 @@ class LLMManager:
                 int(v): k for k, v in self.token_to_id.items()}
             print(f"Vocabulary loaded! ({len(self.id_to_token)} tokens)")
         except Exception as e:
-            print(f"Failed to load vocabulary: {e}")
+            print(f"Error occurred: {e}")
             sys.exit(1)
 
     def text_to_token_ids_list(self, text: str) -> list[int]:
