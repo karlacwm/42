@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/17 02:20:16 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/22 00:35:12 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/22 01:37:02 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,15 @@ int	request_dongles(t_coder *coder)
 	t_dongle	*first;
 	t_dongle	*second;
 
+	if (coder->left_dongle == coder->right_dongle)
+	{
+		pthread_mutex_lock(&coder->left_dongle->mutex);
+		log_message(coder, "has taken a dongle");
+		while (check_burnout_or_coding(coder->args))
+			usleep(500);
+		pthread_mutex_unlock(&coder->left_dongle->mutex);
+		return (0);
+	}
 	init_before_request(coder, &polite_request, &first, &second);
 	pthread_mutex_lock(&coder->args->queue_mutex);
 	join_heap_q(&coder->args->queue, polite_request);
