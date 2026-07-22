@@ -9,6 +9,7 @@
 # }
 
 from pydantic import BaseModel
+from typing import Any
 
 # 1. Define what a single Parameter looks like
 
@@ -32,3 +33,9 @@ class FunctionDef(BaseModel):
     # and the value is the ParameterDef (like {"type": "number"})
     parameters: dict[str, ParameterDef]
     returns: ReturnDef
+
+
+class FunctionCall(BaseModel):
+    name: str
+    # Arguments can be numbers, strings, etc., so we use Dict[str, Any]
+    arguments: dict[str, Any]
