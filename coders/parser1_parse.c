@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/03 18:49:21 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/22 00:26:41 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/23 21:24:55 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,6 @@ int	parse_and_store(char *str, int *field)
 	return (0);
 }
 
-// "Try again with: ./codexion <no_of_coders> <time_to_burnout> "
-// 			"<time_to_compile> <time_to_debug> <time_to_refactor> "
-// 			"<no_of_compiles_required> <dongle_cooldown> <scheduler>\n"
+// ./codexion <no_of_coders> <time_to_burnout> <time_to_compile>
+// <time_to_debug> <time_to_refactor> <no_of_compiles_required>
+// <dongle_cooldown> <edf/fifo>

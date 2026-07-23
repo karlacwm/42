@@ -21,14 +21,39 @@ Phase 6: The Monitor Thread & Cleanup (Checking for burnouts and freeing memory)
 
 ## Description
 
-coders can compile, debug, or refactor
+Coders can compile, debug, or refactor. The project codexion is about
 
 ## Instruction
 
+To build:
+```
+cd coders && make
+```
 
+Test the program with the exact number of arguments:
+
+(Values should be positive integers. Time value will be parsed in milliseconds and there should be at least one coder.)
+```
+./codexion <no_of_coders> <time_to_burnout> <time_to_compile> <time_to_debug> <time_to_refactor> <no_of_compiles_required> <dongle_cooldown> <edf/fifo>
+```
+
+For example:
+```
 ./codexion 5 500 50 50 50 3 50 fifo
+```
+
+To test with valgrind and helgrind:
+```
 valgrind ./codexion 5 500 50 50 50 3 50 fifo
 valgrind --tool=helgrind ./codexion 5 500 50 50 50 3 50 fifo
+```
+
+Example test to show difference in edf and fifo
+
+```
+./codexion 4 600 200 100 100 5 10 fifo
+./codexion 4 600 200 100 100 5 10 edf
+```
 
 ## Blocking cases handled
 
@@ -45,6 +70,7 @@ https://man7.org/linux/man-pages/man7/pthreads.7.html
 https://pubs.opengroup.org/onlinepubs/7908799/xsh/pthread.h.html
 https://www.geeksforgeeks.org/c/thread-functions-in-c-c/
 https://blog.gtwang.org/programming/pthread-multithreading-programming-in-c-tutorial/
+https://medium.com/@ruinadd/philosophers-42-guide-the-dining-philosophers-problem-893a24bc0fe2
 https://tigercosmos.xyz/en/post/2020/07/simple-pthread-usage/
 https://medium.com/@jalal92/the-dining-philosophers-7157cc05315
 https://suspectedoceano.notion.site/Philosophers-b1bf3c57eee6420cafa7d0900b3d3216
