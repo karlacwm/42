@@ -62,21 +62,36 @@ Example test to show difference in edf and fifo
 
 
 ## Resources
-https://www.youtube.com/watch?v=d9s_d28yJq0&list=PLfqABt5AS4FmuQf70psXrsMLEDQXNkLq2&index=1
-https://www.youtube.com/watch?v=mvZKu0DfFLQ
-https://www.youtube.com/watch?v=zOpzGHwJ3MU
-https://www.youtube.com/watch?v=ldJ8WGZVXZk
-https://man7.org/linux/man-pages/man7/pthreads.7.html
-https://pubs.opengroup.org/onlinepubs/7908799/xsh/pthread.h.html
-https://www.geeksforgeeks.org/c/thread-functions-in-c-c/
-https://blog.gtwang.org/programming/pthread-multithreading-programming-in-c-tutorial/
-https://medium.com/@ruinadd/philosophers-42-guide-the-dining-philosophers-problem-893a24bc0fe2
-https://tigercosmos.xyz/en/post/2020/07/simple-pthread-usage/
-https://medium.com/@jalal92/the-dining-philosophers-7157cc05315
-https://suspectedoceano.notion.site/Philosophers-b1bf3c57eee6420cafa7d0900b3d3216
-https://www.codequoi.com/en/threads-mutexes-and-concurrent-programming-in-c/
-https://www.geeksforgeeks.org/c/heap-in-c/
+Youtube videos
+[[1]](https://www.youtube.com/watch?v=d9s_d28yJq0&list=PLfqABt5AS4FmuQf70psXrsMLEDQXNkLq2&index=1)
+[[2]](https://www.youtube.com/watch?v=mvZKu0DfFLQ)
+[[3]](https://www.youtube.com/watch?v=zOpzGHwJ3MU)
+[[4]](https://www.youtube.com/watch?v=ldJ8WGZVXZk)
+
+Threads
+[[1]](https://man7.org/linux/man-pages/man7/pthreads.7.html)
+[[2]](https://pubs.opengroup.org/onlinepubs/7908799/xsh/pthread.h.html)
+[[3]](https://www.geeksforgeeks.org/c/thread-functions-in-c-c/)
+[[4]](https://blog.gtwang.org/programming/pthread-multithreading-programming-in-c-tutorial/)
+[[5]](https://tigercosmos.xyz/en/post/2020/07/simple-pthread-usage/)
+[[6]](https://www.codequoi.com/en/threads-mutexes-and-concurrent-programming-in-c/)
+
+Guide
+[[1]](https://medium.com/@ruinadd/philosophers-42-guide-the-dining-philosophers-problem-893a24bc0fe2)
+[[2]](https://medium.com/@jalal92/the-dining-philosophers-7157cc05315)
+[[3]](https://suspectedoceano.notion.site/Philosophers-b1bf3c57eee6420cafa7d0900b3d3216)
+
+Heap
+[[1]](https://www.geeksforgeeks.org/c/heap-in-c/)
 
 For this project, the README.md must also include:
 • A “Blocking cases handled” section describing all the concurrency issues addressed in your solution (e.g., deadlock prevention and Coffman’s conditions, starvation prevention, cooldown handling, precise burnout detection, and log serialization).
 • A “Thread synchronization mechanisms” section explaining the specific threading primitives used in your implementation (pthread_mutex_t, pthread_cond_t, custom event implementation) and how they coordinate access to shared resources (dongles, logging, monitor state). Include examples of how race conditions are prevented and how thread-safe communication is achieved between coders and the monitor
+
+## AI Usage
+AI is used in this project:
+- build my foundation knowledge for threads and mutexes concepts
+- confirm and correct my understanding to the new concepts
+- explain when i don't understand something
+- guide me through step by step
+- debug and check for error handling
