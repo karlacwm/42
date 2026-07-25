@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/17 02:20:16 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/22 01:37:02 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/25 02:09:17 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,6 @@ void	release_dongles(t_coder *coder)
 		first_dongle = coder->right_dongle;
 		second_dongle = coder->left_dongle;
 	}
-	pthread_mutex_lock(&coder->args->queue_mutex);
 	current_time = get_time_in_ms();
 	coder->left_dongle->available_when = current_time
 		+ coder->args->dongle_cooldown;
@@ -123,6 +122,7 @@ void	release_dongles(t_coder *coder)
 	if (!same_dongle)
 		pthread_mutex_unlock(&second_dongle->mutex);
 	pthread_mutex_unlock(&first_dongle->mutex);
+	pthread_mutex_lock(&coder->args->queue_mutex);
 	pthread_cond_broadcast(&coder->args->queue_cond);
 	pthread_mutex_unlock(&coder->args->queue_mutex);
 }

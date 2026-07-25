@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/06 18:51:04 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/21 23:24:10 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/25 01:25:51 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	log_message(t_coder *coder, char *status)
 	if (!is_running)
 		return ;
 	pthread_mutex_lock(&coder->args->message_mutex);
-	if (coder->args->burnout_yet)
+	if (is_running)
 	{
 		time_passed = get_time_in_ms() - coder->args->start_time;
 		printf("%ld %d %s\n", time_passed, coder->id, status);

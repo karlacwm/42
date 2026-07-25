@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/18 02:33:33 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/21 23:44:16 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/25 02:09:17 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 static void	coder_burned_out(t_coder *coders, int i)
 {
+	pthread_mutex_lock(&coders[0].args->queue_mutex);
 	pthread_mutex_lock(&coders[0].args->coding_mutex);
 	coders[0].args->burnout_yet = 0;
 	pthread_mutex_unlock(&coders[0].args->coding_mutex);
@@ -22,6 +23,7 @@ static void	coder_burned_out(t_coder *coders, int i)
 		get_time_in_ms() - coders[0].args->start_time, coders[i].id);
 	pthread_mutex_unlock(&coders[0].args->message_mutex);
 	pthread_cond_broadcast(&coders[0].args->queue_cond);
+	pthread_mutex_unlock(&coders[0].args->queue_mutex);
 }
 
 static int	check_coder(t_coder *coders, int i, int *all_finished)
@@ -63,10 +65,12 @@ void	monitor_check(t_coder *coders)
 		}
 		if (coders[0].args->nb_compiles_required != -1 && all_finished)
 		{
+			pthread_mutex_lock(&coders[0].args->queue_mutex);
 			pthread_mutex_lock(&coders[0].args->coding_mutex);
 			coders[0].args->burnout_yet = 0;
 			pthread_mutex_unlock(&coders[0].args->coding_mutex);
 			pthread_cond_broadcast(&coders[0].args->queue_cond);
+			pthread_mutex_unlock(&coders[0].args->queue_mutex);
 			return ;
 		}
 		usleep_in_ms(1);

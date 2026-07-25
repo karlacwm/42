@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 08:30:26 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/21 23:42:15 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/25 02:09:17 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,12 @@ static void	init_simulation(t_arg *args, t_coder *coders,
 static int	handle_thread_error(t_arg *args, t_coder *coders,
 		t_dongle *dongles, int created)
 {
+	pthread_mutex_lock(&args->queue_mutex);
 	pthread_mutex_lock(&args->coding_mutex);
 	args->burnout_yet = 0;
 	pthread_mutex_unlock(&args->coding_mutex);
 	pthread_cond_broadcast(&args->queue_cond);
+	pthread_mutex_unlock(&args->queue_mutex);
 	while (created-- > 0)
 		pthread_join(coders[created].thread, NULL);
 	cleanup_simulation(args, coders, dongles);
@@ -92,24 +94,3 @@ int	main(int argc, char **argv)
 	cleanup_simulation(&args, coders, dongles);
 	return (0);
 }
-
-// --------learning about threads and testing ----------
-// void	*routine(void)
-// {
-// 	printf("start\n");
-// 	sleep(2);
-// 	printf("end\n");
-// 	return (NULL);
-// }
-
-// int	main(int argc, char **argv)
-// {
-// 	pthread_t	t1;
-// 	pthread_t	t2;
-
-// 	pthread_create(&t1, NULL, (void *)&routine, NULL);
-// 	pthread_create(&t2, NULL, (void *)&routine, NULL);
-// 	pthread_join(t1, NULL);
-// 	pthread_join(t2, NULL);
-// 	return (0);
-// }
