@@ -6,11 +6,25 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/06 16:39:21 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/23 21:25:42 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/25 01:53:52 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
+
+static void	wait_for_start(t_coder *coder)
+{
+	pthread_mutex_lock(&coder->args->queue_mutex);
+	coder->args->ready_coders++;
+	if (coder->args->ready_coders == coder->args->nb_coders)
+	{
+		coder->args->start_ready = 1;
+		pthread_cond_broadcast(&coder->args->queue_cond);
+	}
+	while (!coder->args->start_ready && check_burnout_or_coding(coder->args))
+		pthread_cond_wait(&coder->args->queue_cond, &coder->args->queue_mutex);
+	pthread_mutex_unlock(&coder->args->queue_mutex);
+}
 
 static void	compile_start(t_coder *coder)
 {
@@ -52,6 +66,7 @@ void	*cycle(void *arg)
 	t_coder	*coder;
 
 	coder = (t_coder *)arg;
+	wait_for_start(coder);
 	while (check_burnout_or_coding(coder->args))
 	{
 		if (request_dongles(coder) == 0)

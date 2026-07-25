@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 08:31:13 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/22 00:29:10 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/25 01:56:41 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@
 typedef struct s_request
 {
 	int		coder_id;
-	long	arrival_time; // Used to sort if scheduler == 0 (FIFO
-	long	deadline; // Used to sort if scheduler == 1 (EDF)
+	long	arrival_time;
+	long	deadline;
 }		t_request;
 
 typedef struct s_heap
@@ -32,7 +32,7 @@ typedef struct s_heap
 	t_request	*requests;
 	int			size;
 	int			capacity;
-	int			scheduler; // 0 for FIFO, 1 for EDF
+	int			scheduler; // 0 for fifo, 1 for edf
 }		t_heap;
 
 typedef struct s_arg
@@ -47,6 +47,8 @@ typedef struct s_arg
 	int				scheduler; // 0 for fifo, 1 for edf
 	long			start_time;
 	int				burnout_yet; // 0 for burnout, 1 for coding
+	int				ready_coders;
+	int				start_ready;
 	pthread_mutex_t	coding_mutex;
 	pthread_mutex_t	message_mutex;
 	t_heap			queue;
@@ -86,7 +88,6 @@ void		release_dongles(t_coder *coder);
 int			check_burnout_or_coding(t_arg *args);
 void		monitor_check(t_coder *coders);
 void		cleanup_simulation(t_arg *args, t_coder *coders, t_dongle *dongles);
-int			mutex_handle(t_arg *args);
 int			mutex_init(t_arg *args);
 
 #endif

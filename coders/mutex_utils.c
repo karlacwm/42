@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/21 23:38:14 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/24 21:57:27 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/25 02:15:17 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	init_data(t_arg *args, t_coder **coders, t_dongle **dongles)
 	return (0);
 }
 
-int	mutex_handle(t_arg *args)
+static int	mutex_handle(t_arg *args)
 {
 	if (pthread_mutex_init(&args->coding_mutex, NULL) != 0)
 		return (1);
@@ -94,8 +94,8 @@ int	mutex_init(t_arg *args)
 	args->queue.size = 0;
 	args->queue.capacity = args->nb_coders;
 	args->queue.scheduler = args->scheduler;
-	// args->ready_coders = 0;
-	// args->start_ready = 0;
+	args->ready_coders = 0;
+	args->start_ready = 0;
 	args->queue.requests = malloc(sizeof(t_request) * args->nb_coders);
 	if (!args->queue.requests)
 		return (1);
