@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/21 23:38:14 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/25 02:15:17 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/25 02:44:25 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ static int	init_dongles(t_arg *args, t_dongle *dongles)
 	{
 		dongles[i].id = i;
 		dongles[i].available_when = 0;
-		// do i always need a mutex init?
 		if (pthread_mutex_init(&dongles[i].mutex, NULL) != 0)
 			return (1);
 		i++;
