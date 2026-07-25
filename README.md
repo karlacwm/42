@@ -44,10 +44,19 @@ Example test to show difference in edf and fifo
 ```
 
 ## Blocking cases handled
-
+These issues are handled in the project:
+- coders acquire shared dongles in a consistent order and release them safely after use, avoiding circular waiting
+- coders are scheduled in a fair order using the FIFO/EDF policy, so a thread cannot occupy the resources indefinitely
+- the monitor thread stops the simulation when a coder has burnout or completion conditions are reached
+- logging is also protected by mutex so it remains readable even when many threads write at the same time
 
 ## Thread synchronization mechanisms
-
+To coordinate access to shared resources safely:
+- ```pthread_mutex_t``` is used to resources such as the dongles, the queue and the logging messages
+- ```pthread_cond_t``` is used to make threads wait until a resource becomes available or until the condition changes
+- when a coder wants to use a dongle, it first requests it, checks whether it is available, if it is not locked by a mutex
+- when a coder releases a dongle, it updates the cooldown timestamp, unlocks the mutex, and signals waiting threads, so the next coder can proceed
+- logging messages from different threads cannot pollute the terminal output
 
 ## Resources
 Youtube videos
