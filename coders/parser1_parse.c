@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/03 18:49:21 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/23 21:24:55 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/25 02:16:13 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ int	parse_and_store(char *str, int *field)
 {
 	int	value;
 
+	value = 0;
 	if (!parse_int_arg(str, &value))
 	{
 		printf("Parsing error - %s is not a valid integer.\n", str);

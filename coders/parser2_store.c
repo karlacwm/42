@@ -6,7 +6,7 @@
 /*   By: wcheung <wcheung@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/22 00:18:31 by wcheung           #+#    #+#             */
-/*   Updated: 2026/07/23 21:25:37 by wcheung          ###   ########.fr       */
+/*   Updated: 2026/07/25 02:02:51 by wcheung          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,23 +39,6 @@ static int	store_data(char **argv, t_arg *args)
 		args->scheduler = 0;
 	else
 		args->scheduler = 1;
-	return (0);
-}
-
-static int	check_empty_args(char **argv)
-{
-	int	i;
-
-	i = 1;
-	while (i < 8)
-	{
-		if (argv[i][0] == '\0')
-		{
-			printf("Parsing error - %s is not a valid integer.\n", argv[i]);
-			return (1);
-		}
-		i++;
-	}
 	return (0);
 }
 
@@ -94,8 +77,6 @@ int	parse_argv(int argc, char **argv, t_arg *args)
 		printf("Parsing error - scheduler must be either fifo or edf.\n");
 		return (1);
 	}
-	if (check_empty_args(argv))
-		return (1);
 	if (store_data(argv, args))
 		return (1);
 	return (validate_values(args));
