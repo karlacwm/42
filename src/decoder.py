@@ -18,25 +18,47 @@ def generate_constrained_deco(
         logit_list = llm.get_logits_list(input_ids)
         logits = np.array(logit_list)
         mask = np.full_like(logits, -np.inf)
-        
-        if generated_text in valid_paths:
-            # STATE 4: Parameters! (We turn off the bouncer here for now)
-            mask = np.zeros_like(logits)
-        else:
-            # Find which paths are still possible based on what we've generated
+
+        matched_path = None
+        for path in valid_paths:
+            if generated_text.startswith(path):
+                matched_path = path
+                break
+
+        if not matched_path:
             possible_paths = [
                 p for p in valid_paths if p.startswith(generated_text)]
 
             for token_id, token_string in llm.id_to_token.items():
                 clean_token = token_string.replace("Ġ", "").replace(" ", "")
-                if not clean_token:
-                    continue
-
-                test_string = generated_text + clean_token
-
-                # If this token keeps us on ANY valid path, unban it!
-                if any(p.startswith(test_string) for p in possible_paths):
+                if clean_token and any(p.startswith(
+                        generated_text + clean_token) for p in possible_paths):
                     mask[token_id] = 0
+        else:
+            if generated_text.count('{') == 2 and generated_text.count('}') == 1:
+                for token_id, token_string in llm.id_to_token.items():
+                    if token_string.replace("Ġ", "").replace(" ", "") == "}":
+                        mask[token_id] = 0
+
+            else:
+                func_name = matched_path.split('"name":"')[1].split('"')[0]
+                selected_func = next(f for f in func if f.name == func_name)
+
+                allowed_chars = set('":,.}')
+                allowed_chars.update('0123456789-')
+
+                for param_name in selected_func.parameters.keys():
+                    allowed_chars.update(param_name)
+
+                for token_id, token_string in llm.id_to_token.items():
+                    clean_token = token_string.replace(
+                        "Ġ", "").replace(" ", "")
+
+                    if clean_token and all(c in allowed_chars for c in clean_token):
+                        if '}' in clean_token and clean_token != '}':
+                            continue
+
+                        mask[token_id] = 0
 
         logits = logits + mask
         best_token_id = int(np.argmax(logits))
@@ -47,8 +69,12 @@ def generate_constrained_deco(
         print(
             f"Step {step+1}: Added token {best_token_id}"
             f" -> '{new_word_piece}'")
-        if generated_text.endswith("}}"):
-            print("\n == reached the }} ")
+        open_brackets = generated_text.count('{')
+        close_brackets = generated_text.count('}')
+
+        if open_brackets > 0 and open_brackets == close_brackets:
+            print(
+                "\nStopping")
             break
 
     return generated_text

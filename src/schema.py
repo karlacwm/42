@@ -18,6 +18,7 @@ class FunctionDef(BaseModel):
 
 
 class FunctionCall(BaseModel):
+    prompt: str
     name: str
     arguments: dict[str, Any]
 
