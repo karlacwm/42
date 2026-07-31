@@ -11,13 +11,11 @@ class LLMManager:
             print(f"Error occurred: {e}")
             sys.exit(1)
 
-        # Load Vocabulary
         try:
             vocab_path = self.model.get_path_to_vocab_file()
             with open(vocab_path, 'r', encoding='utf-8') as f:
                 self.token_to_id = json.load(f)
 
-            # Create reverse lookup dictionary
             self.id_to_token = {
                 int(v): k for k, v in self.token_to_id.items()}
             print(f"Vocabulary loaded! ({len(self.id_to_token)} tokens)")
@@ -32,7 +30,6 @@ class LLMManager:
     def token_id_to_string(self, token_id: int) -> str:
         """Convert a single token ID back to its string representation."""
         raw_string = self.id_to_token.get(token_id, "")
-        # Clean up the Hugging Face space character 'Ġ'
         return raw_string.replace("Ġ", " ")
 
     def get_logits_list(self, input_ids: list[int]) -> list[float]:

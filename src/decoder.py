@@ -1,9 +1,11 @@
 import numpy as np
 from src.llm_manager import LLMManager
+from src.schema import FunctionDef
 
 
 def generate_unconstrained(
-        prompt: str, llm: LLMManager, max_tokens: int = 20) -> str:
+        prompt: str, llm: LLMManager, func: list[FunctionDef],
+        max_tokens: int = 20) -> str:
     """Generates text purely by picking the most likely next token."""
     print(f"\nOriginal Prompt: '{prompt}'")
 
@@ -11,30 +13,31 @@ def generate_unconstrained(
     generated_text = ""
 
     for step in range(max_tokens):
-        # 1. Get probabilities
         logit_list = llm.get_logits_list(input_ids)
         logits = np.array(logit_list)
-        if step == 0:
-            mask = np.full_like(logits, -np.inf)
+
+        mask = np.full_like(logits, -np.inf)
+        name_format = '{"name":"'
+
+        if len(generated_text) < len(name_format):
+            remaining = name_format[len(generated_text):]
 
             for token_id, token_string in llm.id_to_token.items():
-                # We use .strip() to catch "{" and " {" (with spaces)
-                if token_string.replace("Ġ", "").strip() == "{":
+                clean_token = token_string.replace("Ġ", "").replace(" ", "")
+
+                if clean_token and remaining.startswith(clean_token):
                     mask[token_id] = 0
+        else:
+            mask = np.zeros_like(logits)
 
-            # Apply our mask to the AI's scoreboard
-            # (Any normal score + (-inf) = -inf. The AI is now powerless!)
-            logits = logits + mask
+        logits = logits + mask
 
-        # 2. Pick the highest scoring token
         best_token_id = int(np.argmax(logits))
 
-        # 3. Add to sequence
         input_ids.append(best_token_id)
 
-        # 4. Map back to text
         new_word_piece = llm.token_id_to_string(best_token_id)
-        generated_text += new_word_piece
+        generated_text += new_word_piece.replace("Ġ", "").replace(" ", "")
 
         print(
             f"Step {step+1}: Added token {best_token_id}"

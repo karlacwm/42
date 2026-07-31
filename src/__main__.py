@@ -2,14 +2,12 @@ import argparse
 import json
 import sys
 
-# Import our new modularized code
 from src.llm_manager import LLMManager
 from src.decoder import generate_unconstrained
 from src.schema import FunctionDef
 
 
 def main() -> None:
-    # 1. Parse Arguments
     parser = argparse.ArgumentParser(description="LLM Function Calling tool")
     parser.add_argument("--functions_definition", type=str,
                         default="data/input/functions_definition.json")
@@ -19,10 +17,7 @@ def main() -> None:
                         default="data/output/function_calling_results.json")
     args = parser.parse_args()
 
-    # 2. Load Files
     try:
-        # with open(args.functions_definition, 'r') as f:
-        #     functions_def = json.load(f)
         with open(args.functions_definition, 'r') as f:
             prompts_data = json.load(f)
         functions_def: list[FunctionDef] = [
@@ -34,14 +29,12 @@ def main() -> None:
         print(f"Error occurred: {e}")
         sys.exit(1)
 
-    # 3. Initialize LLM Manager
     llm = LLMManager()
 
-    # 4. Run the Decoder Experiment
     first_prompt = prompts_data[0]["prompt"]
 
     final_output = generate_unconstrained(
-        prompt=first_prompt, llm=llm, max_tokens=20)
+        prompt=first_prompt, llm=llm, func=functions_def, max_tokens=20)
 
     print(f"\nFinal Unconstrained Output:\n{first_prompt} {final_output}")
 
