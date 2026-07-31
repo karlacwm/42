@@ -3,7 +3,7 @@ import json
 import sys
 
 from src.llm_manager import LLMManager
-from src.decoder import generate_unconstrained
+from src.decoder import generate_constrained_deco
 from src.schema import FunctionDef
 
 
@@ -30,11 +30,9 @@ def main() -> None:
         sys.exit(1)
 
     llm = LLMManager()
-
     first_prompt = prompts_data[0]["prompt"]
-
-    final_output = generate_unconstrained(
-        prompt=first_prompt, llm=llm, func=functions_def, max_tokens=20)
+    final_output = generate_constrained_deco(
+        prompt=first_prompt, llm=llm, func=functions_def, max_tokens=50)
 
     print(f"\nFinal Unconstrained Output:\n{first_prompt} {final_output}")
 

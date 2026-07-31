@@ -1,5 +1,6 @@
 import json
 import sys
+from typing import Any
 from llm_sdk import Small_LLM_Model  # type: ignore
 
 
@@ -23,15 +24,15 @@ class LLMManager:
             print(f"Error occurred: {e}")
             sys.exit(1)
 
-    def text_to_token_ids_list(self, text: str) -> list[int]:
+    def text_to_token_ids_list(self, text: str) -> list[int] | Any:
         """Convert text to a list of token IDs."""
         return self.model.encode(text).tolist()[0]
 
-    def token_id_to_string(self, token_id: int) -> str:
+    def token_id_to_string(self, token_id: int) -> str | Any:
         """Convert a single token ID back to its string representation."""
         raw_string = self.id_to_token.get(token_id, "")
         return raw_string.replace("Ġ", " ")
 
-    def get_logits_list(self, input_ids: list[int]) -> list[float]:
+    def get_logits_list(self, input_ids: list[int]) -> list[float] | Any:
         """Get the raw probabilities for the next token."""
         return self.model.get_logits_from_input_ids(input_ids)
