@@ -19,10 +19,9 @@ def main() -> None:
 
     try:
         with open(args.functions_definition, 'r') as f:
-            prompts_data = json.load(f)
+            func_data = json.load(f)
         functions_def: list[FunctionDef] = [
-            FunctionDef(**fn) for fn in prompts_data]
-
+            FunctionDef(**func) for func in func_data]
         with open(args.input, 'r') as f:
             prompts_data = json.load(f)
     except Exception as e:

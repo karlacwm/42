@@ -35,7 +35,8 @@ def generate_constrained_deco(
                         generated_text + clean_token) for p in possible_paths):
                     mask[token_id] = 0
         else:
-            if generated_text.count('{') == 2 and generated_text.count('}') == 1:
+            if generated_text.count('{') == 2 and generated_text.count(
+                    '}') == 1:
                 for token_id, token_string in llm.id_to_token.items():
                     if token_string.replace("Ġ", "").replace(" ", "") == "}":
                         mask[token_id] = 0
@@ -54,7 +55,8 @@ def generate_constrained_deco(
                     clean_token = token_string.replace(
                         "Ġ", "").replace(" ", "")
 
-                    if clean_token and all(c in allowed_chars for c in clean_token):
+                    if clean_token and all(c in allowed_chars
+                                           for c in clean_token):
                         if '}' in clean_token and clean_token != '}':
                             continue
 
@@ -66,9 +68,9 @@ def generate_constrained_deco(
 
         new_word_piece = llm.token_id_to_string(best_token_id)
         generated_text += new_word_piece.replace("Ġ", "").replace(" ", "")
-        print(
-            f"Step {step+1}: Added token {best_token_id}"
-            f" -> '{new_word_piece}'")
+        # print(
+        #     f"Step {step+1}: Added token {best_token_id}"
+        #     f" -> '{new_word_piece}'")
         open_brackets = generated_text.count('{')
         close_brackets = generated_text.count('}')
 

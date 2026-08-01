@@ -20,14 +20,19 @@ class FunctionDef(BaseModel):
 class FunctionCall(BaseModel):
     prompt: str
     name: str
-    arguments: dict[str, Any]
+    parameters: dict[str, Any]
 
-# {
-#   "name": "fn_add_numbers",
-#   "description": "Add two numbers together and return their sum.",
-#   "parameters": {
-#     "a": {"type": "number"},
-#     "b": {"type": "number"}
+
+# example output -- save to data/output/function_calling_results.json
+# [
+#   {
+#       "prompt": "What is the sum of 2 and 3?",
+#       "name": "fn_add_numbers",
+#       "parameters": {"a": 2.0, "b": 3.0}
 #   },
-#   "returns": {"type": "number"}
-# }
+#   {
+#       "prompt": "Reverse the string 'hello'",
+#       "name": "fn_reverse_string",
+#       "parameters": {"s": "hello"}
+#   }
+# ]
