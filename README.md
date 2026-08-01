@@ -33,3 +33,7 @@ https://magazine.sebastianraschka.com/p/understanding-encoder-and-decoder
 
 JSON
 https://www.geeksforgeeks.org/python/json-load-in-python/
+
+Python
+https://www.geeksforgeeks.org/python/python-os-makedirs-method/
+
