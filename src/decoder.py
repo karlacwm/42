@@ -3,80 +3,81 @@ from src.llm_manager import LLMManager
 from src.schema import FunctionDef
 
 
-def generate_constrained_deco(
+def generate_constrained_decod(
         prompt: str, llm: LLMManager, func: list[FunctionDef],
-        max_tokens: int = 10) -> str:
-    """Generates text purely by picking the most likely next token."""
-    print(f"\nOriginal Prompt: '{prompt}'")
+        max_tokens: int = 150) -> str:
 
-    input_ids: list[int] = llm.text_to_token_ids_list(prompt)
-    generated_text = ""
+    valid_names = [f.name for f in func]
 
-    valid_paths = [f'{{"name":"{f.name}","parameters":{{' for f in func]
+    # ==========================================
+    # STAGE 1: Let the AI pick the function name
+    # ==========================================
+    # We create a new prompt just to ask the AI for the name!
+    stage1_prompt = f"Question: {prompt}\nWhich of these functions should be used? {valid_names}\nAnswer with exactly one function name:"
+    input_ids = llm.text_to_token_ids_list(stage1_prompt)
 
-    for step in range(max_tokens):
-        logit_list = llm.get_logits_list(input_ids)
-        logits = np.array(logit_list)
-        mask = np.full_like(logits, -np.inf)
+    generated_name = ""
+    matched_name = None
 
-        matched_path = None
-        for path in valid_paths:
-            if generated_text.startswith(path):
-                matched_path = path
+    # We only give it 20 steps because we only need the short name
+    for _ in range(20):
+        logits = np.array(llm.get_logits_list(input_ids))
+        best_token = int(np.argmax(logits))
+        input_ids.append(best_token)
+
+        piece = llm.token_id_to_string(best_token)
+        generated_name += piece
+
+        # If we see one of our valid function names in what it typed, we win!
+        for name in valid_names:
+            if name in generated_name:
+                matched_name = name
                 break
-
-        if not matched_path:
-            possible_paths = [
-                p for p in valid_paths if p.startswith(generated_text)]
-
-            for token_id, token_string in llm.id_to_token.items():
-                clean_token = token_string.replace("Ġ", "").replace(" ", "")
-                if clean_token and any(p.startswith(
-                        generated_text + clean_token) for p in possible_paths):
-                    mask[token_id] = 0
-        else:
-            if generated_text.count('{') == 2 and generated_text.count(
-                    '}') == 1:
-                for token_id, token_string in llm.id_to_token.items():
-                    if token_string.replace("Ġ", "").replace(" ", "") == "}":
-                        mask[token_id] = 0
-
-            else:
-                func_name = matched_path.split('"name":"')[1].split('"')[0]
-                selected_func = next(f for f in func if f.name == func_name)
-
-                allowed_chars = set('":,.}')
-                allowed_chars.update('0123456789-')
-
-                for param_name in selected_func.parameters.keys():
-                    allowed_chars.update(param_name)
-
-                for token_id, token_string in llm.id_to_token.items():
-                    clean_token = token_string.replace(
-                        "Ġ", "").replace(" ", "")
-
-                    if clean_token and all(c in allowed_chars
-                                           for c in clean_token):
-                        if '}' in clean_token and clean_token != '}':
-                            continue
-
-                        mask[token_id] = 0
-
-        logits = logits + mask
-        best_token_id = int(np.argmax(logits))
-        input_ids.append(best_token_id)
-
-        new_word_piece = llm.token_id_to_string(best_token_id)
-        generated_text += new_word_piece.replace("Ġ", "").replace(" ", "")
-        # print(
-        #     f"Step {step+1}: Added token {best_token_id}"
-        #     f" -> '{new_word_piece}'")
-        open_brackets = generated_text.count('{')
-        close_brackets = generated_text.count('}')
-
-        if open_brackets > 0 and open_brackets == close_brackets:
-            print(
-                "\nStopping")
+        if matched_name:
             break
 
-    return generated_text
+    # Fallback: If the AI gets confused, safely default to the first function
+    if not matched_name:
+        matched_name = valid_names[0]
+
+    print(f"[Stage 1] AI picked function: {matched_name}")
+
+    # ==========================================
+    # STAGE 2: Let the AI generate the parameters
+    # ==========================================
+    # Now we ask it to generate JUST the parameters for the function it picked!
+    stage2_prompt = f"Question: {prompt}\nOutput only a valid JSON dictionary containing the parameters for the function '{matched_name}'.\nJSON:"
+    input_ids = llm.text_to_token_ids_list(stage2_prompt)
+
+    generated_params = ""
+    for step in range(max_tokens):
+        logits = np.array(llm.get_logits_list(input_ids))
+        best_token = int(np.argmax(logits))
+        input_ids.append(best_token)
+
+        piece = llm.token_id_to_string(best_token)
+        generated_params += piece
+
+        # Stop when the JSON brackets are perfectly balanced
+        open_brackets = generated_params.count('{')
+        close_brackets = generated_params.count('}')
+        if open_brackets > 0 and open_brackets == close_brackets:
+            break
+
+    # ==========================================
+    # STAGE 3: Assemble the Perfect JSON
+    # ==========================================
+    # The AI might have said "Here is your JSON: { ... }".
+    # We use find() to chop off the extra words and just grab the brackets!
+    start_idx = generated_params.find('{')
+    end_idx = generated_params.rfind('}') + 1
+
+    if start_idx != -1 and end_idx != -1:
+        clean_params = generated_params[start_idx:end_idx]
+    else:
+        clean_params = "{}"  # Ultimate safe fallback
+
+    # We manually build the final string. This guarantees the formatting is flawlessly perfect.
+    final_json_string = f'{{"name": "{matched_name}", "parameters": {clean_params}}}'
+    print(final_json_string)
+    return final_json_string

@@ -6,6 +6,19 @@
 
 ## Instruction
 
+uv run python -m src [--functions_definition <function_definition_file>] [--input <input_file>] [--
+output <output_file>]
+
+uv run python -m src
+--functions_definition data/input/functions_definition.json
+--input data/input/function_calling_tests.json
+--output data/output/function_calls.json
+
+uv sync
+uv run python -m moulinette prepare_exercises
+uv run python -m moulinette grade_student_answers ../data/output/function_calling_results.json
+
+
 
 ## Additionals
 ### Algorithm explanation

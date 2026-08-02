@@ -1,10 +1,10 @@
 import argparse
 import json
 import sys
-
+import os
 from src.llm_manager import LLMManager
-from src.decoder import generate_constrained_deco
-from src.schema import FunctionDef
+from src.decoder import generate_constrained_decod
+from src.schema import FunctionCall, FunctionDef
 
 
 def main() -> None:
@@ -29,11 +29,31 @@ def main() -> None:
         sys.exit(1)
 
     llm = LLMManager()
-    first_prompt = prompts_data[0]["prompt"]
-    final_output = generate_constrained_deco(
-        prompt=first_prompt, llm=llm, func=functions_def, max_tokens=50)
+    results = []
 
-    print(f"\nFinal Unconstrained Output:\n{first_prompt} {final_output}")
+    for item in prompts_data:
+        prompt_text = item["prompt"]
+        print(f"\n processing {prompt_text}")
+
+        raw_output = generate_constrained_decod(
+            prompt=prompt_text, llm=llm, func=functions_def, max_tokens=50)
+
+        try:
+            parsed_json = json.loads(raw_output)
+
+            validate_pydantic = FunctionCall(
+                prompt=prompt_text,
+                name=parsed_json.get("name", ""),
+                parameters=parsed_json.get("parameters", {})
+            )
+
+            results.append(validate_pydantic.model_dump())
+        except Exception as e:
+            print(f"Error occurred when parsing output: {e}")
+
+    os.makedirs(os.path.dirname(args.output), exist_ok=True)
+    with open(args.output, "w") as f:
+        json.dump(results, f, indent=2)
 
 
 if __name__ == "__main__":
