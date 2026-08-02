@@ -17,7 +17,7 @@ class FunctionDef(BaseModel):
     returns: ReturnDef
 
 
-class FunctionCall(BaseModel):
+class Output(BaseModel):
     prompt: str
     name: str
     parameters: dict[str, Any]

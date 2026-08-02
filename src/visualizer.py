@@ -5,11 +5,10 @@ class Visualizer:
     """Displays progress bars and status updates in the terminal."""
 
     @staticmethod
-    def print_header(title: str) -> None:
-        """Prints a styled section header."""
-        print("\n==================================================")
-        print(f"  {title}")
-        print("==================================================")
+    def print_start() -> None:
+        """Shows that the program starts."""
+        print("\n( ˶°ㅁ°)* ✧ﾟ･✧ Loading prompts and "
+              "calling functions ✧ﾟ･✧ *(°ㅁ°˶ )\n")
 
     @staticmethod
     def show_progress(current: int, total: int,
@@ -28,3 +27,8 @@ class Visualizer:
         sys.stdout.flush()
         if current == total:
             print()  # Print a newline when finished
+
+    @staticmethod
+    def print_done() -> None:
+        """Shows that the program finishes."""
+        print("\n(◍•ᴗ•◍)✧*。 All Done! Check the output! 。*✧(◍•ᴗ•◍)\n")
