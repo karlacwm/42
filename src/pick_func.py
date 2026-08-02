@@ -26,7 +26,7 @@ class FunctionPicking:
         stage1_prompt = (
             f"Question: {prompt}\n"
             f"Here are the available functions and what they do:\n{menu}\n"
-            "Based on the question, which function should be used?"
+            "Based on the question, which function should be used?\n"
             "Answer with EXACTLY one function name:"
         )
 
