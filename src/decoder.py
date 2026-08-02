@@ -9,11 +9,15 @@ def generate_constrained_decod(
 
     valid_names = [f.name for f in func]
 
-    # ==========================================
-    # STAGE 1: Let the AI pick the function name
-    # ==========================================
+    # Build a super simple menu so the AI knows what the functions actually do!
+    menu = ""
+    for f in func:
+        menu += f"- {f.name}: {f.description}\n"
+
     # We create a new prompt just to ask the AI for the name!
-    stage1_prompt = f"Question: {prompt}\nWhich of these functions should be used? {valid_names}\nAnswer with exactly one function name:"
+    # NEW: We include the 'menu' so it doesn't get tricked by keywords.
+    stage1_prompt = f"Question: {prompt}\nHere are the available functions and what they do:\n{menu}\nBased on the question, which function should be used? Answer with EXACTLY one function name:"
+    
     input_ids = llm.text_to_token_ids_list(stage1_prompt)
 
     generated_name = ""
@@ -42,11 +46,15 @@ def generate_constrained_decod(
 
     print(f"[Stage 1] AI picked function: {matched_name}")
 
-    # ==========================================
-    # STAGE 2: Let the AI generate the parameters
-    # ==========================================
-    # Now we ask it to generate JUST the parameters for the function it picked!
-    stage2_prompt = f"Question: {prompt}\nOutput only a valid JSON dictionary containing the parameters for the function '{matched_name}'.\nJSON:"
+    # NEW: Let's find the exact expected parameter names from your schema
+    expected_params = []
+    for f in func:
+        if f.name == matched_name:
+            expected_params = list(f.parameters.keys())
+            break
+            
+    # NEW: We tell the AI exactly which parameter keys we want!
+    stage2_prompt = f"Question: {prompt}\nOutput ONLY a valid JSON dictionary containing the parameters {expected_params} for the function '{matched_name}'.\nJSON:"
     input_ids = llm.text_to_token_ids_list(stage2_prompt)
 
     generated_params = ""
@@ -64,9 +72,6 @@ def generate_constrained_decod(
         if open_brackets > 0 and open_brackets == close_brackets:
             break
 
-    # ==========================================
-    # STAGE 3: Assemble the Perfect JSON
-    # ==========================================
     # The AI might have said "Here is your JSON: { ... }".
     # We use find() to chop off the extra words and just grab the brackets!
     start_idx = generated_params.find('{')
@@ -79,5 +84,5 @@ def generate_constrained_decod(
 
     # We manually build the final string. This guarantees the formatting is flawlessly perfect.
     final_json_string = f'{{"name": "{matched_name}", "parameters": {clean_params}}}'
-    print(final_json_string)
+
     return final_json_string
