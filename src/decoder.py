@@ -38,8 +38,6 @@ class Decoder:
         input_ids = self.llm.text_to_token_ids_list(stage2_prompt)
         generated_params = ""
 
-        print(f"\n[AI Typing Parameters for {matched_name}]: ", end="")
-
         # Generate tokens one by one
         for step in range(max_tokens):
             logits = np.array(self.llm.get_logits_list(input_ids))
