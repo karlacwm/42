@@ -1,6 +1,7 @@
 import json
 import os
 from typing import Any
+from src.visualizer import Visualizer
 
 
 class FileHandler:
@@ -12,7 +13,7 @@ class FileHandler:
         If the file is missing or corrupted, it catches the error safely.
         """
         if not os.path.exists(filepath):
-            print(f"[Error] The file '{filepath}' does not exist.")
+            print(f"Error caught: '{filepath}' does not exist.")
             # Error Recovery: Return an empty list so the program doesn't crash
             return []
 
@@ -22,14 +23,14 @@ class FileHandler:
                 return data
 
         except json.JSONDecodeError as e:
-            print(f"[Error] The file '{filepath}' contains invalid JSON.")
+            print(f"Error caught: '{filepath}' contains invalid JSON.")
             print(f"Details: {e}")
             # Error Recovery: Return empty list to gracefully skip
             return []
 
         except Exception as e:
             print(
-                f"Error occurred while reading '{filepath}': {e}")
+                f"Error occurred: failed to read '{filepath}' - {e}")
             return []
 
     def save_json(self, filepath: str, data: list[Any]) -> None:
@@ -45,7 +46,7 @@ class FileHandler:
 
             with open(filepath, 'w', encoding='utf-8') as file:
                 json.dump(data, file, indent=2)
-            print(f"[Success] Data safely saved to {filepath}")
+            Visualizer.print_done(filepath)
 
         except Exception as e:
-            print(f"[Error] Failed to save output to '{filepath}': {e}")
+            print(f"Error occurred saving output to '{filepath}': {e}")

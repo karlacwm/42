@@ -16,8 +16,8 @@ class DataValidator:
                 # Pydantic validates the structure automatically
                 func_obj = FunctionDef(**raw_item)
                 valid_defs.append(func_obj)
-            except ValidationError as err:
-                print(f"Validation error: function def #{index} - {err}")
+            except ValidationError as e:
+                print(f"Validation error: function def #{index} - {e}")
         return valid_defs
 
     @staticmethod
