@@ -18,7 +18,7 @@ class FileHandler:
 
         try:
             with open(filepath, 'r', encoding='utf-8') as file:
-                data = json.load(file)
+                data: list[Any] | dict[str, Any] = json.load(file)
                 return data
 
         except json.JSONDecodeError as e:
@@ -41,7 +41,7 @@ class FileHandler:
             # Ensure the output directory exists (e.g., data/output/)
             directory = os.path.dirname(filepath)
             if directory:
-                os.path.makedirs(directory, exist_ok=True)
+                os.makedirs(directory, exist_ok=True)
 
             with open(filepath, 'w', encoding='utf-8') as file:
                 json.dump(data, file, indent=2)

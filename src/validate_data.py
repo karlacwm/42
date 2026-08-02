@@ -1,6 +1,6 @@
+from typing import Any
 from pydantic import ValidationError
 from src.schema import FunctionDef, Output
-from typing import Any
 
 
 class DataValidator:
@@ -8,7 +8,7 @@ class DataValidator:
 
     @staticmethod
     def validate_function_definitions(
-            raw_defs: list[dict]) -> list[FunctionDef]:
+            raw_defs: list[dict[str, Any]]) -> list[FunctionDef]:
         """Ensures input function definitions match our Pydantic schema."""
         valid_defs = []
         for index, raw_item in enumerate(raw_defs):
@@ -34,7 +34,7 @@ class DataValidator:
 
     @staticmethod
     def validate_output(prompt: str, name: str,
-                        params: dict) -> dict | None:
+                        params: dict[str, Any]) -> dict[str, Any] | None:
         """Ensures the generated result matches the required output schema."""
         try:
             output_obj = Output(prompt=prompt, name=name,

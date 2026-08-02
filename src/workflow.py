@@ -25,14 +25,18 @@ class Workflow:
 
         # Say hello with our happy kaomoji!
         Visualizer.print_start()
-
+        track_progress = 0
         # --- STEP 1: Load and Validate Data ---
         raw_functions = self.file_handler.load_json(functions_path)
         raw_prompts = self.file_handler.load_json(input_path)
 
         # Ensure the data matches our Pydantic rules before we start
-        functions = DataValidator.validate_function_definitions(raw_functions)
-        prompts = DataValidator.validate_prompts(raw_prompts)
+        functions = DataValidator.validate_function_definitions(
+            raw_functions if isinstance(raw_functions, list) else []
+        )
+        prompts = DataValidator.validate_prompts(
+            raw_prompts if isinstance(raw_prompts, list) else []
+        )
 
         if not functions or not prompts:
             print("[Error] Missing or invalid data. Cannot continue.")
@@ -47,8 +51,8 @@ class Workflow:
 
             # Update our beautiful progress bar
             Visualizer.show_progress(
-                index, total_prompts, prefix="Generating JSON")
-
+                track_progress, total_prompts)
+            track_progress += 1
             # Stage 1: Ask the AI which function to use
             matched_name = self.selector.select_function(
                 prompt_text, functions)
@@ -80,7 +84,7 @@ class Workflow:
                         break
 
                 # Ensure it perfectly matches the Pydantic FunctionCall schema
-                validated_dict = DataValidator.validate_output_call(
+                validated_dict = DataValidator.validate_output(
                     prompt=prompt_text,
                     name=func_name,
                     params=params
@@ -94,8 +98,7 @@ class Workflow:
                 pass
 
         # Fill the progress bar to 100% when the loop finishes
-        Visualizer.show_progress(
-            total_prompts, total_prompts, prefix="Generating JSON")
+        Visualizer.show_progress(total_prompts, total_prompts)
 
         # --- STEP 4: Save and Finish ---
         self.file_handler.save_json(output_path, final_results)
