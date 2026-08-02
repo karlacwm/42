@@ -52,3 +52,8 @@ https://www.geeksforgeeks.org/python/python-os-makedirs-method/
 
 Pydantic
 https://pydantic.dev/docs/validation/dev/concepts/serialization/
+
+Visualizer
+https://emojicombos.com/kaomoji
+https://www.geeksforgeeks.org/python/clear-screen-python/
+https://www.geeksforgeeks.org/python/python-subprocess-module/
