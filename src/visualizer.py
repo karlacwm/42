@@ -1,5 +1,5 @@
 import sys
-import os
+import subprocess
 
 
 class Visualizer:
@@ -25,7 +25,7 @@ class Visualizer:
         bar = "█" * filled + "░" * (bar_length - filled)
         percent = int(progress * 100)
 
-        os.system('clear')
+        subprocess.run(["clear"], check=False)
         sys.stdout.write(
             f"Generating output: [{bar}] {percent}% "
             f"({self.current}/{self.total})"
@@ -50,7 +50,7 @@ class Visualizer:
            "                                          "
            "˚⊹       ┊    ┊"
            "\n✩⋆    ✮      "
-           "                                               "
+           "                                              "
            "      ✩    ⋆✮"
            f"\n\n   Check the results now in {filepath}"
            "\n                (◍•ᴗ•◍)✧*。 Call again soon! 。*✧(◍•ᴗ•◍)\n")
