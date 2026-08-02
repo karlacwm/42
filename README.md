@@ -50,3 +50,5 @@ https://www.geeksforgeeks.org/python/json-load-in-python/
 Python
 https://www.geeksforgeeks.org/python/python-os-makedirs-method/
 
+Pydantic
+https://pydantic.dev/docs/validation/dev/concepts/serialization/
