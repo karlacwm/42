@@ -23,9 +23,6 @@ class Workflow:
             output_path: str) -> None:
         """Runs the entire process from loading files to saving the results."""
 
-        # Say hello with our happy kaomoji!
-        Visualizer.print_start()
-        track_progress = 0
         # --- STEP 1: Load and Validate Data ---
         raw_functions = self.file_handler.load_json(functions_path)
         raw_prompts = self.file_handler.load_json(input_path)
@@ -39,20 +36,16 @@ class Workflow:
         )
 
         if not functions or not prompts:
-            print("[Error] Missing or invalid data. Cannot continue.")
+            print("Error occurred: data missing or invalid, cannot continue.")
             return
 
         final_results = []
         total_prompts = len(prompts)
-
+        visualizer = Visualizer(total_prompts)
+        Visualizer.print_start()
         # --- STEP 2: Process Each Prompt ---
         for index, item in enumerate(prompts):
             prompt_text = item["prompt"]
-
-            # Update our beautiful progress bar
-            Visualizer.show_progress(
-                track_progress, total_prompts)
-            track_progress += 1
             # Stage 1: Ask the AI which function to use
             matched_name = self.selector.select_function(
                 prompt_text, functions)
@@ -97,9 +90,11 @@ class Workflow:
                 # If the AI failed completely, we skip safely without crashing
                 pass
 
+            # Update our beautiful progress bar after the prompt finishes.
+            visualizer.update()
+
         # Fill the progress bar to 100% when the loop finishes
-        Visualizer.show_progress(total_prompts, total_prompts)
+        visualizer.finish()
 
         # --- STEP 4: Save and Finish ---
         self.file_handler.save_json(output_path, final_results)
-        Visualizer.print_done()
