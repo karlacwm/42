@@ -1,15 +1,15 @@
-# UV_CACHE := /goinfre/$(USER)/uv_cache
-# HF_HOME := /goinfre/$(USER)/hf_cache
-# LINT_CHECK = src/
-# export UV_CACHE
-# export HF_HOME
-
-UV_CACHE ?= /tmp/$(USER)/uv_cache
-HF_HOME ?= /tmp/$(USER)/hf_cache
+UV_CACHE := /goinfre/$(USER)/uv_cache
+HF_HOME := /goinfre/$(USER)/hf_cache
 LINT_CHECK = src/
-export PATH := $(HOME)/.local/bin:$(PATH)
 export UV_CACHE
 export HF_HOME
+
+# UV_CACHE ?= /tmp/$(USER)/uv_cache
+# HF_HOME ?= /tmp/$(USER)/hf_cache
+# LINT_CHECK = src/
+# export PATH := $(HOME)/.local/bin:$(PATH)
+# export UV_CACHE
+# export HF_HOME
 
 install:
 	mkdir -p $(UV_CACHE)
@@ -17,7 +17,7 @@ install:
 	uv sync --cache-dir $(UV_CACHE)
 
 run:
-	uv run python -m src
+	uv run python -m src 2> stderr_log.txt
 
 debug:
 	uv run python -m pdb -m src
