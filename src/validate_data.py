@@ -1,3 +1,4 @@
+import sys
 from typing import Any
 from pydantic import ValidationError
 from src.schema import FunctionDef, Output
@@ -17,7 +18,9 @@ class DataValidator:
                 func_obj = FunctionDef(**raw_item)
                 valid_defs.append(func_obj)
             except ValidationError as e:
-                print(f"Validation error: function def #{index} - {e}")
+                print(
+                    f"\nValidation error: function def #{index} - {e}",
+                    file=sys.stderr)
         return valid_defs
 
     @staticmethod
@@ -29,7 +32,8 @@ class DataValidator:
             if isinstance(item, dict) and "prompt" in item:
                 valid_prompts.append(item)
             else:
-                print(f"Validation error: #{index} - missing prompt key.")
+                print(f"\nValidation error: #{index} - missing prompt key.",
+                      file=sys.stderr)
         return valid_prompts
 
     @staticmethod
@@ -41,5 +45,6 @@ class DataValidator:
                                 parameters=params)
             return output_obj.model_dump()
         except ValidationError as err:
-            print(f"Validation error: output schema - {err}")
+            print(
+                f"\nValidation error: output schema - {err}", file=sys.stderr)
             return None

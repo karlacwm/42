@@ -23,8 +23,7 @@ class FileHandler:
                 return data
 
         except json.JSONDecodeError as e:
-            print(f"Error caught: '{filepath}' contains invalid JSON.")
-            print(f"Details: {e}")
+            print(f"Error caught: '{filepath}' contains invalid JSON - {e}")
             # Error Recovery: Return empty list to gracefully skip
             return []
 

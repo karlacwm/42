@@ -35,8 +35,11 @@ class Workflow:
             raw_prompts if isinstance(raw_prompts, list) else []
         )
 
-        if not functions or not prompts:
-            print("Error occurred: data missing or invalid, cannot continue.")
+        if not functions:
+            print("Function data missing or invalid, cannot continue :(")
+            return
+        if not prompts:
+            print("Prompts data missing or invalid, cannot continue :(")
             return
 
         final_results = []
