@@ -4,7 +4,7 @@ requires-python = ">=3.14"
 
 [manifest]
 members = [
-    "callme",
+    "callmemaybe",
     "llm-sdk",
 ]
 
@@ -39,7 +39,7 @@ wheels = [
 ]
 
 [[package]]
-name = "callme"
+name = "callmemaybe"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
