@@ -1,15 +1,15 @@
-UV_CACHE := /goinfre/$(USER)/uv_cache
-HF_HOME := /goinfre/$(USER)/hf_cache
-LINT_CHECK = src/
-export UV_CACHE
-export HF_HOME
-
-# UV_CACHE ?= /tmp/$(USER)/uv_cache
-# HF_HOME ?= /tmp/$(USER)/hf_cache
+# UV_CACHE := /goinfre/$(USER)/uv_cache
+# HF_HOME := /goinfre/$(USER)/hf_cache
 # LINT_CHECK = src/
-# export PATH := $(HOME)/.local/bin:$(PATH)
 # export UV_CACHE
 # export HF_HOME
+
+UV_CACHE ?= /tmp/$(USER)/uv_cache
+HF_HOME ?= /tmp/$(USER)/hf_cache
+LINT_CHECK = src/
+export PATH := $(HOME)/.local/bin:$(PATH)
+export UV_CACHE
+export HF_HOME
 
 install:
 	mkdir -p $(UV_CACHE)
@@ -27,6 +27,7 @@ clean:
 	rm -rf .mypy_cache
 	rm -rf $(UV_CACHE)
 	rm -rf $(HF_HOME)
+	rm -rf stderr_log.txt
 
 lint:
 	uv run flake8 $(LINT_CHECK)
