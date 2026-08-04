@@ -14,7 +14,6 @@ class FileHandler:
         """
         if not os.path.exists(filepath):
             print(f"Error caught: '{filepath}' does not exist.")
-            # Error Recovery: Return an empty list so the program doesn't crash
             return []
 
         try:
@@ -24,7 +23,6 @@ class FileHandler:
 
         except json.JSONDecodeError as e:
             print(f"Error caught: '{filepath}' contains invalid JSON - {e}")
-            # Error Recovery: Return empty list to gracefully skip
             return []
 
         except Exception as e:
@@ -38,7 +36,6 @@ class FileHandler:
         creating the output folder if it doesn't exist.
         """
         try:
-            # Ensure the output directory exists (e.g., data/output/)
             directory = os.path.dirname(filepath)
             if directory:
                 os.makedirs(directory, exist_ok=True)
