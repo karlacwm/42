@@ -19,7 +19,9 @@ class LLMManager:
 
             self.id_to_token = {
                 int(v): k for k, v in self.token_to_id.items()}
-            print(f"Vocabulary loaded! ({len(self.id_to_token)} tokens)")
+            print(
+                f"Vocabulary loaded! ({len(self.id_to_token)} tokens)",
+                file=sys.stderr)
         except Exception as e:
             print(f"Error occurred: {e}")
             sys.exit(1)
