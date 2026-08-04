@@ -27,8 +27,11 @@ class Visualizer:
 
         subprocess.run(["clear"], check=False)
         sys.stdout.write(
-            f"Generating output: [{bar}] {percent}% "
-            f"({self.current}/{self.total})"
+            "               "
+            f"(ㅅ´ ˘ `) Received a total of {self.total} calls to make ~ \n\n"
+            "                              "
+            f"Making call #{self.current}...\n"
+            f"and here's a progress bar to entertain us: [{bar}] {percent}%\n"
         )
         sys.stdout.flush()
 
@@ -39,6 +42,7 @@ class Visualizer:
     @staticmethod
     def print_done(filepath: str) -> None:
         """Shows that the program finishes."""
+        subprocess.run(["clear"], check=False)
         print(
            "\n┊ ✩  ┊   ✧   ┊   ┊"
            "                                    "
