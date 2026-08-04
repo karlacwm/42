@@ -4,6 +4,9 @@ from pydantic import ValidationError
 from src.schema import FunctionDef, Output
 
 
+MAX_PROMPT_LENGTH = 1000
+
+
 class DataValidator:
     """Validates raw input and output dictionaries using Pydantic models."""
 
@@ -14,7 +17,6 @@ class DataValidator:
         valid_defs = []
         for index, raw_item in enumerate(raw_defs):
             try:
-                # Pydantic validates the structure automatically
                 func_obj = FunctionDef(**raw_item)
                 valid_defs.append(func_obj)
             except ValidationError as e:
@@ -26,14 +28,22 @@ class DataValidator:
     @staticmethod
     def validate_prompts(raw_prompts: list[dict[str, Any]]
                          ) -> list[dict[str, Any]]:
-        """Ensures the input test file contains 'prompt' strings."""
+        """Ensures the input test file contains usable prompt strings."""
         valid_prompts = []
         for index, item in enumerate(raw_prompts):
-            if isinstance(item, dict) and "prompt" in item:
-                valid_prompts.append(item)
-            else:
-                print(f"\nValidation error: #{index} - missing prompt key.",
-                      file=sys.stderr)
+            if not isinstance(item, dict) or "prompt" not in item:
+                print(f"\nValidation error: prompt #{index} "
+                      "missing prompt key.", file=sys.stderr)
+                continue
+
+            prompt = item["prompt"]
+            if not prompt.strip():
+                print(
+                    f"\nValidation error: prompt #{index} cannot be empty.",
+                    file=sys.stderr)
+                continue
+
+            valid_prompts.append(item)
         return valid_prompts
 
     @staticmethod
