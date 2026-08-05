@@ -1,3 +1,4 @@
+import json
 import numpy as np
 from src.llm_manager import LLMManager
 from src.schema import FunctionDef
@@ -17,7 +18,7 @@ class Decoder:
         and visualizes the output token-by-token.
         """
         if matched_name == "Unknown":
-            return f'{{"name": "{matched_name}", "parameters": {{}}}}'
+            return json.dumps({"name": matched_name, "parameters": {}})
 
         expected_params = []
         matched_desc = ""
@@ -31,8 +32,13 @@ class Decoder:
         stage2_prompt = (
             f"Question: {prompt}\n"
             f"Function: '{matched_name}' ({matched_desc})\n"
-            "If function is 'Unknown', return an empty JSON object '{}'.\n"
-            "Output ONLY a valid JSON dictionary containing the parameters "
+            "If function is 'Unknown', return an empty parameters.\n"
+            "Hint: Replace all numbers in a string, \
+            the regex code is exactly \\d+. \
+            Replace a word in a string, means regex is the word. \
+            Replace all vowels in a string, \
+            means the regex code is a|e|i|o|u."
+            "\nOutput ONLY a valid JSON dictionary containing the parameters "
             f"{expected_params}. Extract the correct values from the Question."
             "\nJSON:"
         )
@@ -63,7 +69,31 @@ class Decoder:
         else:
             clean_params = "{}"
 
-        final_json_string = (f'{{"name": "{matched_name}", '
-                             f'"parameters": {clean_params}}}')
+        clean_params = self._repair_json_escapes(clean_params)
 
-        return final_json_string
+        try:
+            parameters = json.loads(clean_params)
+        except json.JSONDecodeError:
+            parameters = {}
+
+        return json.dumps({"name": matched_name, "parameters": parameters})
+
+    @staticmethod
+    def _repair_json_escapes(json_text: str) -> str:
+        """Escape stray backslashes so text remain valid JSON."""
+        repaired = []
+        index = 0
+
+        while index < len(json_text):
+            character = json_text[index]
+            if character == "\\" and index + 1 < len(json_text):
+                next_character = json_text[index + 1]
+                if next_character not in '"\\/bfnrtu':
+                    repaired.append("\\\\")
+                    index += 1
+                    continue
+
+            repaired.append(character)
+            index += 1
+
+        return "".join(repaired)

@@ -4,9 +4,6 @@ from pydantic import ValidationError
 from src.schema import FunctionDef, Output
 
 
-MAX_PROMPT_LENGTH = 1000
-
-
 class DataValidator:
     """Validates raw input and output dictionaries using Pydantic models."""
 
