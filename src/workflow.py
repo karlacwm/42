@@ -72,6 +72,10 @@ class Workflow:
                                     print(f"ValueError occured: {e}.")
                         break
 
+                for k, v in list(params.items()):
+                    if isinstance(v, str):
+                        params[k] = v.strip()
+
                 validated_dict = DataValidator.validate_output(
                     prompt=prompt_text,
                     name=func_name,

@@ -46,9 +46,28 @@ class Decoder:
         input_ids = self.llm.text_to_token_ids_list(stage2_prompt)
         generated_params = ""
 
+        try:
+            brace_seq = self.llm.text_to_token_ids_list("{")
+            brace_seq_list = list(brace_seq) if not isinstance(
+                brace_seq, list) else brace_seq
+            required_first_brace = brace_seq_list[0] if (
+                brace_seq_list) else None
+        except Exception:
+            required_first_brace = None
+
         for step in range(max_tokens):
             logits = np.array(self.llm.get_logits_list(input_ids))
-            best_token = int(np.argmax(logits))
+
+            if step == 0 and required_first_brace is not None:
+                masked = np.full_like(logits, -1e9)
+                if 0 <= required_first_brace < len(masked):
+                    masked[required_first_brace] = logits[required_first_brace]
+                    best_token = int(np.argmax(masked))
+                else:
+                    best_token = int(np.argmax(logits))
+            else:
+                best_token = int(np.argmax(logits))
+
             input_ids.append(best_token)
 
             piece = self.llm.token_id_to_string(best_token)
