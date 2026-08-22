@@ -27,6 +27,18 @@ During evaluation, we run evaluation mode to get 3 random levels.
 #### TCP/IP addressing
 
 #### subnet masks
+Subnet (sub-network) is like a boundary line.
+When the computer wants to send a message, it checks the destinatiion.
+If the destination is inside its boundary, it sends the message to a switch.
+Else if the destination is outside, it sends the message to a router.
+
+An IP address is 32 bits long.
+A CIDR like /24 means: the first 24 bits are 1, the rest are 0.
+So /24 looks like this: 11111111.11111111.11111111.00000000
+
+A subnet mask is like a filter on the IP address.
+The 1 part is the network, the 0 part is the host(computer's ID).
+Computers connected to the same switch must have the exact same network part.
 
 #### default gateways
 
@@ -40,7 +52,7 @@ TCP/IP addressing
 
 Subnet masks
 [[1]](
-    
+
 Default gateways
 [[1]](
 
