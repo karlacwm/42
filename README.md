@@ -8,9 +8,14 @@ It is necessary to understand how concepts such as IP address, subnet mask, rout
 ## Instruction
 First, download the "net_practice" package from intra.
 
+Go to the directory:
+```
+cd /net_practice.1.9/net_practice/
+```
+
 Then, run:
 ```
-./net_practice.1.9/net_practice/run.sh
+./run.sh
 ```
 
 The netpractice server should run in a browser, if not, open a browser with:
@@ -51,7 +56,7 @@ TCP/IP addressing
 [[1]](
 
 Subnet masks
-[[1]](
+[[1 *\*(very useful calculator/visualisor)\**]](https://wintelguy.com/ip-mask-visualizer.pl)
 
 Default gateways
 [[1]](
@@ -70,9 +75,7 @@ Youtube
 [[1]](https://www.youtube.com/playlist?list=PLIhvC56v63IKrRHh3gvZZBAGvsvOhwrRF)
 [[2]](https://www.youtube.com/watch?v=_IOZ8_cPgu8)
 [[3]](https://www.youtube.com/watch?v=HQUw0CfQWAM)
-[[4]](https://www.youtube.com/watch?v=PpsEaqJV_A0)
-[[5]](https://www.youtube.com/watch?v=OTwp3xtd4dg)
-[[6]](https://www.youtube.com/watch?v=vKFLgmSC6do)
+
 
 https://web.archive.org/web/20260225174732/https://42-cursus.gitbook.io/guide/4-rank-04/netpractice/theory
 https://web.archive.org/web/20260225174737/https://42-cursus.gitbook.io/guide/4-rank-04/netpractice/level-1-and-2
@@ -80,6 +83,14 @@ https://github.com/caroldaniel/42sp-cursus-netpractice
 https://github.com/ricardoreves/42-net-practice
 https://github.com/yomazini/42cursus-Netpractice
 https://github.com/viruskizz/42bangkok-netpractice
+
+
+AI usage:
+- help to clarify new concepts and correct me when i understood something wrong
+- explain what went wrong when I was stuck at some levels
+
+
+
 
 - The Resources section must explicitly mention the networking concepts studied,
 such as TCP/IP addressing, subnet masks, default gateways, routers and
