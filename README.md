@@ -3,7 +3,7 @@
 ## Description
 The project is an introduction to the basics of computer networking.
 Through getting through exercises on the netpractice server, networking concepts are made practical and visualised.
-It is necessary to understand how concepts such as IP address, subnet mask, router, switch etc work in order to pass the exercises, and this is the expected learning outcome of this project.
+It is necessary to understand how concepts such as IP address, subnet mask, router, switch, work in order to pass the exercises, and this is the expected learning outcome of this project.
 
 ## Instruction
 First, download the "net_practice" package from intra.
@@ -34,26 +34,37 @@ TCP stands for Transmission Control Protocol and IP for Internet Protocol.
 TCP is the protocal that breaks data into smaller pieces to send them over the network.
 It works with IP address which helps to identify the device connected to a network, in simple words, where the data should be sent to.
 
-There are private IPs:
+These are private IPs:
 - from 10.0.0.0 to 10.255.255.255
 - from 172.16.0.0 to 172.31.255.255
 - from 192.168.0.0 to 192.168.255.255
+
+(Private IPs are reserved strictly for internal, local networks and cannot be routed on the public internet.
+This allows millions of different private networks to reuse the exact same IP addresses internally.)
+
+Loopback:
 - from 127.0.0.1 to 127.255.255.254
+
+(Loopback address is mostly used for local software testing.
+It is a virutal address that always point back to your own machine.)
+
+An IP address consists of two parts: network and host, where the network specifies the network the device belongs to, and the host points to the specific device within that network.
+The boundary between these two parts is identified by a subnet mask.
 
 #### Subnet masks
 Subnet (sub-network) is like a boundary line.
 When the computer wants to send a message, it checks the destinatiion.
-If the destination is inside its boundary, it sends the message to a switch.
-Else if the destination is outside, it sends the message to a router.
+If the destination is inside its boundary, the message should be sent to a switch.
+Else if the destination is outside, the message should be sent to a router.
 
 An IP address is 32 bits long.
-A CIDR(Classless Inter-Domain Routing) like /24 means: the first 24 bits are 1, the rest are 0.
+A CIDR(Classless Inter-Domain Routing) (e.g. /24) means: the first 24 bits are 1, the rest are 0.
 So /24 looks like this: 11111111.11111111.11111111.00000000.
 A subnet mask is like a filter on the IP address.
 The 1 part is the network, the 0 part is the host(computer's ID).
 Computers connected to the same switch must have the exact same network part.
 
-| CIDR | Subnet Mask | Total IPs | Usable IPs |
+| Subnet Mask |  CIDR |Total IPs | Usable IPs |
 | :---: | :--- | :---: | :--- |
 | `255.255.255.255` | /32 | 1 | 1 |
 | `255.255.255.254` | /31 | 2 | 2 |
@@ -78,8 +89,9 @@ Computers connected to the same switch must have the exact same network part.
 #### Default gateways
 In a route, it is indicated with destination => next hop.
 Destination is where the data should arrive and next hop is where should the data pass through first, like the first checkpoint or first direction.
-A default gateway actually means 0.0.0.0/0, it means to match 0 bits (/0) from the IP address (0.0.0.0).
+A default route actually means 0.0.0.0/0, it means to match 0 bits (/0) from the IP address (0.0.0.0).
 Basically it means, to send this out, anywhere else that is not here.
+The default gateway is the actual IP address of the router (the next hop) that you hand the packets to.
 
 #### Routers and switches
 Routers connect devices from different network, while switches connect devices from the same network.
@@ -89,20 +101,23 @@ When devices from different routers want to communicate, a route from the device
 #### OSI layers
 Open Systems Interconnection (OSI) consists of 7 layers:
 
-|  |  |
-| :---: | :--- |
-| layer 7 | application layer |
-| layer 6 | presentation layer |
-| layer 5 | session layer |
-| layer 4 | transport layer |
-| layer 3 | network layer |
-| layer 2 | data link layer |
-| layer 1 | physical layer |
+|  |  |  |  |
+| :---: | :---: | :---: | :---: |
+| 7 | application layer | where network applications and end-user processes operate | e.g., HTTP, Web browsers, SSH |
+| 6 | presentation layer | translates, encrypts, and formats data so the application layer can understand it |
+| 5 | session layer | establishes, maintains, and terminates connections/sessions between applications |
+| 4 | transport layer | manages data delivery, error recovery, and flow control | where TCP/UDP protocols and ports operate (**notes)|
+| 3 | network layer | handles IP addressing and routes packets across different networks to find the best path | routers live here |
+| 2 | data link layer | transfers data between devices on the exact same local network | switches live here |
+| 1 | physical layer | the actual hardware: network cables, radio waves, electrical signals, and raw binary data (0s and 1s) |
 
+**(short note: TCP focuses on reliable data delivery, ordered packets and error checks;
+whereas UDP, user datagram protocol, focuses on speed and never look back or resend.
+so, TCP: unicast(one to one); UDP: broadcast(one to all) and multicast(one to several))
 
 ## Resources
 Network and subnet masks
-[[1 *\*(very useful calculator/visualisor)\**]](https://wintelguy.com/ip-mask-visualizer.pl)
+[[1]](https://wintelguy.com/ip-mask-visualizer.pl) *\*(very useful calculator/visualisor)\**
 
 Guide
 [[1]](http://medium.com/@imyzf/netpractice-2d2b39b6cf0a)
