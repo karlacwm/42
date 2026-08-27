@@ -35,10 +35,10 @@ TCP is the protocal that breaks data into smaller pieces to send them over the n
 It works with IP address which helps to identify the device connected to a network, in simple words, where the data should be sent to.
 
 There are private IPs:
-from 10.0.0.0 to 10.255.255.255
-from 172.16.0.0 to 172.31.255.255
-from 192.168.0.0 to 192.168.255.255
-from 127.0.0.1 to 127.255.255.254
+- from 10.0.0.0 to 10.255.255.255
+- from 172.16.0.0 to 172.31.255.255
+- from 192.168.0.0 to 192.168.255.255
+- from 127.0.0.1 to 127.255.255.254
 
 #### Subnet masks
 Subnet (sub-network) is like a boundary line.
@@ -72,6 +72,7 @@ Computers connected to the same switch must have the exact same network part.
 | `255.255.192.0` | /18 | ... | ... |
 | `255.255.128.0` | /17 | ... | ... |
 | `255.255.0.0` | /16 | ... | ... |
+| ... | ... | ... | ... |
 
 
 #### Default gateways
@@ -88,6 +89,8 @@ When devices from different routers want to communicate, a route from the device
 #### OSI layers
 Open Systems Interconnection (OSI) consists of 7 layers:
 
+|  |  |
+| :---: | :--- |
 | layer 7 | application layer |
 | layer 6 | presentation layer |
 | layer 5 | session layer |
@@ -98,51 +101,21 @@ Open Systems Interconnection (OSI) consists of 7 layers:
 
 
 ## Resources
-TCP/IP addressing
-[[1]](
-
-Subnet masks
+Network and subnet masks
 [[1 *\*(very useful calculator/visualisor)\**]](https://wintelguy.com/ip-mask-visualizer.pl)
 
-Default gateways
-[[1]](
-
-Routers and switches
-[[1]](
-
-OSI layers
-[[1]](
-
 Guide
-[[1]](https://42-cursus.gitbook.io/guide/4-rank-04/netpractice)
-[[2]](http://medium.com/@imyzf/netpractice-2d2b39b6cf0a)
+[[1]](http://medium.com/@imyzf/netpractice-2d2b39b6cf0a)
+[[2]](https://42-cursus.gitbook.io/guide/4-rank-04/netpractice)
+<!-- https://web.archive.org/web/20260225174732/https://42-cursus.gitbook.io/guide/4-rank-04/netpractice/theory
+https://web.archive.org/web/20260225174737/https://42-cursus.gitbook.io/guide/4-rank-04/netpractice/level-1-and-2 -->
 
 Youtube
 [[1]](https://www.youtube.com/playlist?list=PLIhvC56v63IKrRHh3gvZZBAGvsvOhwrRF)
 [[2]](https://www.youtube.com/watch?v=_IOZ8_cPgu8)
 [[3]](https://www.youtube.com/watch?v=HQUw0CfQWAM)
 
-
-https://web.archive.org/web/20260225174732/https://42-cursus.gitbook.io/guide/4-rank-04/netpractice/theory
-https://web.archive.org/web/20260225174737/https://42-cursus.gitbook.io/guide/4-rank-04/netpractice/level-1-and-2
-https://github.com/caroldaniel/42sp-cursus-netpractice
-https://github.com/ricardoreves/42-net-practice
-https://github.com/yomazini/42cursus-Netpractice
-https://github.com/viruskizz/42bangkok-netpractice
-
-
 AI usage:
 - help to clarify new concepts and correct me when i understood something wrong
 - explain what went wrong when I was stuck at some levels
-
-
-
-
-- The Resources section must explicitly mention the networking concepts studied,
-such as TCP/IP addressing, subnet masks, default gateways, routers and
-switches, OSI layers, etc.
-- The Instructions section must explain how to run the training interface (e.g.,
-using run.sh), how to export configurations, and submission requirements.
-- Submission details must state that 10 exported configuration files (one per level)
-must be placed at the repository root.
 
