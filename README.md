@@ -52,7 +52,7 @@ An IP address consists of two parts: network and host, where the network specifi
 The boundary between these two parts is identified by a subnet mask.
 
 #### Subnet masks
-Subnet (sub-network) is like a boundary line.
+Subnet (sub-network) mask is like a boundary line.
 When the computer wants to send a message, it checks the destinatiion.
 If the destination is inside its boundary, the message should be sent to a switch.
 Else if the destination is outside, the message should be sent to a router.
