@@ -85,6 +85,15 @@ Computers connected to the same switch must have the exact same network part.
 | `255.255.0.0` | /16 | ... | ... |
 | ... | ... | ... | ... |
 
+From the table, it is clear that the no. of total IPs is not the same of usable IPs.
+The reason is that the first and last IPs of a network range is always reserved.
+First IP is called net prefix, to identify the range and the last one is called broadcast.
+
+One example is, for /30, of the total 4 IP addresses, only 2 are usable:
+- net prefix is 255.255.255.252
+- first host is 255.255.255.253
+- last host is 255.255.255.254
+- broadcast is 255.255.255.255
 
 #### Default gateways
 In a route, it is indicated with destination => next hop.
