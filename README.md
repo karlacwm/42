@@ -139,6 +139,16 @@ Youtube
 [[2]](https://www.youtube.com/watch?v=_IOZ8_cPgu8)
 [[3]](https://www.youtube.com/watch?v=HQUw0CfQWAM)
 
+Chinese
+[[1]](https://learn.microsoft.com/zh-tw/troubleshoot/windows-client/networking/tcpip-addressing-and-subnetting)
+[[2]](https://hackmd.io/@ncnu-opensource/book/%2FkEIB82Y2QKCt3U84UoqjFw)
+[[3]](https://www.runoob.com/tcpip/tcpip-intro.html)
+[[4]](https://www.fortinet.com/tw/resources/cyberglossary/tcp-ip)
+[[5]](https://codelove.tw/@tony/post/Zq47ea)
+[[6]](https://ihower.tw/cs/networking-tcpip.html)
+[[7]](https://medium.com/@bun.coding/u%EF%BD%95%EF%BD%95%E7%B6%B2%E8%B7%AF%E9%80%A3%E6%8E%A5%E6%9C%89%E5%88%86%E5%B1%A4-%E6%B7%BA%E8%AB%87tcp-ip-39364f127bc)
+[[8]](https://ithelp.ithome.com.tw/m/articles/10325247)
+
 AI usage:
 - help to clarify new concepts and correct me when i understood something wrong
 - explain what went wrong when I was stuck at some levels
