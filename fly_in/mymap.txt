@@ -1,0 +1,30 @@
+# my map  # and tesing comments
+nb_drones: 8
+
+start_hub: start 0 0 [color=green max_drones=8]
+
+hub: trap_door 2 0 [zone=restricted color=orange max_drones=1]
+hub: bottom_1 1 2 [zone=priority color=cyan max_drones=3]
+hub: bottom_2 3 2 [zone=priority color=cyan max_drones=3]
+hub: mid_1 1 -2 [color=blue max_drones=2]
+hub: mid_2 3 -2 [color=blue max_drones=2]
+hub: final_gate 4 0 [color=yellow max_drones=2]
+
+end_hub: goal 5 0 [color=red max_drones=8]
+
+# path 1
+connection: start-trap_door [max_link_capacity=1]
+connection: trap_door-final_gate [max_link_capacity=1]
+
+# path 2
+connection: start-bottom_1 [max_link_capacity=3]
+connection: bottom_1-bottom_2 [max_link_capacity=3]
+connection: bottom_2-final_gate [max_link_capacity=3]
+
+# path 3
+connection: start-mid_1 [max_link_capacity=2]
+connection: mid_1-mid_2 [max_link_capacity=2]
+connection: mid_2-final_gate [max_link_capacity=2]
+
+# bottleneck
+connection: final_gate-goal [max_link_capacity=2]
