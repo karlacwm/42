@@ -1,0 +1,33 @@
+# .gitignore
+
+# Ignore the virtual environment folder
+venv/
+env/
+.env
+
+# Ignore Python compiled files (the 'artifacts')
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore distribution/build files
+*.egg-info/
+dist/
+build/
+
+# Ignore system files
+.DS_Store
+
+# Ignore your IDE settings (optional but good)
+.vscode/
+
+# Ignore the output maze files
+*.txt
+!config.txt
+
+# Generated version files
+mazegen/_version.py
+
+# Type checking
+.mypy_cache/
+.pytest_cache/

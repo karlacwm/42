@@ -1,0 +1,46 @@
+# Example maze configuration file
+# Format: KEY=VALUE
+
+# Maze dimensions
+width=15
+height=12
+
+# Generation algorithm (prim, kruskal or iterative_backtracking)
+# algorithm=prim
+algorithm=kruskal
+# algorithm=iterative_backtracking
+
+# entry coordinates (x, y)
+entry=
+
+# exit coordinates (x, y)
+exit=width-6, height-1
+
+# Generate perfect maze (no loops) : either true or false
+# When false, loops will be added by removing internal walls
+perfect=true
+
+# Random seed for reproducibility (optional)
+seed= 42
+
+# output filename
+output_file = output_maze.txt
+
+# ======================================================
+
+# colours to choose from :
+# white     |   blue_green  |   brown                |   light_gray
+# blue      |   marroon     |   forest_green         |   dark_gray
+# green     |   lime        |   navy_blue            |   tan
+# red       |   pink        |   rust                 |   coffee_brown
+# black     |   purple      |   dandelion_yellow     |   moon_glow
+# orange    |   gray        |   highlighter          |
+# yellow    |   magenta     |   sky_blue             |
+
+entry_colour = green
+exit_colour = red
+
+wall_colour = gray
+maze_colour = forest_green
+egg42 = sky_blue
+path_colour = tan

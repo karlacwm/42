@@ -1,0 +1,98 @@
+1. What is a "Seed"? (The Analogy)
+Imagine you are playing a game like Minecraft. When you create a new world, the game asks you for a "Seed."
+If you leave it blank, you get a totally random world.
+If you type "MountainView" (or any specific word/number), the game creates a specific world.
+Crucially: If your friend types "MountainView" on their computer, they get the exact same world as you.
+In programming, a "Seed" is just a number that forces the computer to make the "random" choices in the exact same order every time.
+
+2. Why do we need it?
+Computers cannot actually be random. They are logical machines. When you ask for a "random number," the computer is actually reading from a massive, pre-written list of scrambled numbers.
+No Seed: The computer picks a starting spot on that list based on the current time (which changes every millisecond).
+With Seed: You tell the computer: "Start reading the list at line 42." Since the list never changes, the numbers you get will always be the same.
+
+-----------------------
+LSB = least significant bit
+Bit 0 (North) 2^0 = 1 (decimal) = 0001 (binary)
+Bit 1 (East)  2^1 = 2           = 0010
+Bit 2 (South) 2^2 = 4           = 0100
+Bit 3 (West)  2^3 = 8           = 1000
+
+When you start generating a maze, every cell begins with all four walls closed
+1 + 2 + 4 + 8 = 15 (binary 1111, hex 0xF)
+15 means every wall is closed
+
+examples:
+Value: 3 (Binary 0011)
+N: closed
+E: closed
+S: opened
+W: opened
+
+Value: A (Binary 1010)
+N: opened
+E: closed
+S: opened
+W: closed
+
+-----------------------
+unicode drawing shapes:
+http://xahlee.info/comp/unicode_drawing_shapes.html
+
+-----------------------
+prim's algorithm
+resources:
+https://weblog.jamisbuck.org/2011/1/10/maze-generation-prim-s-algorithm
+https://stackoverflow.com/questions/29739751/implementing-a-randomly-generated-maze-using-prims-algorithm
+https://professor-l.github.io/mazes/
+
+wiki:
+1. A Grid consists of a 2 dimensional array of cells.
+2. A Cell has 2 states: Blocked or Passage.
+3. Start with a Grid full of Cells in state Blocked.
+4. Pick a random Cell, set it to state Passage and Compute its frontier cells. A frontier cell of a Cell is a cell with distance 2 in state Blocked and within the grid.
+5. While the list of frontier cells is not empty:
+   - Pick a random frontier cell from the list of frontier cells.
+   - Let neighbors(frontierCell) = All cells in distance 2 in state Passage. Pick a random neighbor and connect the frontier cell with the neighbor by setting the cell in-between to state Passage. Compute the frontier cells of the chosen frontier cell and add them to the frontier list. Remove the chosen frontier cell from the list of frontier cells.
+
+-----------------------------
+make debug (Pdb) prompt
+n	|Next	      |Run the current line and move to the next one. (Does not go inside functions).
+s	|Step	      |Step into a function call (useful to see how generate() works).
+c	|Continue	|Run normally until the program crashes or hits a "breakpoint".
+l	|List	      |Show the code around the current line so you know where you are.
+p	|Print	   |p variable_name prints the value of a variable (e.g., p width).
+q	|Quit	      |Stop the debugger and exit.
+
+-----------------------------
+pattern42.py
+set.add() vs set.update()
+add - one element, arg type: single object, str input: adds whole str
+update - multiple elements, arg type: iterable, str input: adds each char
+
+cx, cy = width // 2, height // 2
+finds center of the grid
+
+start_x = cx - 3
+moves 3 cells to the left from the center
+start_y = cy - 2
+moves 2 cells up from the center
+
+-----------------------------
+maze.py
+self.walls &= ~wall
+& is bitwise AND, it keeps a bit only if both bits are 1
+
+bool(self.walls & wall)
+bitwise AND
+bool(...) returns True when non-zero, False when zero
+If the wall is present → result is non-zero.
+
+self.walls:X
+:X formats the number in uppercase hexadecimal.
+
+checking south and east walls or 2x2 blocks
+The SOUTH wall of (x, y) is the same as the NORTH wall of (x, y+1)
+The EAST wall of (x, y) is the same as the WEST wall of (x+1, y)
+
+----------------------------------
+class_maze_generator.py
