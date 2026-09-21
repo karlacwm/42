@@ -1,0 +1,352 @@
+LVM(logical volume manager)
+- flexible way to manage storage on linux
+- PV(physical volume):actual disk/partition
+- VG(volume group):pool of storage made from PV, group = pile of space
+- LV(logical volume):virtual partitions you actually use, logical = pretend partition
+
+UFW(uncomplicated firewall)
+- simple tool to manage linux firewall
+- a firewall is a security tool that controls what traffic enteres or leaves your machine
+- UFW = easy firewall, linux's built-in firewall is powerful but complicated
+UFW commands:
+sudo ufw enable: turn firewall ON, UFW starts filtering incoming and outgoing network traffic based on the rules
+sudo ufw status: check rules, verbose mode(more details): sudo ufw status verbose
+sudo ufw allow 22: allow SSH on port 22, otherwise the connection will be blocked by firewall
+sudo ufw deny 80: blocks incoming connections on port 80(usually for HTTP web traffic), for better security by reducing attack surfaces if not running a web server
+sudo ufw default deny incoming: deny all incoming traffic unless i explicitly allow it, protects the system by blocking all unwanted or unknown connections by default
+sudo ufw default allow outgoing: sets the default policy to allow all outgoing traffic, send data out or access external services, safe since outgoing traffic doesn’t expose the server to external attacks
+
+SSH(secure shell)
+- protocol used to connect to another computer securely over a network
+- like a locked and encrypted tunnel between your computer and the server
+terms:
+- Port 22: default port SSH listens to
+- SSH key: a secure alternative to passwords
+
+cache
+- temporary storage area used to speed up data access
+
+kernel
+- core part of the operating system, managing hardware, memory, processes and communication between software
+
+systemctl
+- interacts with systemd, which is the init system responsible for starting and stopping services, managing dependencies, and keeping the system running smoothly
+- use purposes include: start or stop services, enable or disable services at boot, check the status of services, manage system shutdown, reboot, or hibernation
+
+- Remote login: logging into a machine from another device
+SSH commands:
+ssh username@server_ip: to connect
+ssh-keygen: generate SSH keys
+
+AppArmor
+- AppArmor is installed and enabled by default during the base system installation
+
+tty (Teletypewritter)
+- it refers to terminals — basically any interface where you can type commands and interact with the system
+- tty: check which tty you are on
+- output: /dev/tty1 = physical console, /dev/pts/0 = terminal emulator or ssh session
+- setting in sudo rules Defaults requiretty: forces sudo to be run only from an interactive terminal
+
+CGI (Common Gateway Interface)
+- standard way for a web server to run programs to generate dynamic web pages
+- CGI starts a new PHP process for every request, which is slow, while PHP-FPM keeps PHP processes running and reuses them, making it much faster and scalable
+
+dpkg -s
+- dpkg is the Debian package manager command
+- the -s flag stands for “status”
+
+systemctl
+- interacts with systemd, which is the init system responsible for starting and stopping services, managing dependencies, and keeping the system running smoothly
+- use purposes include: start or stop services, enable or disable services at boot, check the status of services, manage system shutdown, reboot, or hibernation
+
+base memory: 2048MB
+storage: 30GB
+
+installation steps:
+- settings/storage/opticaldrive: change IDE secondary device to debian iso
+- start the VM and install
+- choose language and location
+	- set hostname: wcheung42
+	- set root pw: WASD853wasd
+	- new user name: wcheung
+	- password: &wcheung1027
+- manual set up partitions
+- primary, beginning, /boot, size 500m
+- logical, size max
+- create encrypted volume to /dev/sda5
+	- encrypt password: &Karla1027
+- configure logical volume manager
+- create volume group LVMGroup at /dev/mapper/sda5_crypt
+- create logical volume in LVMGroup, set all the name and size as pdf and set as finish
+- configure the file system (ext4 journaling file system) and mount point as pdf
+- set as finish and write changes to disks
+- select no to extra installation media (not required), choose country and deb.debian.org for debian archive mirror, leave blank for HTTP proxy information, select no to usage survey, deselect all software to install
+- install GRUB boot loader to /dev/sda and installation is finished
+
+machine setup
+install sudo:
+- login with root pw, then user login
+- su: switch user, switch to root
+- apt install sudo
+- sudo reboot: reboot the machine so changes can be applied
+- login everything again and su to root
+- sudo -V: check the installation
+- sudo adduser <login>: add user, or check if an user is created
+- sudo addgroup user42: create a new group called user42, GID = group identifier
+- getent group <groupname>: check if group is created
+- sudo adduser <username> <groupname>: add an user to a group
+- getent group <groupname> <groupname>: check if the user has been added to group
+
+install ssh:
+- update system first
+- sudo apt update: update system
+- sudo apt install openssh-server: install openssh as main tool for remote access with ssh protocol
+- sudo service ssh status: to check if the installation was successful, should be showing active
+- config ssh
+- nano /etc/ssh/sshd_config: to edit
+- lines with # are commented out, uncomment #Port 22, change to Port 4242
+- uncomment #PermitRootLogin prohibit-password, change to PermitRootLogin no
+- crtl + X, Y, Enter: to save and exit nano
+- nano /etc/ssh/ssh_config: uncomment #Port 22, change to Port 4242
+- sshd_config vs ssh_config = SSH server settings(sshd = ssh demon) vs SSH client settings
+- sudo service ssh restart: reboot to apply updates
+- sudo service ssh status: check status, if port is changed to 4242
+
+connect via ssh
+- close the machine
+- VM settings > network > port forwarding > click plus to add new rule
+- ip address not needed
+- set host port and guest port
+- a connection issue can occur if the ports are the same
+- ssh <user>@localhost -p 4241: to connect via ssh from our machine
+- it will ask for the pw of the user that we log in with
+- login in green means log in successful
+
+install ufw
+- sudo apt install ufw: install ufw package
+- sudo enable: activate ufw
+- sudo ufw allow 4242: accept connections that happens in port 4242
+- sudo ufw status: check firewall status
+
+sudo policies
+- create a file to store the sudo policy
+- touch /etc/sudoers.d/sudo_config: create the sudo policy file
+- mkdir /var/log/sudo: create a directory to log the input and output of each command
+- nano /etc/sudoers.d/sudo_config: create the policies
+policies:
+Defaults  passwd_tries=3
+(total tries for entering sudo password)
+Defaults  badpass_message="Incorrect password"
+(message that will show when the password failed)
+Defaults  logfile="/var/log/sudo/sudo_config"
+(path where the sudo logs will be stored)
+Defaults  log_input, log_output
+(what will be logged)
+Defaults  iolog_dir="/var/log/sudo"
+(where to log the files)
+Defaults  requiretty
+(TTY is required)
+Defaults  secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
+(folders that will be excluded of sudo)
+
+password policies
+- nano /etc/login.defs: edit the login.defs file
+- modify password parameters
+- change PASS_MAX_DAYS 99999 > PASS_MAX_DAYS 30
+(maximum number of days before password expires)
+- change PASS_MIN_DAYS 0 > PASS_MIN_DAYS 2
+(minimum number of days before password can be changed)
+- no change for PASS_WARN_AGE 7
+(number of days before password expiration to show warning)
+
+install password quality enforcement
+- sudo apt install libpam-pwquality: install password quality library
+
+configure password complexity rules
+- nano /etc/pam.d/common-password: edit PAM (pluggable authentication modules)
+- after retry=3, add "minlen=10 ucredit=-1 dcredit=-1 lcredit=-1 maxrepeat=3 reject_username difok=7 enforce_for_root"
+minlen=10 : must contain minimum 10 characters
+ucredit=-1 : must contain at least one capital letter
+(we must write it with a - sign, as this is how it knows that it refers to minimum characters; if we put a + sign it will refer to maximum characters)
+dcredit=-1 : must contain at least one digit
+lcredit=-1 : must contain at least one lowercase letter
+maxrepeat=3 : cannot have the same character repeated three consecutive times
+reject_username : cannot contain the username within itself
+difok=7 : must contain at least seven different characters from the last password used
+enforce_for_root : implement this password policy for root
+
+script
+- go to /usr/local/bin
+- sh monitoring.sh: to execute the script
+- sudo chmod 755 /usr/local/bin/monitoring.sh
+- crontab: a background service that checks the cron tables (crontabs) and executes scheduled tasks
+- format: minute hour day month weekday
+- crontab written in: /tmp/crontab.GRdFab/crontab
+- sudo systemctl enable cron.service
+- sudo crontab -u root -e: added the 10 min */10 * * * * sh /home/wcheung/monitoring.sh
+(crontab = cron table, -u root = specify which user's crontab to edit, -e = to edit with the default text editor)
+- go to sudo visudo, use command <username> ALL=(ALL) NOPASSWD:/usr/local/bin/monitoring.sh: allow the script to be run without password
+- wall broadcasts to terminals that accept messages; SSH sessions on minimal Debian don’t accept them by default, but the monitoring script is working correctly
+
+inside script
+- uname -a to get CPU architecture
+- grep "physical id" /proc/cpuinfo | wc -l to get number of physical cores
+- grep processor /proc/cpuinfo | wc -l to get number of virtual cores
+- free --mega | awk '$1 == "Mem:" {print $3}' to get number mb of used memoir
+- free --mega | awk '$1 == "Mem:" {print $2}' to get number of total mb memoire
+- free --mega | awk '$1 == "Mem:" {printf("(%.2f%%)\n", $3/$2*100)}' to get pourcent of used memory
+- df -m | grep "/dev/" | grep -v "/boot" | awk '{use += $3} {total += $2} END {printf("(%d%%)\n"), use/total*100}' to get number of occuped disk memory
+- vmstat 1 4 | tail -1 | awk '{print $15}' to get cpu usage
+- who -b | awk '$1 == "system" {print $3 " " $4}' to get date and time of last reboot
+- if [ $(lsblk | grep "lvm" | wc -l) -gt 0 ]; then echo yes; else echo no; fi to know if LVM is active or not
+- ss -ta | grep ESTAB | wc -l to get number of tcp connections
+- users | wc -w to get number of users
+- ip link | grep "link/ether" | awk '{print $2}' to get addressemac
+- journalctl _COMM=sudo | grep COMMAND | wc -l to get number of executed command
+
+script commands explanation:
+- uname -a: prints all available system info in one line
+- grep "physical id" /proc/cpuinfo | wc -l: grep = search for text patterns in files or output, wc -l = count lines of output
+- free --mega | awk '$1 == "Mem:" {print $3}: free = shows memory usage (RAM and swap), --mega = displays the memory in megabytes, awk = text-processing tool used to extract and manipulate columns of data, $1 == "Mem:" {print $3} = look for lines where first column($1) is Mem and print the third column($3) from that line OR {printf("(%.2f%%)\n", $3/$2*100)}: .2 = two decimal places, f = floats for printf
+- df -m | grep "/dev/" | grep -v "/boot" | awk '{memory_use += $3} END {print memory_use}': df = disk filesystem usage, -m = size in megabytes, -v = invert match(removes any filesystem at /boot), awk = processes each remaining line and automatically splits lines into fields (default separator = whitespace) "awk '<pattern> {<action>}' file", += = adds up all 3 values
+- vmstat 1 4 | tail -1 | awk '{print $15}': vmstat = virtual memory statistics, 1 = interval in seconds, 4 = number of reports, tail -1 = last line of output
+- who -b | awk '$1 == "system" {print $3 " " $4}': who = shows info about logged in users and system status, -b = last system boot
+- if [ $(lsblk | grep "lvm" | wc -l) -gt 0 ]; then echo yes; else echo no; fi: if [ ... -gt 0 ]; then ... = if ... is greater than 0 , fi = shell keyword that ends an if block
+- ss -ta | grep ESTAB | wc -l: ss = socket statistics (modern replacement for netstat), -t TCP sockets only, -a = all TCP sockets (listening + non-listening), grep ESTAB = filters only sockets in the ESTABLISHED state
+- users | wc -w: users = show the names of users there are
+- ip link | grep "link/ether" | awk '{print $2}': ip link = show info about network interfaces
+- journalctl _COMM=sudo | grep COMMAND | wc -l: journalctl = tool to read systemd journal logs, _COMM=sudo = filters logs only from the sudo command
+
+Sockets
+-  an endpoint for communication between two programs, usually over a network, 
+Types of sockets
+1. TCP sockets
+Reliable, ordered, connection-based
+Used by: HTTP, HTTPS, SSH, FTP, SMTP
+2. UDP sockets
+Faster, connectionless, no delivery guarantee
+Used by: DNS, streaming, gaming
+3. Unix domain sockets
+Local-only (no network)
+Faster than TCP for same-machine communication
+What “socket state” means
+1. LISTEN → waiting for connections
+2. ESTABLISHED → active connection
+3. TIME-WAIT, CLOSE-WAIT, etc. → closing
+
+.d
+- an extra configuration file that Linux reads from a .d directory to override or extend the main settings
+- instead of editing the main config file, you add your own file in the .d directory so your changes are cleaner and safer.
+
+change password command
+- passwd
+
+display password aging information for a given user
+- sudo chage -l username
+
+resize LVM
+- sudo lvresize -r -L 10G /dev/LVMGroup/root
+- for the rest, except swap
+- sudo swapoff -a: disables all swap areas in use
+- sudo lvresize -L 2.29G /dev/LVMGroup/swap
+- sudo swapon -a: enables all swap areas defined in /etc/fstab
+
+lighttpd
+- sudo apt install lighttpd
+- sudo ufw allow 80
+- sudo ufw status
+- add rule to include port 80 in machine configuration > network > port forwarding
+- sudo systemctl reload lighttpd
+- sudo systemctl enable lighttpd
+- sudo systemctl start lighttpd
+- sudo systemctl status lighttpd
+
+mariaDB
+- sudo apt install mariadb-server
+- sudo mariadb-secure-installation
+[Switch to unix_socket autentication? N
+Change the root password? N
+Remove anonymous users? Y 
+Disallow root login remotely? Y 
+Remove test database and access to it? Y 
+Reload privilege tables now? Y]
+- sudo mariadb
+- CREATE DATABASE wp_database;
+- SHOW DATABASES;
+- GRANT ALL ON <database name>.* TO '<username>'@'localhost' IDENTIFIED BY 'db password';
+db password: !cwm123
+- FLUSH PRIVILEGES;
+- exit
+- mariadb -u wcheung -p
+- login with db password
+- exit
+
+PHP
+- sudo apt install php-fpm php-mysql php-curl php-gd php-zip
+(fpm: PHP FastCHI Process Manager
+mysql: PHP extension that enables MySQL support
+curl: CURL is a library that allows PHP to make HTTP requests to other websites or servers, to fetch data from external sources, such as updating themes, plugins, or interacting with third-party APIs
+gd: PHP extension for the GD graphics library, to handle image uploads, resize them for various media sizes, and generate thumbnails automatically
+zip: PHP extension that provides support for working with ZIP archives
+)
+- sudo nano /etc/lighttpd/conf-available/15-fastcgi-php.conf
+- make sure config has: "socket" => "/run/php/php8.2-fpm.sock"
+- remove line: bin-path => /usr/bin/php-cgi
+(it’s trying to run php-cgi instead of PHP-FPM)
+
+wordpress
+- site name: wcheung WP
+- username: wcheung
+- pw: !cwm123
+wordpress logic:
+- a user visits your website in a browser (http://yourserver.com).
+- Lighttpd receives the HTTP request.
+- If the request is for a WordPress page:
+- Lighttpd passes the request to PHP (via FastCGI or PHP-FPM).
+- PHP executes WordPress scripts.
+- When WordPress needs content (like a post or user info), it queries MariaDB.
+- MariaDB responds with the requested data.
+- WordPress combines the data with PHP templates and sends the HTML output back through Lighttpd to the browser.
+- Essentially: Lighttpd = delivery, PHP = logic, MariaDB = storage, WordPress = orchestrator.
+
+redis
+- cache = a place where frequently used data is stored so it can be accessed faster next time, it is temporary and is fast. if cache disappears, nothing is broken. it just becomes slower
+- reduce database load and improve response time, e.g WordPress normally asks MariaDB for data. with Redis, WordPress asks Redis first, if the data is cached > instant response. if not > MariaDB is used, and Redis stores the result
+- redis pw: !cwm123
+- sudo apt install redis-server
+- sudo apt install php-redis
+- sudo systemctl restart lighttpd
+- sudo nano /etc/redis/redis.conf
+- add before ./redis-server /path/to/redis.conf: 
+requirepass <!cwm123>
+save 900 1
+save 300 10
+save 60 10000
+- sudo mkdir -p /var/lib/redis
+- sudo chown redis:redis /var/lib/redis
+- sudo systemctl restart redis-server
+- sudo nano /var/www/html/wp-config.php
+- configure wordpress to use redis, add before the "stop editing" line:
+define('WP_REDIS_HOST', '127.0.0.1');
+define('WP_REDIS_PASSWORD', '!cwm123');
+test:
+- redis-cli: should return "127.0.0.1:6379" (port6379 is official default)
+- AUTH <!cwm123>
+- ping: should return "PONG"
+- exit
+
+bonus check
+- systemctl status 1. lighttpd 2. mariadb 3. php7.3-fpm 4. redis
+- ls -l /var/www/html: check if wordpress files exist
+- redis-cli ping: PONG
+- sudo ss -tulnp: TCP only, UDP only, listening sockets, numeric addresses and ports, process ID (PID) and program names
+- lighttpd port 80, mariaDB port 3306, redis port 6379
+- sudo mariadb -e "SHOW DATABASES";: -e = execute
+
+signature
+- go to b2br directory
+- sha1sum b2br.vdi
+- sha1sum is a Linux command used to compute a SHA-1 cryptographic hash of a file or input
+- SHA-1 = Secure Hash Algorithm 1
+- produces a 160-bit hash, usually shown as a 40-character hexadecimal string
+- same input = same hash, change one bit = completely different hash
